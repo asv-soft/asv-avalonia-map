@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization;
-using Asv.Gnss;
+using Asv.Common;
 
 namespace Asv.Avalonia.Map
 {

@@ -1,5 +1,5 @@
 ﻿using System.Collections.ObjectModel;
-using Asv.Gnss;
+using Asv.Common;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Media;

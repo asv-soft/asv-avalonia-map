@@ -7,7 +7,6 @@ using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
-using Asv.Gnss;
 using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
@@ -16,11 +15,11 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Selection;
 using Avalonia.Data;
 using Avalonia.Input;
-using Avalonia.Logging;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.VisualTree;
 using ReactiveUI;
+using GeoPoint = Asv.Common.GeoPoint;
 
 namespace Asv.Avalonia.Map
 {

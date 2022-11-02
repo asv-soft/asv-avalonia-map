@@ -4,7 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Asv.Gnss;
+using Asv.Common;
 using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
@@ -66,8 +66,8 @@ namespace Asv.Avalonia.Map
                 var offsetY = 0;
                 var old = MapView.GetLocation(child);
                 var location = _map.FromLocalToLatLng((int)(point.Position.X  + _map.MapTranslateTransform.X + offsetX), (int)(point.Position.Y + _map.MapTranslateTransform.Y + offsetY));
-                
-                MapView.SetLocation(child, location.SetAltitude(old.Altitude)); 
+                location = new GeoPoint(location.Latitude, location.Longitude, old.Altitude);
+                MapView.SetLocation(child, location); 
             }
         }
         private void DragPointerPressed(PointerPressedEventArgs args)

@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Net;
 using System.Xml;
-using Asv.Gnss;
+using Asv.Common;
 
 namespace Asv.Avalonia.Map
 {

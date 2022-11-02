@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
-using Asv.Gnss;
+using Asv.Common;
 using static System.Math;
 
 namespace Asv.Avalonia.Map

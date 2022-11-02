@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Asv.Gnss;
+using Asv.Common;
 #if NET46
 using System.Collections.Concurrent;
 #endif

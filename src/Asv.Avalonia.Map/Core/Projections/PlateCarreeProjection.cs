@@ -1,5 +1,5 @@
 ﻿using System;
-using Asv.Gnss;
+using Asv.Common;
 
 namespace Asv.Avalonia.Map
 {

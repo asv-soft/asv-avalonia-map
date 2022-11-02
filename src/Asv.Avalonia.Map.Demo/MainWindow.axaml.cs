@@ -1,4 +1,4 @@
-using Asv.Gnss;
+using Asv.Common;
 using Avalonia.Controls;
 
 namespace Asv.Avalonia.Map.Demo

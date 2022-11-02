@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Asv.Gnss;
+using Asv.Common;
 
 namespace Asv.Avalonia.Map
 {
