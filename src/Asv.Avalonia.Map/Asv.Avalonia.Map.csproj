@@ -2,6 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>https://github.com/asvol</Authors>
+    <Company>https://github.com/asvol</Company>
+    <Description>Map library for Avalonia UI</Description>
+    <Copyright>https://github.com/asvol</Copyright>
+    <PackageProjectUrl>https://github.com/asvol/asv-avalonia-map</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
