@@ -2,7 +2,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="using:Asv.Avalonia.Map"
         xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-        xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles">
+        xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
+        xmlns:controls1="clr-namespace:Material.Styles.Controls;assembly=Material.Styles">
   <Design.PreviewWith>
     <controls:MapAnchorView Icon="Navigation" Title="" Size="100" RotateAngle="0" />
   </Design.PreviewWith>
@@ -79,7 +80,7 @@
                         IsOpen="{TemplateBinding IsSelected}"
                         PlacementTarget="PART_ContentPresenter"
                     >
-                        <styles:Card IsVisible="{TemplateBinding IsPopupNotEmpty}">
+                        <controls1:Card IsVisible="{TemplateBinding IsPopupNotEmpty}">
                             <StackPanel>
                                 <TextBlock Text="{TemplateBinding Description}"/>
                                 <ItemsControl Items="{TemplateBinding Actions}">
@@ -95,7 +96,7 @@
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
                             </StackPanel>
-                        </styles:Card>
+                        </controls1:Card>
                     </Popup>
                 </Grid>
                 

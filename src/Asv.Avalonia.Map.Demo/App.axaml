@@ -9,6 +9,6 @@
     <Application.Styles>
         <StyleInclude Source="avares://Asv.Avalonia.Map/ToolKit.axaml"></StyleInclude>
         <StyleInclude Source="avares://Material.Icons.Avalonia/App.xaml"/>
-        <FluentTheme Mode="Light"/>
+		<SimpleTheme Mode="Light" />
     </Application.Styles>
 </Application>

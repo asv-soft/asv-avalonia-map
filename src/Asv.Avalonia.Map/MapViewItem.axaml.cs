@@ -12,6 +12,7 @@ using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Mixins;
 using Avalonia.Controls.Shapes;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
 using ReactiveUI;
@@ -38,10 +39,16 @@ namespace Asv.Avalonia.Map
                 DisposableMixins.DisposeWith(this.WhenAnyValue(_ => _.IsSelected).Subscribe(UpdateSelectableZindex), disp);
                 DisposableMixins.DisposeWith(this.WhenAnyValue(_ => _.Bounds).Subscribe(_ => UpdateLocalPosition()), disp);
 
-                DisposableMixins.DisposeWith(this.Events().PointerPressed.Where(_ => IsEditable).Subscribe(DragPointerPressed),disp);
-                // DisposableMixins.DisposeWith(this.Events().PointerReleased.Where(_ => IsEditable).Subscribe(DragPointerReleased), disp);
-                DisposableMixins.DisposeWith(this.Events().PointerMoved.Where(_ => IsEditable).Subscribe(DragPointerMoved), disp);
+                Observable.FromEventPattern<EventHandler<PointerPressedEventArgs>, PointerPressedEventArgs>(
+                    handler => PointerPressed += handler,
+                    handler => PointerPressed -= handler).Subscribe(_=>DragPointerPressed(_.EventArgs)).DisposeItWith(disp);
+                Observable.FromEventPattern<EventHandler<PointerEventArgs>, PointerEventArgs>(
+                    handler => PointerMoved += handler,
+                    handler => PointerMoved -= handler).Subscribe(_ => DragPointerMoved(_.EventArgs)).DisposeItWith(disp);
                 
+                // DisposableMixins.DisposeWith(this.Events().PointerReleased.Where(_ => IsEditable).Subscribe(DragPointerReleased), disp);
+                
+
             });
 
         }
