@@ -80,7 +80,7 @@
                         IsOpen="{TemplateBinding IsSelected}"
                         PlacementTarget="PART_ContentPresenter"
                     >
-                        <controls1:Card IsVisible="{TemplateBinding IsPopupNotEmpty}">
+                        <styles:Card IsVisible="{TemplateBinding IsPopupNotEmpty}">
                             <StackPanel>
                                 <TextBlock Text="{TemplateBinding Description}"/>
                                 <ItemsControl Items="{TemplateBinding Actions}">
@@ -96,7 +96,7 @@
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
                             </StackPanel>
-                        </controls1:Card>
+                        </styles:Card>
                     </Popup>
                 </Grid>
                 
