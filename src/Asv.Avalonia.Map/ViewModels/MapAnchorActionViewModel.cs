@@ -5,10 +5,13 @@ using ReactiveUI.Fody.Helpers;
 
 namespace Asv.Avalonia.Map
 {
+   
+
     public class MapAnchorActionViewModel: ReactiveObject
     {
+        public int Order { get; }
         [Reactive]
-        public MaterialIconKind Icon { get; set; }
+        public MaterialIconKind? Icon { get; set; }
         [Reactive]
         public string Title { get; set; }
         [Reactive]

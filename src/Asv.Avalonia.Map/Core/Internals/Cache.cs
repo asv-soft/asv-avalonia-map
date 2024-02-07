@@ -6,85 +6,15 @@ using System.Text;
 
 namespace Asv.Avalonia.Map
 {
-    internal class CacheLocator
-    {
-        private static string _location;
-
-        public static string Location
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(_location))
-                {
-                    Reset();
-                }
-
-                return _location;
-            }
-            set
-            {
-                if (string.IsNullOrEmpty(value)) // setting to null resets to default
-                {
-                    Reset();
-                }
-                else
-                {
-                    _location = value;
-                }
-
-                if (Delay)
-                {
-                    Cache.Instance.CacheLocation = _location;
-                }
-            }
-        }
-
-        static void Reset()
-        {
-            string appDataLocation = GetApplicationDataFolderPath();
-
-            // http://greatmaps.codeplex.com/discussions/403151
-            // by default Network Service don't have disk write access
-            if (string.IsNullOrEmpty(appDataLocation))
-            {
-                GMaps.Instance.Mode = AccessMode.ServerOnly;
-                GMaps.Instance.UseDirectionsCache = false;
-                GMaps.Instance.UseGeocoderCache = false;
-                GMaps.Instance.UsePlacemarkCache = false;
-                GMaps.Instance.UseRouteCache = false;
-                GMaps.Instance.UseUrlCache = false;
-            }
-            else
-            {
-                Location = appDataLocation;
-            }
-        }
-
-        public static string GetApplicationDataFolderPath()
-        {
-            
-            string path;
-
-            // https://greatmaps.codeplex.com/workitem/16112
-            path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-
-            if (!string.IsNullOrEmpty(path))
-            {
-                path += Path.DirectorySeparatorChar + "GMap.NET" + Path.DirectorySeparatorChar;
-            }
-
-            return path;
-        }
-
-        public static bool Delay;
-    }
+    
 
     /// <summary>
     ///     cache system for tiles, geocoding, etc...
     /// </summary>
-    internal class Cache
+    public class Cache
     {
-        
+        private static Cache _cacheInstance;
+
         /// <summary>
         ///     abstract image cache
         /// </summary>
@@ -95,76 +25,19 @@ namespace Asv.Avalonia.Map
         /// </summary>
         public PureImageCache ImageCacheSecond;
 
-        string _cache;
+        public static string CacheFolder { get; set; } = "map";
 
-        /// <summary>
-        ///     local cache location
-        /// </summary>
-        public string CacheLocation
-        {
-            get
-            {
-                return _cache;
-            }
-            set
-            {
-                _cache = value;
-// #if SQLite
-//                 if (ImageCache is SQLitePureImageCache)
-//                 {
-//                     (ImageCache as SQLitePureImageCache).CacheLocation = value;
-//                 }
-// #else
-//             if(ImageCache is MsSQLCePureImageCache)
-//             {
-//                (ImageCache as MsSQLCePureImageCache).CacheLocation = value;
-//             }
-// #endif
-                CacheLocator.Delay = true;
-            }
-        }
-
-        public static Cache Instance { get; } = new Cache();
+        public static Cache Instance => _cacheInstance ??= new Cache();
 
         private Cache()
         {
-            ImageCache = new FolderDbCache("map");
-            string newCache = CacheLocator.Location;
-
-            string oldCache = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-                              Path.DirectorySeparatorChar + "GMap.NET" + Path.DirectorySeparatorChar;
-
-            // move database to non-roaming user directory
-            if (Directory.Exists(oldCache))
-            {
-                try
-                {
-                    if (Directory.Exists(newCache))
-                    {
-                        Directory.Delete(oldCache, true);
-                    }
-                    else
-                    {
-                        Directory.Move(oldCache, newCache);
-                    }
-
-                    CacheLocation = newCache;
-                }
-                catch (Exception ex)
-                {
-                    CacheLocation = oldCache;
-                    Trace.WriteLine("SQLitePureImageCache, moving data: " + ex.ToString());
-                }
-            }
-            else
-            {
-                CacheLocation = newCache;
-            }
+            ImageCache = new FolderDbCache(CacheFolder);
         }
 
         #region -- etc cache --
 
-        static readonly SHA1CryptoServiceProvider HashProvider = new SHA1CryptoServiceProvider();
+        static readonly SHA1 HashProvider = SHA1.Create();
+        
 
         void ConvertToHash(ref string s)
         {
@@ -177,7 +50,7 @@ namespace Asv.Avalonia.Map
             {
                 ConvertToHash(ref url);
 
-                string dir = Path.Combine(_cache, type.ToString()) + Path.DirectorySeparatorChar;
+                string dir = Path.Combine(CacheFolder, type.ToString()) + Path.DirectorySeparatorChar;
 
                 // precrete dir
                 if (!Directory.Exists(dir))
@@ -206,7 +79,7 @@ namespace Asv.Avalonia.Map
             {
                 ConvertToHash(ref url);
 
-                string dir = Path.Combine(_cache, type.ToString()) + Path.DirectorySeparatorChar;
+                string dir = Path.Combine(CacheFolder, type.ToString()) + Path.DirectorySeparatorChar;
                 string file = dir + url + ".txt";
 
                 if (File.Exists(file))
@@ -242,7 +115,7 @@ namespace Asv.Avalonia.Map
         #endregion
     }
 
-    internal enum CacheType
+    public enum CacheType
     {
         GeocoderCache,
         PlacemarkCache,

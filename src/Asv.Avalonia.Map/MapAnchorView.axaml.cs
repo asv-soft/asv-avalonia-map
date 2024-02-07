@@ -12,15 +12,20 @@ using ReactiveUI;
 namespace Asv.Avalonia.Map
 {
     [PseudoClasses(":pressed", ":selected")]
-    public class MapAnchorView : TemplatedControl,ISelectable
+    public class MapAnchorView : TemplatedControl, ISelectable
     {
         public MapAnchorView()
         {
             SelectableMixin.Attach<MapAnchorView>(IsSelectedProperty);
             // PressedMixin.Attach<MapAnchorView>();
             this.WhenAnyValue(_ => _.Description).Subscribe(_ => IsPopupNotEmpty = !string.IsNullOrWhiteSpace(Description) );
-            this.WhenAnyValue(_ => _.CanvasBounds).Subscribe(_ => UpdateOffset(_));
+            this.WhenAnyValue(_ => _.CanvasBounds).Subscribe(UpdateOffset);
+            
+        }
 
+        static MapAnchorView()
+        {
+            IsInEditModeProperty.Changed.Subscribe(_ => ((MapAnchorView)_.Sender).PseudoClasses.Set(":edit", _.NewValue.Value));
         }
 
         private void UpdateOffset(Rect rect)
@@ -61,8 +66,8 @@ namespace Asv.Avalonia.Map
             set => SetAndRaise(IsPopupNotEmptyProperty, ref _isPopupNotEmpty, value);
         }
 
-        public static readonly StyledProperty<IBrush?> IconBrushProperty = AvaloniaProperty.Register<MapAnchorView, IBrush?>(nameof(IconBrush));
-        public IBrush? IconBrush
+        public static readonly StyledProperty<IBrush> IconBrushProperty = AvaloniaProperty.Register<MapAnchorView, IBrush>(nameof(IconBrush));
+        public IBrush IconBrush
         {
             get => GetValue(IconBrushProperty);
             set => SetValue(IconBrushProperty, value);
@@ -70,7 +75,7 @@ namespace Asv.Avalonia.Map
 
         public static readonly StyledProperty<string> TitleProperty = AvaloniaProperty.Register<MapAnchorView, string>(nameof(Title),String.Empty, coerce:OnTitleChanged);
 
-        private static string OnTitleChanged(IAvaloniaObject arg1, string arg2)
+        private static string OnTitleChanged(AvaloniaObject avaloniaObject, string arg2)
         {
             return arg2 ?? string.Empty;
         }
@@ -94,7 +99,8 @@ namespace Asv.Avalonia.Map
             get => GetValue(IsSelectedProperty);
             set => SetValue(IsSelectedProperty, value);
         }
-
+        
+  
         public static readonly StyledProperty<double> RotateCenterXProperty = AvaloniaProperty.Register<MapAnchorView, double>(nameof(RotateCenterX));
         public double RotateCenterX
         {
@@ -170,6 +176,14 @@ namespace Asv.Avalonia.Map
         {
             get => GetValue(OffsetYTypeProperty);
             set => SetValue(OffsetYTypeProperty, value);
+        }
+
+        public static readonly StyledProperty<bool> IsInEditModeProperty = AvaloniaProperty.Register<MapAnchorView, bool>(nameof(IsInEditMode), false);
+
+        public bool IsInEditMode
+        {
+            get => GetValue(IsInEditModeProperty);
+            set => SetValue(IsInEditModeProperty, value);
         }
     }
 }

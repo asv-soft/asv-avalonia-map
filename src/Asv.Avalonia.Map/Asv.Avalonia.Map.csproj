@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net5.0;net6.0</TargetFrameworks>
+    <TargetFramework>net8.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>https://github.com/asvol</Authors>
     <Company>https://github.com/asvol</Company>
@@ -8,13 +8,14 @@
     <Copyright>https://github.com/asvol</Copyright>
     <PackageProjectUrl>https://github.com/asvol/asv-avalonia-map</PackageProjectUrl>
     <Version>1.0.3</Version>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Asv.Common" Version="1.4.0" />
-    <PackageReference Include="Avalonia" Version="0.10.18" />
-    <PackageReference Include="Material.Avalonia" Version="3.0.0-avalonia10-preview2" />
-    <PackageReference Include="Material.Icons.Avalonia" Version="1.1.10" />
+    <PackageReference Include="Asv.Common" Version="$(AsvCommonVersion)" />
+    <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Material.Icons.Avalonia" Version="$(MaterialIconsAvaloniaVersion)" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-    <PackageReference Include="ReactiveUI.Fody" Version="18.4.1" />
+    <PackageReference Include="ReactiveUI.Fody" Version="$(ReactiveUIVersion)" />
+    <PackageReference Include="FluentAvaloniaUI" Version="$(FluentAvaloniaUIVersion)" />
   </ItemGroup>
 </Project>

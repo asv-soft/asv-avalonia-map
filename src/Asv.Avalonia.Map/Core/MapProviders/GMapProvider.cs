@@ -314,7 +314,7 @@ namespace Asv.Avalonia.Map
 
         protected GMapProvider()
         {
-            using (var hashProvider = new SHA1CryptoServiceProvider())
+            using (var hashProvider = SHA1.Create())
             {
                 DbId = Math.Abs(BitConverter.ToInt32(hashProvider.ComputeHash(Id.ToByteArray()), 0));
             }

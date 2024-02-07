@@ -1,8 +1,7 @@
-﻿#if !MONO
-#define UseFastResourceLock
-#endif
-using System;
+﻿using System;
 using System.Threading;
+
+
 
 namespace Asv.Avalonia.Map
 {

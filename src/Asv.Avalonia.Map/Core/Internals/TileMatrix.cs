@@ -99,7 +99,7 @@ namespace Asv.Avalonia.Map
             }
         }
 
-        public void ClearLevelsBelove(int zoom)
+        public void ClearLevelsBelow(int zoom)
         {
             _lock.AcquireWriterLock();
             try

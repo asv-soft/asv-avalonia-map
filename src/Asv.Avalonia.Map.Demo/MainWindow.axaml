@@ -13,7 +13,7 @@
 
     <map:MapView Name="GMap" MaxZoom="24" MinZoom="1" 
                  SelectedItem="{Binding SelectedItem}"
-                      Position="{Binding Center, Mode=TwoWay}" DialogText="{Binding DialogText}" DialogTarget="{Binding DialogTarget, Mode=TwoWay}" IsInDialogMode="{Binding IsInDialogMode, Mode=TwoWay}"  Items="{Binding Markers}">
+                      Position="{Binding Center, Mode=TwoWay}" DialogText="{Binding DialogText}" DialogTarget="{Binding DialogTarget, Mode=TwoWay}" IsInDialogMode="{Binding IsInDialogMode, Mode=TwoWay}"  ItemsSource="{Binding Markers}">
 			<map:MapView.ItemTemplate>
 				<DataTemplate x:DataType="map:MapAnchorViewModel">
                     <map:MapAnchorView

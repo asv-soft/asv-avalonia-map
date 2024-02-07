@@ -101,12 +101,12 @@ namespace Asv.Avalonia.Map
         {
             byte[] results;
 
-            using (var hashProvider = new SHA1CryptoServiceProvider())
+            using (var hashProvider = SHA1.Create())
             {
                 var tdesKey = hashProvider.ComputeHash(Encoding.UTF8.GetBytes(passphrase));
                 Array.Resize(ref tdesKey, 16);
 
-                using (var tdesAlgorithm = new TripleDESCryptoServiceProvider())
+                using (var tdesAlgorithm = TripleDES.Create())
                 {
                     tdesAlgorithm.Key = tdesKey;
                     tdesAlgorithm.Mode = CipherMode.ECB;
@@ -139,13 +139,13 @@ namespace Asv.Avalonia.Map
         {
             byte[] results;
 
-            using (var hashProvider = new SHA1CryptoServiceProvider())
+            using (var hashProvider = SHA1.Create())
             {
                 var tdesKey = hashProvider.ComputeHash(Encoding.UTF8.GetBytes(passphrase));
                 Array.Resize(ref tdesKey, 16);
 
                 // Step 2. Create a new TripleDESCryptoServiceProvider object
-                using (var tdesAlgorithm = new TripleDESCryptoServiceProvider())
+                using (var tdesAlgorithm = TripleDES.Create())
                 {
                     // Step 3. Setup the decoder
                     tdesAlgorithm.Key = tdesKey;

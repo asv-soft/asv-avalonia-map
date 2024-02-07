@@ -10,9 +10,6 @@ namespace Asv.Avalonia.Map
     public class FolderDbCache : PureImageCache
     {
         private readonly string _rootFolder;
-        public static FolderDbCache Instance { get; } = new FolderDbCache("map");
-        
-
         public FolderDbCache(string rootFolder)
         {
             _rootFolder = rootFolder;
