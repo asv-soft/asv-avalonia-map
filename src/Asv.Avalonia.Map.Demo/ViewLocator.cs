@@ -1,5 +1,4 @@
 using System;
-using Asv.Avalonia.GMap.Demo.ViewModels;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 

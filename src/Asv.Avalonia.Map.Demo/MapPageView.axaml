@@ -1,0 +1,62 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:map="clr-namespace:Asv.Avalonia.Map;assembly=Asv.Avalonia.Map"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:demo="clr-namespace:Asv.Avalonia.Map.Demo"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Asv.Avalonia.Map.Demo.MapPageView"
+             x:DataType="demo:MapPageViewModel">
+	<Design.DataContext>
+		<demo:MapPageViewModel />
+	</Design.DataContext>
+	<Grid ColumnDefinitions="Auto,*" RowDefinitions="*,100">
+		<!-- Controls part -->
+		
+		<!-- MapView part -->
+		<map:MapView Name="GMap" Grid.Column="1" MaxZoom="24" MinZoom="1" 
+		             SelectedItem="{Binding SelectedItem}"
+		             Position="{Binding Center, Mode=TwoWay}" DialogText="{Binding DialogText}" DialogTarget="{Binding DialogTarget, Mode=TwoWay}" IsInDialogMode="{Binding IsInDialogMode, Mode=TwoWay}"  ItemsSource="{Binding Markers}">
+			<map:MapView.ItemTemplate>
+				<DataTemplate x:DataType="map:MapAnchorViewModel">
+                    <map:MapAnchorView
+                        Name="AnchorView"
+                        map:MapView.Location="{CompiledBinding Location, Mode=TwoWay}"
+                        map:MapView.Path="{CompiledBinding Path,Mode=TwoWay}"
+                        map:MapView.Stroke="{CompiledBinding Stroke,Mode=TwoWay}"
+                        map:MapView.Fill="{CompiledBinding Fill,Mode=TwoWay}"
+                        map:MapView.StrokeThickness="{CompiledBinding StrokeThickness,Mode=TwoWay}"
+                        map:MapView.StrokeDashArray="{CompiledBinding StrokeDashArray,Mode=TwoWay}"
+                        map:MapView.PathOpacity="{CompiledBinding PathOpacity,Mode=TwoWay}"
+                        map:MapView.ZOrder="{CompiledBinding ZOrder}"
+                        map:MapView.IsEditable ="{CompiledBinding IsEditable,Mode=OneWay}"
+                        map:MapView.OffsetX="{Binding OffsetX,ElementName=AnchorView}"
+                        map:MapView.OffsetY="{Binding OffsetY,ElementName=AnchorView}"
+                        OffsetXType="{CompiledBinding OffsetX}"
+                        OffsetYType="{CompiledBinding OffsetY}"
+                        IsVisible="{CompiledBinding IsVisible,Mode=TwoWay}"
+						IsSelected="{CompiledBinding IsSelected,Mode=TwoWay}"
+						Icon="{CompiledBinding Icon}"
+						IconBrush="{CompiledBinding IconBrush}"
+						Title="{CompiledBinding Title}"
+						RotateCenterX="{CompiledBinding RotateCenterX}"
+						RotateCenterY="{CompiledBinding RotateCenterY}"
+						RotateAngle="{CompiledBinding RotateAngle}"
+						Size="{CompiledBinding Size}"
+						Actions="{CompiledBinding Actions} "
+						Description="{CompiledBinding Description}"/>
+					</DataTemplate>
+            </map:MapView.ItemTemplate>
+        </map:MapView>
+		<StackPanel Grid.Row="1" Grid.Column="1"  Orientation="Horizontal">
+			<ToggleButton IsChecked="{Binding  IsInAnchorEditMode}" >
+				<StackPanel Orientation="Horizontal" Spacing="3">
+					<avalonia:MaterialIcon Kind="CursorMove" />
+					<TextBlock Text="Move anchor" VerticalAlignment="Center" />
+				</StackPanel>
+			</ToggleButton>
+			<ToggleButton Classes="MapBottomButton" IsChecked="{Binding IsInDialogMode}" Content="{avalonia:MaterialIconExt TapeMeasure}" />
+		</StackPanel>
+	</Grid>		
+</UserControl>

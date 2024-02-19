@@ -18,6 +18,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Asv.Common" Version="$(AsvCommonVersion)" />
+    <PackageReference Include="Asv.Mavlink" Version="3.7.0-alpha02" />
     <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
     <PackageReference Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
@@ -29,5 +30,10 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Asv.Avalonia.Map\Asv.Avalonia.Map.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Menu\Actions\AnchorMover\AnchorMoverActionView.axaml" />
+    <UpToDateCheckInput Remove="Menu\Actions\Ruler\MapRulerActionView.axaml" />
+    <UpToDateCheckInput Remove="Menu\Actions\Zoom\MapZoomActionView.axaml" />
   </ItemGroup>
 </Project>
