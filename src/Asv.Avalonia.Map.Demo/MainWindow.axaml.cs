@@ -16,15 +16,10 @@ namespace Asv.Avalonia.Map.Demo
             GMaps.Instance.CacheOnIdleRead = true;
             GMaps.Instance.UseMemoryCache = true;
             
-
-            // this.WhenActivated(disp =>
-            // {
-            //     MainMap.Markers.AddMissionItem(new GMapMarker(MainMap.Position) { Shape = new Rectangle { Width = 10, Height = 10, Fill = Brushes.Red } });
-            // });
-            // this is only for MAP control disposing
             
         }
-
+        
+        
         public MapView MainMap { get; set; }
     }
 }

@@ -9,11 +9,14 @@
         Title="Asv.Avalonia.Map.Demo">
 	<Design.DataContext>
         <demo:MainWindowViewModel/>
-    </Design.DataContext>
-
-    <map:MapView Name="GMap" MaxZoom="24" MinZoom="1" 
+    </Design.DataContext>	
+	<Grid RowDefinitions="*,100">
+		<map:MapView x:DataType="demo:MainWindowViewModel" Name="GMap" MaxZoom="24" MinZoom="1"  Grid.RowSpan="2"
                  SelectedItem="{Binding SelectedItem}"
-                      Position="{Binding Center, Mode=TwoWay}" DialogText="{Binding DialogText}" DialogTarget="{Binding DialogTarget, Mode=TwoWay}" IsInDialogMode="{Binding IsInDialogMode, Mode=TwoWay}"  ItemsSource="{Binding Markers}">
+                      Position="{Binding Center, Mode=TwoWay}"
+                 DialogText="{Binding DialogText}" 
+                 DialogTarget="{Binding DialogTarget, Mode=TwoWay}"
+                 IsInDialogMode="{Binding IsInDialogMode,Mode=TwoWay}"  ItemsSource="{Binding Markers}">
 			<map:MapView.ItemTemplate>
 				<DataTemplate x:DataType="map:MapAnchorViewModel">
                     <map:MapAnchorView
@@ -45,4 +48,11 @@
 					</DataTemplate>
             </map:MapView.ItemTemplate>
         </map:MapView>
+		<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Orientation="Horizontal">
+			<!-- <ComboBox PlaceholderText="Select anchor" ItemsSource="{Binding MarkersVariantCollection.Title}"></ComboBox> -->
+			<Button Margin="10,0" Content="Add Anchor" Command="{Binding AddAnchor}"></Button>
+			<Button Content="Clear" Command="{Binding RemoveAllAnchorsCommand}"></Button>
+		</StackPanel>
+	</Grid>
+    
 </Window>
