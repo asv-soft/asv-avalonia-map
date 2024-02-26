@@ -20,15 +20,10 @@ namespace Asv.Avalonia.Map.Demo
         private int _anchorindex = 0;
         private MapAnchorViewModel _selectedItem;
         private readonly ObservableCollection<MapAnchorViewModel> _markers;
-      
-        
-
         public MainWindowViewModel()
         {
-            
             _markers =  new ObservableCollection<MapAnchorViewModel>
             {
-                
                 new MapAnchorViewModel
                 {
                     IsEditable = true,
@@ -41,22 +36,17 @@ namespace Asv.Avalonia.Map.Demo
                     Size=32,
                     IconBrush = Brushes.LightSeaGreen,
                     Title="Hello!!!",
-                }
-                
+                }  
             };
-
-           
             AddAnchor = ReactiveCommand.Create(AddNewAnchor);
             RemoveAllAnchorsCommand = ReactiveCommand.Create(RemoveAllAnchors);
         }
-
         [Reactive]
         public double Zoom { get; set; } = 7;
         [Reactive]
         public GeoPoint Center { get; set; }
 
         public ObservableCollection<MapAnchorViewModel> Markers => _markers;
-        public ObservableCollection<MapAnchorViewModel> MarkersVariantCollection => _markersVariantCollection;
 
         public MapAnchorViewModel SelectedItem
         {
@@ -117,13 +107,11 @@ namespace Asv.Avalonia.Map.Demo
 
         public async void AddNewAnchor()
         {
-           
             _tokenSource.Cancel();
             _tokenSource = new();
             try
             {
                 var userpoint= await ShowTargetDialog("Set a point", _tokenSource.Token);
-                
                 MapAnchorViewModel newAnchor = new MapAnchorViewModel()
                 {
                     IsEditable = true,
@@ -145,10 +133,8 @@ namespace Asv.Avalonia.Map.Demo
             }
             catch (TaskCanceledException)
             {
-                
+                return;
             }
-           
-            return;
         }
 
         public async Task<GeoPoint> ShowTargetDialog(string text, CancellationToken cancel)
@@ -161,19 +147,5 @@ namespace Asv.Avalonia.Map.Demo
             await tcs.Task;
             return DialogTarget;
         }
-
-        private MapAnchorViewModel anchorViewModel = new MapAnchorViewModel()
-        {
-            IsEditable = true,
-            ZOrder = 0,
-            OffsetX = OffsetXEnum.Center,
-            OffsetY = OffsetYEnum.Center,
-            IsSelected = true,
-            IsVisible = true,
-            Size=32,
-            IconBrush = Brushes.IndianRed,
-            Title="Hello!!!",
-        };
-
     }
 }
