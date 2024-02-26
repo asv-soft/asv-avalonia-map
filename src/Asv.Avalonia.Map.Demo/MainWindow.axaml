@@ -9,36 +9,36 @@
         Title="Asv.Avalonia.Map.Demo">
 	<Design.DataContext>
         <demo:MainWindowViewModel/>
-    	</Design.DataContext>	
+	</Design.DataContext>	
 	<Grid RowDefinitions="*,100">
 		<map:MapView 
 			x:DataType="demo:MainWindowViewModel" 
 			Name="GMap" MaxZoom="24" MinZoom="1"	
 			Grid.RowSpan="2"
-                	SelectedItem="{Binding SelectedItem}"
-                        Position="{Binding Center, Mode=TwoWay}"
-                 	DialogText="{Binding DialogText}" 
-                 	DialogTarget="{Binding DialogTarget, Mode=TwoWay}"
-                 	IsInDialogMode="{Binding IsInDialogMode,Mode=TwoWay}"
+			SelectedItem="{Binding SelectedItem}"
+			Position="{Binding Center, Mode=TwoWay}"
+			DialogText="{Binding DialogText}" 
+			DialogTarget="{Binding DialogTarget, Mode=TwoWay}"
+			IsInDialogMode="{Binding IsInDialogMode,Mode=TwoWay}"
 			ItemsSource="{Binding Markers}">
 			<map:MapView.ItemTemplate>
 				<DataTemplate x:DataType="map:MapAnchorViewModel">
-                   			 <map:MapAnchorView
-                       				Name="AnchorView"
-				                map:MapView.Location="{CompiledBinding Location, Mode=TwoWay}"
-                        			map:MapView.Path="{CompiledBinding Path,Mode=TwoWay}"
-                        			map:MapView.Stroke="{CompiledBinding Stroke,Mode=TwoWay}"
-                        			map:MapView.Fill="{CompiledBinding Fill,Mode=TwoWay}"
-                        			map:MapView.StrokeThickness="{CompiledBinding StrokeThickness,Mode=TwoWay}"
-                       				map:MapView.StrokeDashArray="{CompiledBinding StrokeDashArray,Mode=TwoWay}"
-                       				map:MapView.PathOpacity="{CompiledBinding PathOpacity,Mode=TwoWay}"
-                      				map:MapView.ZOrder="{CompiledBinding ZOrder}"
-                       				map:MapView.IsEditable ="{CompiledBinding IsEditable,Mode=OneWay}"
-                      				map:MapView.OffsetX="{Binding OffsetX,ElementName=AnchorView}"
-                      				map:MapView.OffsetY="{Binding OffsetY,ElementName=AnchorView}"
-                        			OffsetXType="{CompiledBinding OffsetX}"
-                        			OffsetYType="{CompiledBinding OffsetY}"
-            				        IsVisible="{CompiledBinding IsVisible,Mode=TwoWay}"
+					<map:MapAnchorView
+					    Name="AnchorView"
+						map:MapView.Location="{CompiledBinding Location, Mode=TwoWay}"
+					    map:MapView.Path="{CompiledBinding Path,Mode=TwoWay}"
+					    map:MapView.Stroke="{CompiledBinding Stroke,Mode=TwoWay}"
+					    map:MapView.Fill="{CompiledBinding Fill,Mode=TwoWay}"
+					    map:MapView.StrokeThickness="{CompiledBinding StrokeThickness,Mode=TwoWay}"
+					    map:MapView.StrokeDashArray="{CompiledBinding StrokeDashArray,Mode=TwoWay}"
+					    map:MapView.PathOpacity="{CompiledBinding PathOpacity,Mode=TwoWay}"
+					    map:MapView.ZOrder="{CompiledBinding ZOrder}"
+					    map:MapView.IsEditable ="{CompiledBinding IsEditable,Mode=OneWay}"
+					    map:MapView.OffsetX="{Binding OffsetX,ElementName=AnchorView}"
+					    map:MapView.OffsetY="{Binding OffsetY,ElementName=AnchorView}"
+					    OffsetXType="{CompiledBinding OffsetX}"
+					    OffsetYType="{CompiledBinding OffsetY}"
+					    IsVisible="{CompiledBinding IsVisible,Mode=TwoWay}"
 						IsSelected="{CompiledBinding IsSelected,Mode=TwoWay}"
 						Icon="{CompiledBinding Icon}"
 						IconBrush="{CompiledBinding IconBrush}"
@@ -50,8 +50,8 @@
 						Actions="{CompiledBinding Actions} "
 						Description="{CompiledBinding Description}"/>
 				</DataTemplate>
-            		</map:MapView.ItemTemplate>
-        	</map:MapView>
+            </map:MapView.ItemTemplate>
+        </map:MapView>
 		<StackPanel     
 			HorizontalAlignment="Center" 
 			VerticalAlignment="Center" 

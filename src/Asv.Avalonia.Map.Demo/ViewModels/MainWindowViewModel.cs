@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -16,10 +15,10 @@ namespace Asv.Avalonia.Map.Demo
 {
     public class MainWindowViewModel : ReactiveObject
     {
-
-        private int _anchorindex = 0;
-        private MapAnchorViewModel _selectedItem;
+        private CancellationTokenSource _tokenSource = new ();
+        
         private readonly ObservableCollection<MapAnchorViewModel> _markers;
+        
         public MainWindowViewModel()
         {
             _markers =  new ObservableCollection<MapAnchorViewModel>
@@ -41,78 +40,63 @@ namespace Asv.Avalonia.Map.Demo
             AddAnchor = ReactiveCommand.Create(AddNewAnchor);
             RemoveAllAnchorsCommand = ReactiveCommand.Create(RemoveAllAnchors);
         }
-        [Reactive]
-        public double Zoom { get; set; } = 7;
+        
         [Reactive]
         public GeoPoint Center { get; set; }
 
         public ObservableCollection<MapAnchorViewModel> Markers => _markers;
 
+        private MapAnchorViewModel _selectedItem;
         public MapAnchorViewModel SelectedItem
         {
             get => _selectedItem;
-            set
-            {
-                this.RaiseAndSetIfChanged(ref _selectedItem, value);
-            }
+            set => this.RaiseAndSetIfChanged(ref _selectedItem, value);
         }
 
+        private GeoPoint _dialogTarget;
         [Reactive]
-        public int MinZoom { get; set; } = 1;
-        [Reactive]
-        public int MaxZoom { get; set; } = 20;
-
-        private GeoPoint _dialogtarget;
-        [Reactive]
-        public GeoPoint DialogTarget { 
-            get =>_dialogtarget;
-            set
-            {
-                this.RaiseAndSetIfChanged(ref _dialogtarget, value);
-            }
+        public GeoPoint DialogTarget 
+        { 
+            get =>_dialogTarget;
+            set => this.RaiseAndSetIfChanged(ref _dialogTarget, value);
         }
-    
-         
+
         private bool _isInDialogMode;
         [Reactive]
-        public bool IsInDialogMode { 
+        public bool IsInDialogMode 
+        { 
             get=> _isInDialogMode;
-            set
-            {
-                this.RaiseAndSetIfChanged(ref _isInDialogMode, value);
-            } 
+            set => this.RaiseAndSetIfChanged(ref _isInDialogMode, value);
         }
 
         private string _dialogText;
         [Reactive]
-        public string DialogText { 
+        public string DialogText 
+        { 
             get=>_dialogText;
-            set
-            {
-                this.RaiseAndSetIfChanged(ref _dialogText, value);
-            } 
+            set => this.RaiseAndSetIfChanged(ref _dialogText, value);
         }
 
-
-        private CancellationTokenSource _tokenSource = new ();
         [Reactive]
         public ReactiveCommand<Unit,Unit> AddAnchor { get; set; }
         [Reactive]
         public ReactiveCommand<Unit,Unit> RemoveAllAnchorsCommand { get; set; }
 
-        public void RemoveAllAnchors()
+        private void RemoveAllAnchors()
         {
             _markers.Clear();
         }
 
-        public async void AddNewAnchor()
+        private async void AddNewAnchor()
         {
-            _tokenSource.Cancel();
-            _tokenSource = new();
+            await _tokenSource.CancelAsync();
+            _tokenSource = new CancellationTokenSource();
+
             try
             {
-                var userpoint= await ShowTargetDialog("Set a point", _tokenSource.Token);
-                MapAnchorViewModel newAnchor = new MapAnchorViewModel()
+                var userPoint= await ShowTargetDialog("Set a point", _tokenSource.Token);
+                
+                var newAnchor = new MapAnchorViewModel
                 {
                     IsEditable = true,
                     ZOrder = 0,
@@ -124,20 +108,20 @@ namespace Asv.Avalonia.Map.Demo
                     Size=32,
                     IconBrush = Brushes.LightSeaGreen,
                     Title="Hello!!!",
-                    Location = userpoint
+                    Location = userPoint
                 };
-                _markers.Add( new ObservableCollection<MapAnchorViewModel>()
+                
+                _markers.Add( new ObservableCollection<MapAnchorViewModel>
                 {
                     newAnchor
                 });
             }
             catch (TaskCanceledException)
             {
-                return;
             }
         }
 
-        public async Task<GeoPoint> ShowTargetDialog(string text, CancellationToken cancel)
+        private async Task<GeoPoint> ShowTargetDialog(string text, CancellationToken cancel)
         {
             DialogText = text;
             IsInDialogMode = true;
