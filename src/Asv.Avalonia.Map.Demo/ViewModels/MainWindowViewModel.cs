@@ -20,7 +20,7 @@ namespace Asv.Avalonia.Map.Demo
         private int _anchorindex = 0;
         private MapAnchorViewModel _selectedItem;
         private readonly ObservableCollection<MapAnchorViewModel> _markers;
-        private readonly ObservableCollection<MapAnchorViewModel> _markersVariantCollection;
+      
         
 
         public MainWindowViewModel()
