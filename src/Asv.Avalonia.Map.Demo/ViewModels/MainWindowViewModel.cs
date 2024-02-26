@@ -45,36 +45,7 @@ namespace Asv.Avalonia.Map.Demo
                 
             };
 
-            // _markersVariantCollection = new ObservableCollection<MapAnchorViewModel>
-            // {
-            //   new ()
-            //   {
-            //       IsEditable = true,
-            //       ZOrder = 0,
-            //       OffsetX = OffsetXEnum.Left,
-            //       OffsetY = OffsetYEnum.Top,
-            //       IsSelected = true,
-            //       IsVisible = true,
-            //       Icon = MaterialIconKind.Navigation,
-            //       Size=32,
-            //       IconBrush = Brushes.LightSeaGreen,
-            //       Title="Vehicle",
-            //   },
-            //   new ()
-            //   {
-            //       IsEditable = true,
-            //       ZOrder = 0,
-            //       OffsetX = OffsetXEnum.Left,
-            //       OffsetY = OffsetYEnum.Top,
-            //       IsSelected = true,
-            //       IsVisible = true,
-            //       Icon = MaterialIconKind.MapMarker,
-            //       Size=32,
-            //       IconBrush = Brushes.LightSeaGreen,
-            //       Title="Marker",
-            //   }
-            //   
-            // };   /// Template for anchors type selection feature
+           
             AddAnchor = ReactiveCommand.Create(AddNewAnchor);
             RemoveAllAnchorsCommand = ReactiveCommand.Create(RemoveAllAnchors);
         }
