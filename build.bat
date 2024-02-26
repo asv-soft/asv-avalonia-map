@@ -1,28 +1,33 @@
 @echo off
 rem ====== projects ======
 
-set projects=Asv.Avalonia.Map Asv.Avalonia.Map.Demo
+set projects=Asv.Avalonia.Map
 
 rem ====== projects ======
-
-rem install tool for update project version by git describe
-dotnet tool install -g dotnet-setversion
 
 rem set git to global PATH
 SET BASH_PATH="%SYSTEMDRIVE%\Program Files\Git\bin"
 SET PATH=%BASH_PATH%;%PATH%
 
-rem copy version to text file, then in variable
-%BASH_PATH%\bash.exe tools/get_version.sh > ./version.txt
+ rem copy version to text file, then in variable
+git describe --tags --abbrev=4 >>version.txt
 SET /p VERSION=<version.txt
-DEL version.txt
+del version.txt
+
+rem Extracting only X.X.X from the version string
+SET VERSION=%VERSION:v=%
+for /f "tokens=1 delims=-" %%V in ("%VERSION%") do (
+    set "version=%%V"
+)
+set VERSION=%version%
+
+
 
 rem build all projects
 (for %%p in (%projects%) do (
   	echo %%p
-	setversion %VERSION% ./src/%%p/%%p.csproj
 	dotnet restore ./src/%%p/%%p.csproj
-	dotnet build ./src/%%p/%%p.csproj -c Release
+	dotnet build /p:SolutionDir=../;ProductVersion=%VERSION% ./src/%%p/%%p.csproj -c Release
 	dotnet pack ./src/%%p/%%p.csproj -c Release
 )) 
 
