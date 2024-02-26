@@ -15,13 +15,13 @@ namespace Asv.Avalonia.Map.Demo
 {
     public class MainWindowViewModel : ReactiveObject
     {
-        private CancellationTokenSource _tokenSource = new ();
-        
+        private CancellationTokenSource _tokenSource = new();
+
         private readonly ObservableCollection<MapAnchorViewModel> _markers;
-        
+
         public MainWindowViewModel()
         {
-            _markers =  new ObservableCollection<MapAnchorViewModel>
+            _markers = new ObservableCollection<MapAnchorViewModel>
             {
                 new MapAnchorViewModel
                 {
@@ -32,21 +32,21 @@ namespace Asv.Avalonia.Map.Demo
                     IsSelected = true,
                     IsVisible = true,
                     Icon = MaterialIconKind.Navigation,
-                    Size=32,
+                    Size = 32,
                     IconBrush = Brushes.LightSeaGreen,
-                    Title="Hello!!!",
-                }  
+                    Title = "Hello!!!",
+                }
             };
             AddAnchor = ReactiveCommand.Create(AddNewAnchor);
             RemoveAllAnchorsCommand = ReactiveCommand.Create(RemoveAllAnchors);
         }
-        
-        [Reactive]
-        public GeoPoint Center { get; set; }
+
+        [Reactive] public GeoPoint Center { get; set; }
 
         public ObservableCollection<MapAnchorViewModel> Markers => _markers;
 
         private MapAnchorViewModel _selectedItem;
+
         public MapAnchorViewModel SelectedItem
         {
             get => _selectedItem;
@@ -54,33 +54,34 @@ namespace Asv.Avalonia.Map.Demo
         }
 
         private GeoPoint _dialogTarget;
+
         [Reactive]
-        public GeoPoint DialogTarget 
-        { 
-            get =>_dialogTarget;
+        public GeoPoint DialogTarget
+        {
+            get => _dialogTarget;
             set => this.RaiseAndSetIfChanged(ref _dialogTarget, value);
         }
 
         private bool _isInDialogMode;
+
         [Reactive]
-        public bool IsInDialogMode 
-        { 
-            get=> _isInDialogMode;
+        public bool IsInDialogMode
+        {
+            get => _isInDialogMode;
             set => this.RaiseAndSetIfChanged(ref _isInDialogMode, value);
         }
 
         private string _dialogText;
+
         [Reactive]
-        public string DialogText 
-        { 
-            get=>_dialogText;
+        public string DialogText
+        {
+            get => _dialogText;
             set => this.RaiseAndSetIfChanged(ref _dialogText, value);
         }
 
-        [Reactive]
-        public ReactiveCommand<Unit,Unit> AddAnchor { get; set; }
-        [Reactive]
-        public ReactiveCommand<Unit,Unit> RemoveAllAnchorsCommand { get; set; }
+        [Reactive] public ReactiveCommand<Unit, Unit> AddAnchor { get; set; }
+        [Reactive] public ReactiveCommand<Unit, Unit> RemoveAllAnchorsCommand { get; set; }
 
         private void RemoveAllAnchors()
         {
@@ -94,8 +95,8 @@ namespace Asv.Avalonia.Map.Demo
 
             try
             {
-                var userPoint= await ShowTargetDialog("Set a point", _tokenSource.Token);
-                
+                var userPoint = await ShowTargetDialog("Set a point", _tokenSource.Token);
+
                 var newAnchor = new MapAnchorViewModel
                 {
                     IsEditable = true,
@@ -105,13 +106,13 @@ namespace Asv.Avalonia.Map.Demo
                     IsSelected = true,
                     IsVisible = true,
                     Icon = MaterialIconKind.Aeroplane,
-                    Size=32,
+                    Size = 32,
                     IconBrush = Brushes.LightSeaGreen,
-                    Title="Hello!!!",
+                    Title = "Hello!!!",
                     Location = userPoint
                 };
-                
-                _markers.Add( new ObservableCollection<MapAnchorViewModel>
+
+                _markers.Add(new ObservableCollection<MapAnchorViewModel>
                 {
                     newAnchor
                 });
@@ -127,7 +128,8 @@ namespace Asv.Avalonia.Map.Demo
             IsInDialogMode = true;
             var tcs = new TaskCompletionSource();
             await using var c1 = cancel.Register(() => tcs.TrySetCanceled());
-            this.WhenAnyValue(_ => _.IsInDialogMode).Where(_ => IsInDialogMode == false).Subscribe(_ => tcs.TrySetResult(), cancel);
+            this.WhenAnyValue(_ => _.IsInDialogMode).Where(_ => IsInDialogMode == false)
+                .Subscribe(_ => tcs.TrySetResult(), cancel);
             await tcs.Task;
             return DialogTarget;
         }
