@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Authors>https://github.com/asvol</Authors>
+    <Authors>https://github.com/asv-soft</Authors>
     <Company>https://github.com/asv-soft</Company>
     <Description>Map library for Avalonia UI</Description>
     <Copyright>https://github.com/asv-soft</Copyright>

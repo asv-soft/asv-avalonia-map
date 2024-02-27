@@ -7,9 +7,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Asv.Avalonia.Map", "Asv.Ava
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Asv.Avalonia.Map.Demo", "Asv.Avalonia.Map.Demo\Asv.Avalonia.Map.Demo.csproj", "{5FA60278-FD6A-42D5-9AD4-2750839044EA}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ext", "Ext", "{AE1A51B6-7DE4-407E-A7B2-13297F3F68D6}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution items", "{AE1A51B6-7DE4-407E-A7B2-13297F3F68D6}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
+		..\.gitignore = ..\.gitignore
+		..\build.bat = ..\build.bat
+		..\publish_nuget.bat = ..\publish_nuget.bat
+		..\README.md = ..\README.md
+		..\publish_github.bat = ..\publish_github.bat
+		..\LICENSE = ..\LICENSE
 	EndProjectSection
 EndProject
 Global
