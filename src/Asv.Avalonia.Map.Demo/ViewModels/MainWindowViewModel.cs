@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -15,15 +16,12 @@ namespace Asv.Avalonia.Map.Demo
 {
     public class MainWindowViewModel : ReactiveObject
     {
-        private CancellationTokenSource _tokenSource = new();
-
-        private readonly ObservableCollection<MapAnchorViewModel> _markers;
-
         public MainWindowViewModel()
         {
+            SelectedAnchorVariant = AnchorViewModels[0];
             _markers = new ObservableCollection<MapAnchorViewModel>
             {
-                new MapAnchorViewModel
+                new()
                 {
                     IsEditable = true,
                     ZOrder = 0,
@@ -40,54 +38,23 @@ namespace Asv.Avalonia.Map.Demo
             AddAnchor = ReactiveCommand.Create(AddNewAnchor);
             RemoveAllAnchorsCommand = ReactiveCommand.Create(RemoveAllAnchors);
         }
-
-        [Reactive] public GeoPoint Center { get; set; }
-
-        public ObservableCollection<MapAnchorViewModel> Markers => _markers;
-
-        private MapAnchorViewModel _selectedItem;
-
-        public MapAnchorViewModel SelectedItem
-        {
-            get => _selectedItem;
-            set => this.RaiseAndSetIfChanged(ref _selectedItem, value);
-        }
-
-        private GeoPoint _dialogTarget;
-
+        
+        #region Anchors Actions
+       
         [Reactive]
-        public GeoPoint DialogTarget
-        {
-            get => _dialogTarget;
-            set => this.RaiseAndSetIfChanged(ref _dialogTarget, value);
-        }
-
-        private bool _isInDialogMode;
-
+        public ReactiveCommand<Unit, Unit> AddAnchor { get; set; }
         [Reactive]
-        public bool IsInDialogMode
-        {
-            get => _isInDialogMode;
-            set => this.RaiseAndSetIfChanged(ref _isInDialogMode, value);
-        }
-
-        private string _dialogText;
-
+        public ReactiveCommand<Unit, Unit> RemoveAllAnchorsCommand { get; set; }
         [Reactive]
-        public string DialogText
-        {
-            get => _dialogText;
-            set => this.RaiseAndSetIfChanged(ref _dialogText, value);
-        }
-
-        [Reactive] public ReactiveCommand<Unit, Unit> AddAnchor { get; set; }
-        [Reactive] public ReactiveCommand<Unit, Unit> RemoveAllAnchorsCommand { get; set; }
-
+        public MapAnchorViewModel SelectedAnchorVariant { get; set; }
+        
         private void RemoveAllAnchors()
         {
             _markers.Clear();
         }
 
+        private CancellationTokenSource _tokenSource = new();
+        
         private async void AddNewAnchor()
         {
             await _tokenSource.CancelAsync();
@@ -96,22 +63,20 @@ namespace Asv.Avalonia.Map.Demo
             try
             {
                 var userPoint = await ShowTargetDialog("Set a point", _tokenSource.Token);
-
-                var newAnchor = new MapAnchorViewModel
+                var newAnchor = new MapAnchorViewModel()
                 {
-                    IsEditable = true,
-                    ZOrder = 0,
-                    OffsetX = OffsetXEnum.Center,
-                    OffsetY = OffsetYEnum.Center,
-                    IsSelected = true,
-                    IsVisible = true,
-                    Icon = MaterialIconKind.Aeroplane,
-                    Size = 32,
-                    IconBrush = Brushes.LightSeaGreen,
-                    Title = "Hello!!!",
-                    Location = userPoint
+                    IsEditable = SelectedAnchorVariant.IsEditable,
+                    ZOrder = SelectedAnchorVariant.ZOrder,
+                    OffsetX = SelectedAnchorVariant.OffsetX,
+                    OffsetY = SelectedAnchorVariant.OffsetY,
+                    IsSelected = SelectedAnchorVariant.IsSelected,
+                    IsVisible = SelectedAnchorVariant.IsVisible,
+                    Icon = SelectedAnchorVariant.Icon,
+                    Size = SelectedAnchorVariant.Size,
+                    IconBrush = SelectedAnchorVariant.IconBrush,
+                    Title = SelectedAnchorVariant.Title,
                 };
-
+                newAnchor.Location = userPoint;
                 _markers.Add(new ObservableCollection<MapAnchorViewModel>
                 {
                     newAnchor
@@ -122,6 +87,54 @@ namespace Asv.Avalonia.Map.Demo
             }
         }
 
+        public List<MapAnchorViewModel> AnchorViewModels => new()
+        {
+            new()
+            {
+                IsEditable = true,
+                ZOrder = 0,
+                OffsetX = OffsetXEnum.Center,
+                OffsetY = OffsetYEnum.Bottom,
+                IsSelected = true,
+                IsVisible = true,
+                Icon = MaterialIconKind.MapMarker,
+                Size = 32,
+                IconBrush = Brushes.LightSeaGreen,
+                Title = "Map Marker",
+            },
+            new()
+            {
+                IsEditable = true,
+                ZOrder = 0,
+                OffsetX = OffsetXEnum.Center,
+                OffsetY = OffsetYEnum.Center,
+                IsSelected = true,
+                IsVisible = true,
+                Icon = MaterialIconKind.Navigation,
+                Size = 32,
+                IconBrush = Brushes.LightSeaGreen,
+                Title = "Vehicle",
+            }
+        };
+        #endregion
+        
+        #region Map Properties
+        
+        public ObservableCollection<MapAnchorViewModel> Markers => _markers;
+
+        public MapAnchorViewModel SelectedItem { get; set; }
+        
+        [Reactive]
+        public GeoPoint Center { get; set; }
+        [Reactive]
+        public GeoPoint DialogTarget { get; set; }
+        [Reactive]
+        public bool IsInDialogMode { get; set; }
+        [Reactive]
+        public string DialogText { get; set; }
+        
+        private readonly ObservableCollection<MapAnchorViewModel> _markers;
+        
         private async Task<GeoPoint> ShowTargetDialog(string text, CancellationToken cancel)
         {
             DialogText = text;
@@ -133,5 +146,8 @@ namespace Asv.Avalonia.Map.Demo
             await tcs.Task;
             return DialogTarget;
         }
+        
+        #endregion
+       
     }
 }

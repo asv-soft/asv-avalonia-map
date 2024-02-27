@@ -50,15 +50,27 @@
                 </DataTemplate>
             </map:MapView.ItemTemplate>
         </map:MapView>
-        <StackPanel HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Grid.Row="1"
-                    Orientation="Horizontal">
-            <Button Margin="10,0"
-                    Content="Add Anchor"
-                    Command="{Binding AddAnchor}" />
-            <Button Content="Clear"
-                    Command="{Binding RemoveAllAnchorsCommand}" />
-        </StackPanel>
+        <Border Background="{DynamicResource  SolidBackgroundFillColorBase}"
+                HorizontalAlignment="Center"
+                CornerRadius="10"
+                VerticalAlignment="Center"
+                Grid.Row="1">
+            <StackPanel
+                Margin="10"
+                Orientation="Horizontal">
+                <Label Content="Anchor type:"
+                       VerticalAlignment="Center" />
+                <ComboBox ItemsSource="{Binding AnchorViewModels}"
+                          DisplayMemberBinding="{Binding Title}"
+                          SelectedItem="{Binding SelectedAnchorVariant}" />
+                <Button Margin="10,0"
+                        Content="Add Anchor"
+                        Command="{Binding AddAnchor}" />
+                <Button Content="Clear"
+                        Command="{Binding RemoveAllAnchorsCommand}" />
+            </StackPanel>
+        </Border>
+
+
     </Grid>
 </Window>
