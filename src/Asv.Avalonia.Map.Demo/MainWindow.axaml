@@ -10,10 +10,12 @@
     <Design.DataContext>
         <demo:MainWindowViewModel />
     </Design.DataContext>
-    <Grid RowDefinitions="*,100">
+    <Grid RowDefinitions="*,100" ColumnDefinitions="*, Auto">
         <map:MapView x:DataType="demo:MainWindowViewModel"
                      Name="GMap" MaxZoom="24" MinZoom="1"
+                     MapProvider="{Binding CurrentMapProvider}"
                      Grid.RowSpan="2"
+                     Grid.ColumnSpan="2"
                      SelectedItem="{Binding SelectedItem}"
                      Position="{Binding Center, Mode=TwoWay}"
                      DialogText="{Binding DialogText}"
@@ -54,7 +56,7 @@
                 HorizontalAlignment="Center"
                 CornerRadius="10"
                 VerticalAlignment="Center"
-                Grid.Row="1">
+                Grid.Row="1" Grid.Column="0">
             <StackPanel
                 Margin="10"
                 Orientation="Horizontal">
@@ -70,7 +72,15 @@
                         Command="{Binding RemoveAllAnchorsCommand}" />
             </StackPanel>
         </Border>
-
-
+        <ComboBox ItemsSource="{Binding AvailableProviders}"
+                  SelectedItem="{Binding CurrentMapProvider}"
+                  Grid.Row="0" Grid.Column="1"
+                  Margin="10">
+            <ComboBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Width="200"></StackPanel>
+                </ItemsPanelTemplate>
+            </ComboBox.ItemsPanel>
+        </ComboBox>
     </Grid>
 </Window>

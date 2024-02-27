@@ -18,6 +18,7 @@ namespace Asv.Avalonia.Map.Demo
     {
         public MainWindowViewModel()
         {
+            CurrentMapProvider = GMapProviders.GoogleMap;
             SelectedAnchorVariant = AnchorViewModels[0];
             _markers = new ObservableCollection<MapAnchorViewModel>
             {
@@ -37,6 +38,7 @@ namespace Asv.Avalonia.Map.Demo
             };
             AddAnchor = ReactiveCommand.Create(AddNewAnchor);
             RemoveAllAnchorsCommand = ReactiveCommand.Create(RemoveAllAnchors);
+            
         }
         
         #region Anchors Actions
@@ -47,6 +49,9 @@ namespace Asv.Avalonia.Map.Demo
         public ReactiveCommand<Unit, Unit> RemoveAllAnchorsCommand { get; set; }
         [Reactive]
         public MapAnchorViewModel SelectedAnchorVariant { get; set; }
+        public IEnumerable<GMapProvider> AvailableProviders => GMapProviders.List;
+        [Reactive]
+        public GMapProvider CurrentMapProvider { get; set; }
         
         private void RemoveAllAnchors()
         {
