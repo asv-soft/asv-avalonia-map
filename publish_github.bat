@@ -2,7 +2,7 @@
 rem ====== projects ======
 
 set projects=Asv.Avalonia.Map
-set source=https://api.nuget.org/v3/index.json
+set source=https://nuget.pkg.github.com/asv-soft/index.json
 
 rem ====== projects ======
 
