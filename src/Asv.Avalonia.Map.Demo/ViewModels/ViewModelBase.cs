@@ -1,8 +1,7 @@
 using ReactiveUI;
 
-namespace Asv.Avalonia.GMap.Demo.ViewModels
+namespace Asv.Avalonia.GMap.Demo.ViewModels;
+
+public class ViewModelBase : ReactiveObject
 {
-    public class ViewModelBase : ReactiveObject
-    {
-    }
 }

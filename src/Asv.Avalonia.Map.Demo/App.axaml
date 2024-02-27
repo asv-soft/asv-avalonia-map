@@ -4,13 +4,13 @@
              xmlns:styling="clr-namespace:FluentAvalonia.Styling;assembly=FluentAvalonia"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              x:Class="Asv.Avalonia.Map.Demo.App">
-	<Application.DataTemplates>
-        <demo:ViewLocator/>
+    <Application.DataTemplates>
+        <demo:ViewLocator />
     </Application.DataTemplates>
-    
+
     <Application.Styles>
-        <styling:FluentAvaloniaTheme PreferSystemTheme="True" PreferUserAccentColor="True"  />
+        <styling:FluentAvaloniaTheme PreferSystemTheme="True" PreferUserAccentColor="True" />
         <avalonia:MaterialIconStyles />
-        <StyleInclude Source="avares://Asv.Avalonia.Map/App.axaml"/>
+        <StyleInclude Source="avares://Asv.Avalonia.Map/App.axaml" />
     </Application.Styles>
 </Application>

@@ -65,22 +65,29 @@
             <StackPanel
                 Margin="10"
                 Orientation="Horizontal">
-                <ToggleButton IsChecked="{Binding IsInAnchorEditMode}">
-                    <avalonia:MaterialIcon Kind="ArrowAll"></avalonia:MaterialIcon>
+                <ToggleButton Margin="10,0"
+                              IsChecked="{Binding IsInAnchorEditMode}">
+                    <avalonia:MaterialIcon Kind="ArrowAll" />
                 </ToggleButton>
                 <Label Content="Anchor type:"
                        VerticalAlignment="Center" />
-                <ComboBox x:DataType="demo:MainWindowViewModel" MinWidth="130" ItemsSource="{Binding AnchorViewModels}"
+                <ComboBox x:DataType="demo:MainWindowViewModel" 
+                          MinWidth="130" 
+                          ItemsSource="{Binding AnchorViewModels}"
                           DisplayMemberBinding="{Binding Title}"
                           SelectedItem="{CompiledBinding SelectedAnchorVariant,Mode=TwoWay}" />
                 <Button Margin="10,0"
                         Command="{Binding AddAnchor}">
-                    <avalonia:MaterialIcon Kind="Plus"></avalonia:MaterialIcon>
+                    <avalonia:MaterialIcon Kind="Plus" />
                 </Button>
                 <Button
                     Command="{Binding RemoveAllAnchorsCommand}">
-                    <avalonia:MaterialIcon Kind="Trash"></avalonia:MaterialIcon>
+                    <avalonia:MaterialIcon Kind="Trash" />
                 </Button>
+                <ToggleButton Margin="10,0"
+                              IsChecked="{Binding IsRulerEnabled}">
+                    <avalonia:MaterialIcon Kind="TapeMeasure" />
+                </ToggleButton>
             </StackPanel>
         </Border>
         <Border Grid.Column="1"
@@ -95,11 +102,10 @@
                       Margin="10">
                 <ComboBox.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <StackPanel Width="200"></StackPanel>
+                        <StackPanel Width="200" />
                     </ItemsPanelTemplate>
                 </ComboBox.ItemsPanel>
             </ComboBox>
         </Border>
-
     </Grid>
 </Window>
