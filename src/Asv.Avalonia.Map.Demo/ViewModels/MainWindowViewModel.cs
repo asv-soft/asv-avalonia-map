@@ -19,17 +19,6 @@ namespace Asv.Avalonia.Map.Demo
     {
         public MainWindowViewModel()
         {
-            this.WhenValueChanged(vm => vm.IsInAnchorEditMode).Subscribe(v =>
-            {
-                if (IsInAnchorEditMode)
-                {
-                    foreach (var item in _markers)
-                    {
-                        item.Stroke = Brushes.Firebrick;
-                    }
-                    
-                }
-            });
             CurrentMapProvider = GMapProviders.GoogleMap;
             SelectedAnchorVariant = AnchorViewModels[0];
             _markers = new ObservableCollection<MapAnchorViewModel>
@@ -48,6 +37,13 @@ namespace Asv.Avalonia.Map.Demo
                     Title = "Hello!!!",
                 }
             };
+            this.WhenValueChanged(vm => vm.IsInAnchorEditMode).Subscribe(v =>
+            {
+                foreach (var marker in _markers)
+                {
+                    if (marker.IsEditable) marker.IsInEditMode = v;
+                }
+            });
             AddAnchor = ReactiveCommand.Create(AddNewAnchor);
             RemoveAllAnchorsCommand = ReactiveCommand.Create(RemoveAllAnchors);
         }
@@ -104,6 +100,8 @@ namespace Asv.Avalonia.Map.Demo
         {
             new()
             {
+                Stroke = Brushes.Aqua,
+                StrokeThickness = 2,
                 IsEditable = true,
                 ZOrder = 0,
                 OffsetX = OffsetXEnum.Center,
@@ -111,12 +109,14 @@ namespace Asv.Avalonia.Map.Demo
                 IsSelected = true,
                 IsVisible = true,
                 Icon = MaterialIconKind.MapMarker,
-                Size = 32,
-                IconBrush = Brushes.LightSeaGreen,
+                Size = 34,
+                IconBrush = Brushes.Crimson,
                 Title = "Map Marker",
             },
             new()
             {
+                Stroke = Brushes.Aqua,
+                StrokeThickness = 2,
                 IsEditable = true,
                 ZOrder = 0,
                 OffsetX = OffsetXEnum.Center,
@@ -124,8 +124,8 @@ namespace Asv.Avalonia.Map.Demo
                 IsSelected = true,
                 IsVisible = true,
                 Icon = MaterialIconKind.Navigation,
-                Size = 32,
-                IconBrush = Brushes.LightSeaGreen,
+                Size = 34,
+                IconBrush = Brushes.Crimson,
                 Title = "Vehicle",
             }
         };

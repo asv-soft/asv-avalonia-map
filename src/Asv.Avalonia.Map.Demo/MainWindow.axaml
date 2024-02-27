@@ -65,6 +65,9 @@
             <StackPanel
                 Margin="10"
                 Orientation="Horizontal">
+                <ToggleButton IsChecked="{Binding IsInAnchorEditMode}">
+                    <avalonia:MaterialIcon Kind="ArrowAll"></avalonia:MaterialIcon>
+                </ToggleButton>
                 <Label Content="Anchor type:"
                        VerticalAlignment="Center" />
                 <ComboBox x:DataType="demo:MainWindowViewModel" MinWidth="130" ItemsSource="{Binding AnchorViewModels}"
@@ -80,20 +83,23 @@
                 </Button>
             </StackPanel>
         </Border>
-        <ComboBox ItemsSource="{Binding AvailableProviders}"
-                  SelectedItem="{Binding CurrentMapProvider}"
-                  Grid.Row="0" Grid.Column="1"
-                  Margin="10">
-            <ComboBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel Width="200"></StackPanel>
-                </ItemsPanelTemplate>
-            </ComboBox.ItemsPanel>
-        </ComboBox>
-        <StackPanel>
-            <ToggleButton IsChecked="{Binding IsInAnchorEditMode}">
-                <avalonia:MaterialIcon Kind="ArrowAll"></avalonia:MaterialIcon>
-            </ToggleButton>
-        </StackPanel>
+        <Border Grid.Column="1"
+                Grid.Row="0"
+                Margin="10"
+                Background="{DynamicResource SolidBackgroundFillColorBase}"
+                MaxHeight="50"
+                VerticalAlignment="Top"
+                CornerRadius="10">
+            <ComboBox ItemsSource="{Binding AvailableProviders}"
+                      SelectedItem="{Binding CurrentMapProvider}"
+                      Margin="10">
+                <ComboBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Width="200"></StackPanel>
+                    </ItemsPanelTemplate>
+                </ComboBox.ItemsPanel>
+            </ComboBox>
+        </Border>
+
     </Grid>
 </Window>
