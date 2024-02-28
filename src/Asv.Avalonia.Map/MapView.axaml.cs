@@ -1064,7 +1064,7 @@ namespace Asv.Avalonia.Map
             {
                 var point = e.GetCurrentPoint(source);
 
-                if (point.Properties.IsRightButtonPressed)
+                if (point.Properties.IsLeftButtonPressed || point.Properties.IsRightButtonPressed)
                 {
                     e.Handled = UpdateSelectionFromEventSource(
                         e.Source,

@@ -18,14 +18,15 @@ namespace Asv.Avalonia.Map
         {
             SelectableMixin.Attach<MapAnchorView>(IsSelectedProperty);
             // PressedMixin.Attach<MapAnchorView>();
-            this.WhenAnyValue(_ => _.Description).Subscribe(_ => IsPopupNotEmpty = !string.IsNullOrWhiteSpace(Description) );
+            this.WhenAnyValue(_ => _.Description)
+                .Subscribe(_ => IsPopupNotEmpty = !string.IsNullOrWhiteSpace(Description));
             this.WhenAnyValue(_ => _.CanvasBounds).Subscribe(UpdateOffset);
-            
         }
 
         static MapAnchorView()
         {
-            IsInEditModeProperty.Changed.Subscribe(_ => ((MapAnchorView)_.Sender).PseudoClasses.Set(":edit", _.NewValue.Value));
+            IsInEditModeProperty.Changed.Subscribe(_ =>
+                ((MapAnchorView)_.Sender).PseudoClasses.Set(":edit", _.NewValue.Value));
         }
 
         private void UpdateOffset(Rect rect)
@@ -47,9 +48,11 @@ namespace Asv.Avalonia.Map
         }
 
         public static readonly DirectProperty<MapAnchorView, Rect> CanvasBoundsProperty =
-            AvaloniaProperty.RegisterDirect<MapAnchorView, Rect>(nameof(MapAnchorView.CanvasBounds), o => o.CanvasBounds, (o, v) => o.CanvasBounds = v);
+            AvaloniaProperty.RegisterDirect<MapAnchorView, Rect>(nameof(MapAnchorView.CanvasBounds),
+                o => o.CanvasBounds, (o, v) => o.CanvasBounds = v);
 
         private Rect _canvasBounds;
+
         public Rect CanvasBounds
         {
             get => _canvasBounds;
@@ -57,23 +60,28 @@ namespace Asv.Avalonia.Map
         }
 
         public static readonly DirectProperty<MapAnchorView, bool> IsPopupNotEmptyProperty =
-            AvaloniaProperty.RegisterDirect<MapAnchorView, bool>(nameof(IsPopupNotEmpty), o => o.IsPopupNotEmpty, (o, v) => o.IsPopupNotEmpty = v);
+            AvaloniaProperty.RegisterDirect<MapAnchorView, bool>(nameof(IsPopupNotEmpty), o => o.IsPopupNotEmpty,
+                (o, v) => o.IsPopupNotEmpty = v);
 
         private bool _isPopupNotEmpty = true;
+
         public bool IsPopupNotEmpty
         {
             get => _isPopupNotEmpty;
             set => SetAndRaise(IsPopupNotEmptyProperty, ref _isPopupNotEmpty, value);
         }
 
-        public static readonly StyledProperty<IBrush> IconBrushProperty = AvaloniaProperty.Register<MapAnchorView, IBrush>(nameof(IconBrush));
+        public static readonly StyledProperty<IBrush> IconBrushProperty =
+            AvaloniaProperty.Register<MapAnchorView, IBrush>(nameof(IconBrush));
+
         public IBrush IconBrush
         {
             get => GetValue(IconBrushProperty);
             set => SetValue(IconBrushProperty, value);
         }
 
-        public static readonly StyledProperty<string> TitleProperty = AvaloniaProperty.Register<MapAnchorView, string>(nameof(Title),String.Empty, coerce:OnTitleChanged);
+        public static readonly StyledProperty<string> TitleProperty =
+            AvaloniaProperty.Register<MapAnchorView, string>(nameof(Title), String.Empty, coerce: OnTitleChanged);
 
         private static string OnTitleChanged(AvaloniaObject avaloniaObject, string arg2)
         {
@@ -86,43 +94,55 @@ namespace Asv.Avalonia.Map
             set => SetValue(TitleProperty, value);
         }
 
-        public static readonly StyledProperty<MaterialIconKind> IconProperty = AvaloniaProperty.Register<MapAnchorView, MaterialIconKind>(nameof(Icon));
+        public static readonly StyledProperty<MaterialIconKind> IconProperty =
+            AvaloniaProperty.Register<MapAnchorView, MaterialIconKind>(nameof(Icon));
+
         public MaterialIconKind Icon
         {
             get => (MaterialIconKind)GetValue(IconProperty);
             set => SetValue(IconProperty, value);
         }
 
-        public static readonly StyledProperty<bool> IsSelectedProperty = AvaloniaProperty.Register<MapAnchorView, bool>(nameof(IsSelected));
+        public static readonly StyledProperty<bool> IsSelectedProperty =
+            AvaloniaProperty.Register<MapAnchorView, bool>(nameof(IsSelected));
+
         public bool IsSelected
         {
             get => GetValue(IsSelectedProperty);
             set => SetValue(IsSelectedProperty, value);
         }
-        
-  
-        public static readonly StyledProperty<double> RotateCenterXProperty = AvaloniaProperty.Register<MapAnchorView, double>(nameof(RotateCenterX));
+
+
+        public static readonly StyledProperty<double> RotateCenterXProperty =
+            AvaloniaProperty.Register<MapAnchorView, double>(nameof(RotateCenterX));
+
         public double RotateCenterX
         {
             get => GetValue(RotateCenterXProperty);
             set => SetValue(RotateCenterXProperty, value);
         }
 
-        public static readonly StyledProperty<double> RotateCenterYProperty = AvaloniaProperty.Register<MapAnchorView, double>(nameof(RotateCenterY));
+        public static readonly StyledProperty<double> RotateCenterYProperty =
+            AvaloniaProperty.Register<MapAnchorView, double>(nameof(RotateCenterY));
+
         public double RotateCenterY
         {
             get => GetValue(RotateCenterYProperty);
             set => SetValue(RotateCenterYProperty, value);
         }
 
-        public static readonly StyledProperty<double> RotateAngleProperty = AvaloniaProperty.Register<MapAnchorView, double>(nameof(RotateAngle), defaultValue:300);
+        public static readonly StyledProperty<double> RotateAngleProperty =
+            AvaloniaProperty.Register<MapAnchorView, double>(nameof(RotateAngle), defaultValue: 300);
+
         public double RotateAngle
         {
             get => GetValue(RotateAngleProperty);
             set => SetValue(RotateAngleProperty, value);
         }
 
-        public static readonly StyledProperty<double> SizeProperty = AvaloniaProperty.Register<MapAnchorView, double>(nameof(Size), defaultValue: 30);
+        public static readonly StyledProperty<double> SizeProperty =
+            AvaloniaProperty.Register<MapAnchorView, double>(nameof(Size), defaultValue: 30);
+
         public double Size
         {
             get => GetValue(SizeProperty);
@@ -130,21 +150,24 @@ namespace Asv.Avalonia.Map
         }
 
         public static readonly DirectProperty<MapAnchorView, string> DescriptionProperty =
-            AvaloniaProperty.RegisterDirect<MapAnchorView, string>(nameof(MapAnchorView.Description), o => o.Description, (o, v) => o.Description = v);
+            AvaloniaProperty.RegisterDirect<MapAnchorView, string>(nameof(MapAnchorView.Description),
+                o => o.Description, (o, v) => o.Description = v);
 
         private string _description;
+
         public string Description
         {
             get => _description;
             set => SetAndRaise(DescriptionProperty, ref _description, value);
         }
 
-       
+
         public static readonly DirectProperty<MapAnchorView, IEnumerable> ActionsProperty =
-            AvaloniaProperty.RegisterDirect<MapAnchorView, IEnumerable>(nameof(Actions), o => o.Actions, (o, v) => o.Actions = v);
+            AvaloniaProperty.RegisterDirect<MapAnchorView, IEnumerable>(nameof(Actions), o => o.Actions,
+                (o, v) => o.Actions = v);
 
         private IEnumerable _actions;
-        
+
 
         public IEnumerable Actions
         {
@@ -152,33 +175,44 @@ namespace Asv.Avalonia.Map
             set => SetAndRaise(ActionsProperty, ref _actions, value);
         }
 
-        public static readonly StyledProperty<double> OffsetXProperty = AvaloniaProperty.Register<MapAnchorView, double>(nameof(OffsetX));
+        public static readonly StyledProperty<double> OffsetXProperty =
+            AvaloniaProperty.Register<MapAnchorView, double>(nameof(OffsetX));
+
         public double OffsetX
         {
             get => GetValue(OffsetXProperty);
             set => SetValue(OffsetXProperty, value);
         }
-        public static readonly StyledProperty<double> OffsetYProperty = AvaloniaProperty.Register<MapAnchorView, double>(nameof(OffsetY));
+
+        public static readonly StyledProperty<double> OffsetYProperty =
+            AvaloniaProperty.Register<MapAnchorView, double>(nameof(OffsetY));
+
         public double OffsetY
         {
             get => GetValue(OffsetYProperty);
             set => SetValue(OffsetYProperty, value);
         }
 
-        public static readonly StyledProperty<OffsetXEnum> OffsetXTypeProperty = AvaloniaProperty.Register<MapAnchorView, OffsetXEnum>(nameof(OffsetY));
+        public static readonly StyledProperty<OffsetXEnum> OffsetXTypeProperty =
+            AvaloniaProperty.Register<MapAnchorView, OffsetXEnum>(nameof(OffsetY));
+
         public OffsetXEnum OffsetXType
         {
             get => GetValue(OffsetXTypeProperty);
             set => SetValue(OffsetXTypeProperty, value);
         }
-        public static readonly StyledProperty<OffsetYEnum> OffsetYTypeProperty = AvaloniaProperty.Register<MapAnchorView, OffsetYEnum>(nameof(OffsetY));
+
+        public static readonly StyledProperty<OffsetYEnum> OffsetYTypeProperty =
+            AvaloniaProperty.Register<MapAnchorView, OffsetYEnum>(nameof(OffsetY));
+
         public OffsetYEnum OffsetYType
         {
             get => GetValue(OffsetYTypeProperty);
             set => SetValue(OffsetYTypeProperty, value);
         }
 
-        public static readonly StyledProperty<bool> IsInEditModeProperty = AvaloniaProperty.Register<MapAnchorView, bool>(nameof(IsInEditMode), false);
+        public static readonly StyledProperty<bool> IsInEditModeProperty =
+            AvaloniaProperty.Register<MapAnchorView, bool>(nameof(IsInEditMode), false);
 
         public bool IsInEditMode
         {
