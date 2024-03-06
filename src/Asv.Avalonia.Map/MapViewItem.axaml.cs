@@ -13,8 +13,10 @@ using Avalonia.Controls.Mixins;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
+using Material.Icons.Avalonia;
 using ReactiveUI;
 using Path = Avalonia.Controls.Shapes.Path;
 
@@ -44,19 +46,81 @@ namespace Asv.Avalonia.Map
             this.WhenActivated(disp =>
             {
                 this.WhenAnyValue(_ => _.IsSelected).Subscribe(UpdateSelectableZindex).DisposeWith(disp);
-                this.WhenAnyValue(_ => _.IsSelected).Subscribe(_ => this.IsHitTestVisible = !_).DisposeWith(disp);
                 this.WhenAnyValue(_ => _.Bounds).Subscribe(_ => UpdateLocalPosition()).DisposeWith(disp);
 
                 Observable.FromEventPattern<EventHandler<PointerPressedEventArgs>, PointerPressedEventArgs>(
-                    handler => PointerPressed += handler,
-                    handler => PointerPressed -= handler).Subscribe(_=>DragPointerPressed(_.EventArgs)).DisposeItWith(disp);
+                        handler => PointerPressed += handler,
+                        handler => PointerPressed -= handler).Subscribe(_ => DragPointerPressed(_.EventArgs))
+                    .DisposeItWith(disp);
                 Observable.FromEventPattern<EventHandler<PointerEventArgs>, PointerEventArgs>(
-                    handler => PointerMoved += handler,
-                    handler => PointerMoved -= handler).Subscribe(_ => DragPointerMoved(_.EventArgs)).DisposeItWith(disp);
-                // DisposableMixins.DisposeWith(this.Events().PointerReleased.Where(_ => IsEditable).Subscribe(DragPointerReleased), disp);
+                        handler => PointerMoved += handler,
+                        handler => PointerMoved -= handler).Subscribe(_ => DragPointerMoved(_.EventArgs))
+                    .DisposeItWith(disp);
+                
+                ContextFlyout.Opened += ContextFlyoutOnOpened;
             });
         }
 
+        private void ContextFlyoutOnOpened(object? sender, EventArgs e)
+        {
+            if (ItemsControl.ItemsControlFromItemContaner(this) is MapView owner && 
+                _map.SelectedItem is MapAnchorViewModel anchorViewModel && 
+                sender is Flyout flyout)
+            {
+                var overlappingAnchors = FindOverlappingAnchors(
+                    _map.FromLatLngToLocal(anchorViewModel.Location),
+                    owner.Items.Cast<MapAnchorViewModel>().ToList()).Where(_ => _ != anchorViewModel).ToList();
+                
+                if (overlappingAnchors.Count >= 1)
+                {
+                    var overlapActions = overlappingAnchors.Select(anchor => new MapAnchorSelectionActionViewModel
+                    {
+                        Icon = anchor.Icon,
+                        Title = anchor.Title,
+                        Command = ReactiveCommand.Create(() =>
+                        {
+                            flyout.Hide();
+                            _map.SelectedItem = anchor;
+                        }),
+                        Location = anchor.Location
+                    });
+
+                    if (flyout.Content is ItemsControl itemsControl)
+                    {
+                        itemsControl.ItemsSource = overlapActions;
+                    }
+                }
+                else
+                {
+                    flyout.Hide();
+                }
+            }
+        }
+        
+        private IEnumerable<MapAnchorViewModel> FindOverlappingAnchors(GPoint selectedPoint, List<MapAnchorViewModel> anchors)
+        {
+            var threshold = 50;
+            var overlappingAnchors = new List<MapAnchorViewModel>();
+            foreach (var anchorViewModel in anchors)
+            {
+                var relativePoint = _map.FromLatLngToLocal(anchorViewModel.Location);
+
+                if (IsOverlappingPoints(relativePoint, selectedPoint, threshold) &&
+                    !overlappingAnchors.Contains(anchorViewModel) && anchorViewModel.IsVisible)
+                {
+                    overlappingAnchors.Add(anchorViewModel);
+                }
+            }
+
+            return overlappingAnchors;
+        }
+
+        private bool IsOverlappingPoints(GPoint firstPoint, GPoint secondPoint, long threshold)
+        {
+            return Math.Abs(firstPoint.X - secondPoint.X) < threshold
+                   && Math.Abs(firstPoint.Y - secondPoint.Y) < threshold;
+        }
+        
         public bool IsEditable
         {
             get => _isEditable;
@@ -65,14 +129,12 @@ namespace Asv.Avalonia.Map
 
         private void DragPointerMoved(PointerEventArgs args)
         {
-            if (_map.IsInAnchorEditMode && IsSelected && IsEditable)
+            if (_map == null) return;
+            var point = args.GetCurrentPoint(_map.MapCanvas);
+            if (_map.IsInAnchorEditMode && IsSelected && IsEditable && point.Properties.IsLeftButtonPressed)
             {
-                if (_map == null) return;
-
                 var child = LogicalChildren.FirstOrDefault() as Visual;
                 if (child == null) return;
-
-                var point = args.GetCurrentPoint(_map.MapCanvas);
                 var offsetX = 0;
                 var offsetY = 0;
                 var old = MapView.GetLocation(child);

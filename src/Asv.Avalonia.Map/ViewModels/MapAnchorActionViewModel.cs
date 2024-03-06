@@ -9,7 +9,7 @@ namespace Asv.Avalonia.Map
 
     public class MapAnchorActionViewModel: ReactiveObject
     {
-        public int Order { get; }
+        public int Order { get; set; }
         [Reactive]
         public MaterialIconKind? Icon { get; set; }
         [Reactive]
@@ -18,6 +18,5 @@ namespace Asv.Avalonia.Map
         public ICommand Command { get; set; }
         [Reactive]
         public object CommandParameter { get; set; }
-        
     }
 }
