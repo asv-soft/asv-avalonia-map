@@ -31,7 +31,7 @@ public class MainWindowViewModel : ReactiveObject
                 ZOrder = 0,
                 OffsetX = OffsetXEnum.Left,
                 OffsetY = OffsetYEnum.Top,
-                IsSelected = true,
+                IsSelected = false,
                 IsVisible = true,
                 Icon = MaterialIconKind.Navigation,
                 Size = 32,
@@ -116,32 +116,41 @@ public class MainWindowViewModel : ReactiveObject
         {
             var userPoint = await ShowTargetDialog("Set a point",
                 _tokenSource.Token);
-            var newAnchor = new MapAnchorViewModel()
+
+            if (SelectedAnchorVariant is VehicleAnchorViewModel)
             {
-                IsEditable = SelectedAnchorVariant.IsEditable,
-                ZOrder = SelectedAnchorVariant.ZOrder,
-                OffsetX = SelectedAnchorVariant.OffsetX,
-                OffsetY = SelectedAnchorVariant.OffsetY,
-                IsSelected = SelectedAnchorVariant.IsSelected,
-                IsVisible = SelectedAnchorVariant.IsVisible,
-                Icon = SelectedAnchorVariant.Icon,
-                Size = SelectedAnchorVariant.Size,
-                IconBrush = SelectedAnchorVariant.IconBrush,
-                Title = SelectedAnchorVariant.Title
-            };
-            newAnchor.Location = userPoint;
-            _markers.Add(new ObservableCollection<MapAnchorViewModel>
+                _markers.Add(new VehicleAnchorViewModel
+                {
+                    Location = userPoint
+                });
+            }
+            else
             {
-                newAnchor
-            });
+                var newAnchor = new MapAnchorViewModel
+                {
+                    IsEditable = SelectedAnchorVariant.IsEditable,
+                    ZOrder = SelectedAnchorVariant.ZOrder,
+                    OffsetX = SelectedAnchorVariant.OffsetX,
+                    OffsetY = SelectedAnchorVariant.OffsetY,
+                    IsSelected = SelectedAnchorVariant.IsSelected,
+                    IsVisible = SelectedAnchorVariant.IsVisible,
+                    Icon = SelectedAnchorVariant.Icon,
+                    Size = SelectedAnchorVariant.Size,
+                    IconBrush = SelectedAnchorVariant.IconBrush,
+                    Title = SelectedAnchorVariant.Title,
+                    Location = userPoint
+                };
+                _markers.Add(newAnchor);
+            }
+            
         }
         catch (TaskCanceledException)
         {
         }
     }
 
-    public List<MapAnchorViewModel> AnchorViewModels => new()
-    {
+    public List<MapAnchorViewModel> AnchorViewModels =>
+    [
         new MapAnchorViewModel
         {
             Stroke = Brushes.Aqua,
@@ -150,29 +159,15 @@ public class MainWindowViewModel : ReactiveObject
             ZOrder = 0,
             OffsetX = OffsetXEnum.Center,
             OffsetY = OffsetYEnum.Bottom,
-            IsSelected = true,
+            IsSelected = false,
             IsVisible = true,
             Icon = MaterialIconKind.MapMarker,
             Size = 34,
             IconBrush = Brushes.Crimson,
             Title = "Map Marker"
         },
-        new MapAnchorViewModel
-        {
-            Stroke = Brushes.Aqua,
-            StrokeThickness = 2,
-            IsEditable = true,
-            ZOrder = 0,
-            OffsetX = OffsetXEnum.Center,
-            OffsetY = OffsetYEnum.Center,
-            IsSelected = true,
-            IsVisible = true,
-            Icon = MaterialIconKind.Navigation,
-            Size = 34,
-            IconBrush = Brushes.Crimson,
-            Title = "Vehicle"
-        }
-    };
+        new VehicleAnchorViewModel()
+    ];
 
     #endregion
 
