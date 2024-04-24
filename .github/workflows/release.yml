@@ -1,0 +1,60 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - feature/git-workflow-for-release
+    tags:
+      - 'v*'
+
+permissions:
+  actions: write
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Install dependencies
+        run: dotnet restore ./src
+
+      - name: Build project
+        run: dotnet build ./src --configuration Release --no-restore
+
+      - name: Publish project
+        run: dotnet publish ./src/Asv.Avalonia.Map --configuration Release --no-restore --output ./publish
+
+      - name: Zip the build
+        uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: ./publish
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./publish/your-application.zip
+          asset_name: your-application.zip
+          asset_content_type: application/zip
