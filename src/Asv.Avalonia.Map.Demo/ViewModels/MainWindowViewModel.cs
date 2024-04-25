@@ -74,9 +74,16 @@ public class MainWindowViewModel : ReactiveObject
     private async void SetUpRuler(bool isEnabled)
     {
         var polygon = _markers.FirstOrDefault(x => x is RulerPolygon) as RulerPolygon;
-        if (polygon == null) return;
+        if (polygon is null)
+        {
+            polygon = new RulerPolygon(Ruler);
+            _markers.Add(new RulerAnchor("1", Ruler, RulerPosition.Start));
+            _markers.Add(new RulerAnchor("2", Ruler, RulerPosition.Stop));
+            _markers.Add(polygon);
+        }
         _tokenSource.Cancel();
         _tokenSource = new CancellationTokenSource();
+        
         if (isEnabled)
             try
             {
