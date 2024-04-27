@@ -2,8 +2,6 @@ name: Build and Release
 
 on:
   push:
-    branches:
-      - feature/git-workflow-for-release
     tags:
       - 'v*'
 
@@ -23,21 +21,28 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
+      # here you must define where your project is stored   
       - name: Install dependencies
         run: dotnet restore ./src
 
+      # here you must define path to your .sln
       - name: Build project
-        run: dotnet build ./src --configuration Release --no-restore
+        run: dotnet build ./src/Asv.Avalonia.Map.sln --configuration Release --no-restore
 
-      - name: Publish project
-        run: dotnet publish ./src/Asv.Avalonia.Map --configuration Release --no-restore --output ./publish
+      # here you must define path to your .csproj
+      - name: Publish project for installer
+        run: dotnet publish ./src/Asv.Avalonia.Map.Demo/Asv.Avalonia.Map.Demo.csproj -c Release -o ./publish/app
+        
+      - name: Install NSIS
+        run: choco install nsis
 
-      - name: Zip the build
-        uses: actions/upload-artifact@v2
-        with:
-          name: build
-          path: ./publish
-
+      #here you must define path to your .nsi file (it is used for installer setup and creation)
+      - name: Create EXE installer
+        run: makensis ./setup.nsi
+      
+      - name: List output files
+        run: Get-ChildItem -Path ./publish/app -Force
+      
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -47,7 +52,7 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
           draft: false
-          prerelease: false
+          prerelease: ${{ contains(github.ref, 'alpha') }}
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
@@ -55,6 +60,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./publish/your-application.zip
-          asset_name: your-application.zip
-          asset_content_type: application/zip
+          asset_path: ./AvaloniaAppInstaller.exe # path to the installer file
+          asset_name: asv-avalonia-map-demo-${{ github.ref_name }}-setup.exe
+          asset_content_type: application/vnd.microsoft.portable-executable
