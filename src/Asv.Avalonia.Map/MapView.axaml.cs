@@ -18,6 +18,7 @@ using Avalonia.Input;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.VisualTree;
+using FluentAvalonia.Core;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using GeoPoint = Asv.Common.GeoPoint;
@@ -533,6 +534,27 @@ namespace Asv.Avalonia.Map
                 {
                     ForceUpdateOverlays();
                     InvalidateVisual();
+                }
+
+                if (ItemsSource == null || ItemsSource.Count() <= 0) return;
+                
+                foreach (var item in ItemsSource)
+                {
+                    if (item is MapAnchorViewModel marker)
+                    {
+                        marker.Size = Zoom switch
+                        {
+                            <= 5 => marker.BaseSize * 0.5,
+                            var zoom and > 5 and <= 10 => marker.BaseSize * (zoom / 10),
+                            <= 12 and > 10 => marker.BaseSize * 1.1,
+                            _ => marker.BaseSize * 1.2
+                        };
+
+                        marker.StrokeThickness = Zoom switch
+                        {
+                            _ => 5
+                        };
+                    }
                 }
             }
         }

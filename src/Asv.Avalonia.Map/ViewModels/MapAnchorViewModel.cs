@@ -185,6 +185,11 @@ namespace Asv.Avalonia.Map
         /// The size of the object.
         /// </value>
         double Size { get; set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        double BaseSize { get; set; }
 
         /// <summary>
         /// Gets the read-only ObservableCollection of MapAnchorActionViewModel objects.
@@ -432,6 +437,12 @@ namespace Asv.Avalonia.Map
         /// </value>
         [Reactive]
         public double Size { get; set; } = 32;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Reactive]
+        public double BaseSize { get; set; } = 32;
 
         /// <summary>
         /// Gets or sets a value indicating whether the property is filled.
