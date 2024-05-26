@@ -35,6 +35,7 @@ public class MainWindowViewModel : ReactiveObject
                 IsVisible = true,
                 Icon = MaterialIconKind.Navigation,
                 Size = 32,
+                BaseSize = 32,
                 IconBrush = Brushes.LightSeaGreen,
                 Title = "Hello!!!"
             }
@@ -170,6 +171,7 @@ public class MainWindowViewModel : ReactiveObject
             IsVisible = true,
             Icon = MaterialIconKind.MapMarker,
             Size = 34,
+            BaseSize = 34,
             IconBrush = Brushes.Crimson,
             Title = "Map Marker"
         },

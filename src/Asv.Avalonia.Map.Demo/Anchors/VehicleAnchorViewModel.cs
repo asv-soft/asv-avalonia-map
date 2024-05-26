@@ -26,6 +26,7 @@ public class VehicleAnchorViewModel : MapAnchorViewModel
         IsVisible = true;
         Icon = MaterialIconKind.Navigation;
         Size = 34;
+        BaseSize = 34;
         IconBrush = Brushes.Crimson;
         Title = "Vehicle";
         Description = "Something:";

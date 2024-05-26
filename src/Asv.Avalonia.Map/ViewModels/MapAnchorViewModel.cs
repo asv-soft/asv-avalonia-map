@@ -439,10 +439,14 @@ namespace Asv.Avalonia.Map
         public double Size { get; set; } = 32;
 
         /// <summary>
-        /// 
+        /// Gets or sets the base size of the property.
         /// </summary>
+        /// <value>
+        /// The base size of the property.
+        /// </value>
         [Reactive]
         public double BaseSize { get; set; } = 32;
+
 
         /// <summary>
         /// Gets or sets a value indicating whether the property is filled.
@@ -504,6 +508,13 @@ namespace Asv.Avalonia.Map
         [Reactive]
         public double StrokeThickness { get; set; } = 3;
 
+                
+        /// <summary>
+        /// Gets or sets the thickness of the stroke used to outline the shape.
+        /// The default value is 3.
+        /// </summary>
+        [Reactive] public double BaseStrokeThickness { get; set; } = 3;
+        
         /// <summary>
         /// Gets or sets the collection of values that specify the pattern of dashes and gaps used to stroke lines.
         /// </summary>

@@ -552,7 +552,9 @@ namespace Asv.Avalonia.Map
 
                         marker.StrokeThickness = Zoom switch
                         {
-                            _ => 5
+                            <= 5 => marker.BaseStrokeThickness * (2.0 / 3.0),
+                            var zoom and > 5 and <= 10 => marker.BaseStrokeThickness * ((2.0 + ((zoom - 5) / 5.0) * (5 - 2)) / 3.0), 
+                            _ => marker.BaseStrokeThickness * (7.0 / 3.0)
                         };
                     }
                 }
