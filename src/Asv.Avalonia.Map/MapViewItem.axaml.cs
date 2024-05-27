@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -10,13 +9,10 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Mixins;
-using Avalonia.Controls.Primitives;
+using Avalonia.Data;
 using Avalonia.Input;
-using Avalonia.Interactivity;
-using Avalonia.Layout;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
-using Material.Icons.Avalonia;
 using ReactiveUI;
 using Path = Avalonia.Controls.Shapes.Path;
 
@@ -35,12 +31,7 @@ namespace Asv.Avalonia.Map
             PressedMixin.Attach<MapViewItem>();
             FocusableProperty.OverrideDefaultValue<MapViewItem>(true);
         }
-
-        private void OnIsSelectedChanged(RoutedEventArgs routedEventArgs)
-        {
-            
-        }
-
+        
         public MapViewItem()
         {
             this.WhenActivated(disp =>
@@ -82,7 +73,7 @@ namespace Asv.Avalonia.Map
                             flyout.Hide();
                             _map.SelectedItem = anchor;
                         }),
-                        Location = anchor.Location
+                        Location = anchor.Location,
                     });
 
                     if (flyout.Content is ItemsControl itemsControl)
@@ -181,6 +172,7 @@ namespace Asv.Avalonia.Map
             if (LogicalChildren.FirstOrDefault() is not Visual child) return;
             ZIndex = MapView.GetZOrder(child);
             IsEditable = MapView.GetIsEditable(child);
+            IsAnimated = MapView.GetIsAnimated(child);
             _isVisibleSubscribe?.Dispose();
             _isVisibleSubscribe = child.WhenAnyValue(_ => _.IsVisible).Subscribe(_ => IsVisible = _);
 
@@ -395,6 +387,7 @@ namespace Asv.Avalonia.Map
                         Shape.StrokeJoin = PenLineJoin.Round;
                         Shape.StrokeLineCap = PenLineCap.Square;
                         Shape.IsHitTestVisible = false;
+                        
                     }
                 }
                 else
@@ -406,6 +399,7 @@ namespace Asv.Avalonia.Map
                     Shape.Fill = MapView.GetFill(child);
                     Shape.Opacity = MapView.GetPathOpacity(child);
                 }
+                PseudoClasses.Set(":animated", IsAnimated);
             }
             else
             {
@@ -427,6 +421,7 @@ namespace Asv.Avalonia.Map
                 Canvas.SetLeft(this, point.X);
                 Canvas.SetTop(this, point.Y);
             }
+            
         }
 
         public static readonly DirectProperty<MapViewItem, bool> IsShapeNotAvailableProperty =
@@ -446,10 +441,6 @@ namespace Asv.Avalonia.Map
             get => GetValue(ShapeProperty);
             set => SetValue(ShapeProperty, value);
         }
-
-        
-        
-
 
         public static IEnumerable<TSource[]> Chunked<TSource>(IEnumerable<TSource> source, int size)
         {
@@ -486,16 +477,19 @@ namespace Asv.Avalonia.Map
 
         public static readonly StyledProperty<bool> IsSelectedProperty =
             AvaloniaProperty.Register<MapViewItem, bool>(nameof(IsSelected));
-
-        
-
-
         public bool IsSelected
         {
             get => GetValue(IsSelectedProperty);
             set => SetValue(IsSelectedProperty, value);
         }
-
+        
+        public static readonly StyledProperty<bool> IsAnimatedProperty =
+            AvaloniaProperty.Register<MapViewItem, bool>(nameof(IsAnimated));
+        public bool IsAnimated
+        {
+            get => GetValue(IsAnimatedProperty);
+            set => SetValue(IsAnimatedProperty, value);
+        }
         
     }
 }

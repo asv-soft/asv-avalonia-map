@@ -102,7 +102,13 @@ namespace Asv.Avalonia.Map
         /// <c>true</c> if the object is selected; otherwise, <c>false</c>.
         /// </value>
         bool IsSelected { get; set; }
-
+        /// <summary>
+        /// Gets or sets a value indicating whether the object is animated.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the object is animated; otherwise, <c>false</c>.
+        /// </value>
+        bool IsAnimated { get; set; }
         /// <summary>
         /// Gets or sets the visibility of the item.
         /// </summary>
@@ -322,6 +328,13 @@ namespace Asv.Avalonia.Map
         /// </remarks>
         [Reactive]
         public bool IsSelected { get; set; }
+        /// <summary>
+        /// Gets or sets the value indicating whether the item is animated.
+        /// </summary>
+        /// <remarks>
+        /// This property is marked as reactive, which means that changes to it will automatically trigger any subscribed events.
+        /// </remarks>
+        public bool IsAnimated { get; set; }
 
         /// <summary>
         /// Gets or sets the visibility status of the property.

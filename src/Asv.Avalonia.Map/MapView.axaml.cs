@@ -46,6 +46,7 @@ namespace Asv.Avalonia.Map
             ZOrderProperty.Changed.Subscribe(_ => UpdateZOrder(_.Sender, _.NewValue));
             IsEditableProperty.Changed.Subscribe(_ => UpdateIsEditable(_.Sender, _.NewValue));
             IsSelectedProperty.Changed.Subscribe(_ => UpdateIsSelected(_.Sender, _.NewValue));
+            IsAnimatedProperty.Changed.Subscribe(_ => UpdateIsAnimated(_.Sender, _.NewValue));
         }
 
         private static void UpdateIsSelected(AvaloniaObject obj, BindingValue<bool> objNewValue)
@@ -53,6 +54,15 @@ namespace Asv.Avalonia.Map
             if (obj is MapViewItem find)
             {
                 find.IsSelected = objNewValue.Value;
+            }
+        }
+
+        private static void UpdateIsAnimated(AvaloniaObject obj, BindingValue<bool> objNewValue)
+        {
+            var find = (obj as ILogical)?.GetLogicalParent<MapViewItem>();
+            if (find != null)
+            {
+                find.IsAnimated = objNewValue.Value;
             }
         }
 
@@ -221,6 +231,17 @@ namespace Asv.Avalonia.Map
             element.SetValue(IsEditableProperty, value);
 
         public static bool GetIsEditable(AvaloniaObject element) => (bool)element.GetValue(IsEditableProperty)!;
+
+        public static readonly AvaloniaProperty<bool> IsAnimatedProperty =
+            AvaloniaProperty.RegisterAttached<MapView, AvaloniaObject, bool>("IsAnimated",
+                defaultBindingMode: BindingMode.TwoWay);
+
+        public static void SetIsAnimated(AvaloniaObject element, bool value)
+        {
+            element.SetValue(IsAnimatedProperty, value);
+        }
+
+        public static bool GetIsAnimated(AvaloniaObject element) => (bool)element.GetValue(IsAnimatedProperty)!;
 
         #endregion
 
