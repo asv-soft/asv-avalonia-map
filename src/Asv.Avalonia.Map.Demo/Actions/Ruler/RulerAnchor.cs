@@ -19,6 +19,7 @@ public class RulerAnchor : MapAnchorViewModel
     public RulerAnchor(string id, Ruler ruler, RulerPosition rulerPosition)
     {
         Size = 48;
+        BaseSize = 48;
         OffsetX = OffsetXEnum.Center;
         OffsetY = OffsetYEnum.Bottom;
         StrokeThickness = 1;

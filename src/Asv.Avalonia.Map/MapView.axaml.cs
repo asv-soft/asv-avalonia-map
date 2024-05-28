@@ -18,6 +18,7 @@ using Avalonia.Input;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.VisualTree;
+using FluentAvalonia.Core;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using GeoPoint = Asv.Common.GeoPoint;
@@ -34,6 +35,12 @@ namespace Asv.Avalonia.Map
         internal readonly TranslateTransform MapOverlayTranslateTransform = new();
         internal ScaleTransform MapScaleTransform = new();
         private readonly ScaleTransform _lastScaleTransform = new();
+        
+        const double SmallSizeFactor = 0.5;
+        const double MediumSizeFactor = 1.1;
+        const double LargeSizeFactor = 1.2;
+        const double SmallStrokeFactor = 2.0 / 3.0;
+        const double LargeStrokeFactor = 7.0 / 3.0;
 
         static MapView()
         {
@@ -534,7 +541,36 @@ namespace Asv.Avalonia.Map
                     ForceUpdateOverlays();
                     InvalidateVisual();
                 }
+
+                if (ItemsSource == null || ItemsSource.Count() <= 0) return;
+                
+                foreach (var item in ItemsSource)
+                {
+                    if (item is MapAnchorViewModel marker)
+                    {
+                        marker.Size = Zoom switch
+                        {
+                            <= 5 => marker.BaseSize * SmallSizeFactor,
+                            var zoom and > 5 and <= 10 => marker.BaseSize * (zoom / 10),
+                            <= 12 and > 10 => marker.BaseSize * MediumSizeFactor,
+                            _ => marker.BaseSize * LargeSizeFactor
+                        };
+
+                        marker.StrokeThickness = Zoom switch
+                        {
+                            <= 5 => marker.BaseStrokeThickness * SmallStrokeFactor,
+                            var zoom and > 5 and <= 10 => CalculateMediumStrokeFactor(marker),
+                            _ => marker.BaseStrokeThickness * LargeStrokeFactor
+                        };
+                    }
+                }
             }
+        }
+        
+        private double CalculateMediumStrokeFactor(MapAnchorViewModel model)
+        {
+            return model.BaseStrokeThickness * ((2 + ((Zoom - 5) / 5) * (5 - 2)) / 3);
+
         }
 
         #endregion
@@ -897,6 +933,8 @@ namespace Asv.Avalonia.Map
                 toggle,
                 e.GetCurrentPoint(source).Properties.IsRightButtonPressed);
         }
+
+
 
         #region Pointer events
 
