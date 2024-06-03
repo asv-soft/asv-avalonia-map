@@ -54,3 +54,8 @@ jobs:
           cd src
           dotnet pack -c Release --no-build --no-restore -p:PackageVersion=${{ env.VERSION }} --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
 
+
+      - name: Publish to GitHub Packages
+        run: |
+          cd src 
+          dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIRECTORY }}Asv.Avalonia.Map.${{ env.VERSION }}.nupkg -k ${{ secrets.GIHUB_NUGET_AUTH_TOKEN }} --skip-duplicate -s ${{ env.GITHUB_PACKAGES_URL }}
