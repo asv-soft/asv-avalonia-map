@@ -1,33 +1,60 @@
-name: Publish Package
+name: Github only deploy nuget on windows with no tests
 
 on:
   push:
     tags:
       - 'v*.*.*'
+      
+env:
+  PATH_TO_PROJECTS: ${{ github.workspace }}\src
+  PACKAGE_OUTPUT_DIRECTORY: ${{ github.workspace }}\output\
+  NUGET_SOURCE_URL: 'https://api.nuget.org/v3/index.json'
+  GITHUB_PACKAGES_URL: 'https://nuget.pkg.github.com/asv-soft/index.json'
 
 jobs:
   publish:
-    runs-on: windows-latest
+    name: 'Publish'
+    runs-on: windows-2019
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: |
+            8.x.x
+            7.x.x   
+            6.x.x   
+            5.x.x   
+            3.x.x 
+            
+      - name: Set version variable
+        env:
+          TAG: ${{ github.ref_name }}
+        shell: pwsh
+        run: |
+          $newTag = $env:TAG -replace "dev-v", "" 
+          $newTag += "-dev"
+          echo "VERSION=$newTag" | Out-File -FilePath $env:GITHUB_ENV -Append
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: |
+          cd src
+          dotnet restore
 
       - name: Build project
-        run: dotnet build --configuration Release --no-restore
+        run: |
+          cd src
+          dotnet build --configuration Release --no-restore
 
       - name: Pack project
-        run: dotnet pack --configuration Release --no-build --output ./output
+        run: |
+          cd src
+          dotnet pack -c Release --no-build --no-restore -p:PackageVersion=${{ env.VERSION }} --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
 
       - name: Publish to GitHub Packages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: dotnet nuget push ./output/*.nupkg --api-key $GITHUB_TOKEN --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
+        run: |
+          cd src 
+          dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIRECTORY }}Asv.Avalonia.Map.${{ env.VERSION }}.nupkg -k ${{ secrets.GIHUB_NUGET_AUTH_TOKEN }} --skip-duplicate -s ${{ env.GITHUB_PACKAGES_URL }}
