@@ -1,4 +1,4 @@
-name: Only GitHub Deploy Nuget for Windows
+name: Deploy Nuget for Windows
 
 on:
   push:
