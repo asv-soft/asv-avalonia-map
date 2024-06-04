@@ -185,10 +185,14 @@ namespace Asv.Avalonia.Map
         /// The size of the object.
         /// </value>
         double Size { get; set; }
-        
+
         /// <summary>
-        /// 
+        /// Represents the base size of a map anchor on the map.
         /// </summary>
+        /// <remarks>
+        /// This property determines the initial size of the map anchor when it is rendered on the map.
+        /// The size is measured in units and can be adjusted to fit the desired visual appearance.
+        /// </remarks>
         double BaseSize { get; set; }
 
         /// <summary>
@@ -226,6 +230,14 @@ namespace Asv.Avalonia.Map
         /// The brush used for the stroke.
         /// </value>
         IBrush Stroke { get; set; }
+
+        /// <summary>
+        /// The base thickness of the stroke for the map anchor.
+        /// </summary>
+        /// <remarks>
+        /// This property determines the base thickness of the stroke for the map anchor. The stroke thickness can be modified using the <see cref="StrokeThickness"/> property, which takes into account the base stroke thickness.
+        /// </remarks>
+        double BaseStrokeThickness { get; set; }
 
         /// property `StrokeThickness` in C#
         double StrokeThickness { get; set; }
