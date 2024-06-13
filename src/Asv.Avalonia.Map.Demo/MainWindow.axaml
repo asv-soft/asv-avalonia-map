@@ -30,6 +30,7 @@
                     <map:MapAnchorView Name="AnchorView"
                                        map:MapView.Location="{CompiledBinding Location, Mode=TwoWay}"
                                        map:MapView.Path="{CompiledBinding Path,Mode=TwoWay}"
+                                       map:MapView.Lines="{CompiledBinding Lines, Mode=TwoWay}"
                                        map:MapView.Stroke="{CompiledBinding Stroke,Mode=TwoWay}"
                                        map:MapView.Fill="{CompiledBinding Fill,Mode=TwoWay}"
                                        map:MapView.StrokeThickness="{CompiledBinding StrokeThickness,Mode=TwoWay}"

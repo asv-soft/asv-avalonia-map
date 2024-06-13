@@ -270,6 +270,8 @@ namespace Asv.Avalonia.Map
         /// completely transparent and 1.0 represents completely opaque.
         /// </remarks>
         double PathOpacity { get; set; }
+        
+        ReadOnlyObservableCollection<PathFigure> Lines { get; set; }
     }
 
     /// <summary>
@@ -539,6 +541,7 @@ namespace Asv.Avalonia.Map
         [Reactive]
         public double PathOpacity { get; set; } = 0.6;
         
-        
+        [Reactive]
+        public virtual ReadOnlyObservableCollection<PathFigure> Lines { get; set; }
     }
 }

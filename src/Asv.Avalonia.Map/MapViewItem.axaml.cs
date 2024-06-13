@@ -222,6 +222,21 @@ namespace Asv.Avalonia.Map
             }
         }
 
+        public void UpdateLinesCollection()
+        {
+            _collectionSubscribe?.Dispose();
+            if (LogicalChildren.FirstOrDefault() is not Visual child) return;
+            var lines = MapView.GetLines(child);
+            if (lines is INotifyCollectionChanged coll)
+            {
+                _collectionSubscribe = Observable
+                    .FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(
+                        _ => coll.CollectionChanged += _, _ => coll.CollectionChanged -= _)
+                    .ObserveOn(RxApp.MainThreadScheduler)
+                    .Subscribe(_ => UpdateLocalPosition());
+            }
+        }
+
         protected override void OnAttachedToLogicalTree(LogicalTreeAttachmentEventArgs e)
         {
             base.OnAttachedToLogicalTree(e);
@@ -288,7 +303,7 @@ namespace Asv.Avalonia.Map
 
             _pointerDownPoint = s_invalidPoint;
         }
-        
+
         public void UpdateLocalPosition()
         {
             if (_map == null) return;
@@ -297,24 +312,23 @@ namespace Asv.Avalonia.Map
             if (child == null) return;
 
             if (IsVisible == false) return;
-            
+
+            #region Path
+
             var pathPoints = MapView.GetPath(child)?.ToArray();
-                        
-            
-                        
-            
+
             if (pathPoints is { Length: > 1 })
             {
-                IsShapeNotAvailable = false;// this is for hide content and draw only path
+                IsShapeNotAvailable = false; // this is for hide content and draw only path
                 if (_firstCall)
                 {
                     _firstCall = false;
                     UpdatePathCollection();
                 }
-                
+
                 var newHash = 0;
-                
-                
+
+
                 var localPath = new List<GPoint>(pathPoints.Length);
                 var minX = long.MaxValue;
                 var minY = long.MaxValue;
@@ -327,44 +341,47 @@ namespace Asv.Avalonia.Map
                     {
                         minX = itemPoint.X;
                     }
+
                     if (itemPoint.Y < minY)
                     {
                         minY = itemPoint.Y;
                     }
+
                     // this is for optimization (if last two points are the same - no need to draw it)
                     if (lastPointAdded == itemPoint) continue;
                     localPath.Add(itemPoint);
                     lastPointAdded = itemPoint;
                     newHash = HashCode.Combine(newHash, itemPoint);
                 }
+
                 newHash = HashCode.Combine(newHash, Opacity);
                 newHash = HashCode.Combine(newHash, IsVisible);
                 newHash = HashCode.Combine(newHash, MapView.GetStroke(child));
                 newHash = HashCode.Combine(newHash, MapView.GetStrokeThickness(child));
                 newHash = HashCode.Combine(newHash, MapView.GetStrokeDashArray(child));
                 newHash = HashCode.Combine(newHash, MapView.GetPathOpacity(child));
-                
+
                 if (localPath.Count < 2) return;
-                
+
                 // this is for optimization (if values not changed - no need to update)
                 if (newHash == _lastHash) return;
                 _lastHash = newHash;
-                
+
                 Canvas.SetLeft(this, minX);
                 Canvas.SetTop(this, minY);
-                
+
                 var truePath = new List<Point>(pathPoints.Length);
                 foreach (var p in localPath)
                 {
-                    p.Offset(-minX,-minY);
+                    p.Offset(-minX, -minY);
                     truePath.Add(new Point(p.X, p.Y));
                 }
-                
+
                 // Create a StreamGeometry to use to specify _myPath.
-                var geometry = new StreamGeometry();
-            
-                
-                using (var ctx = geometry.Open())
+                var pathGeometry = new StreamGeometry();
+
+
+                using (var ctx = pathGeometry.Open())
                 {
                     ctx.BeginFigure(truePath[0], MapView.GetIsFilled(child));
                     // Draw a line to the next specified point.
@@ -379,53 +396,138 @@ namespace Asv.Avalonia.Map
                     }
                     //ctx.PolyLineTo(localPath, true, true);
                 }
-            
-                if (Shape == null)
+
+                #endregion
+
+                #region Lines
+
+                var lines = MapView.GetLines(child)?.ToArray();
+
+                if (lines is { Length: > 1 })
                 {
-                    // Create a path to draw a geometry with.
-                    Shape = new Path();
+                    IsShapeNotAvailable = false; // this is for hide content and draw only path
+                    if (_firstCall)
                     {
-                        // Specify the shape of the Path using the StreamGeometry.
-                        Shape.Data = geometry;
+                        _firstCall = false;
+                        UpdateLinesCollection();
+                    }
+
+                    var newLineHash = 0;
+
+
+                    // var localLinesPath = new List<PathFigure>(lines.Length);
+                    // var minLineX = long.MaxValue;
+                    // var minLineY = long.MaxValue;
+                    // var lastLineAdded = new PathFigure();
+                    // foreach (var l in lines)
+                    // {
+                    //     var itemPoint = _map.FromLatLngToLocal(l);
+                    //     itemPoint.Offset(-(long)(_map.MapTranslateTransform.X), -(long)(_map.MapTranslateTransform.Y));
+                    //     if (itemPoint.X < minLineX)
+                    //     {
+                    //         minLineX = itemPoint.X;
+                    //     }
+                    //     if (itemPoint.Y < minLineY)
+                    //     {
+                    //         minLineY = itemPoint.Y;
+                    //     }
+                    //     // this is for optimization (if last two points are the same - no need to draw it)
+                    //     if (lastPointAdded == itemPoint) continue;
+                    //     localPath.Add(itemPoint);
+                    //     lastPointAdded = itemPoint;
+                    //     newHash = HashCode.Combine(newHash, itemPoint);
+                    // }
+                    // newHash = HashCode.Combine(newHash, Opacity);
+                    // newHash = HashCode.Combine(newHash, IsVisible);
+                    // newHash = HashCode.Combine(newHash, MapView.GetStroke(child));
+                    // newHash = HashCode.Combine(newHash, MapView.GetStrokeThickness(child));
+                    // newHash = HashCode.Combine(newHash, MapView.GetStrokeDashArray(child));
+                    // newHash = HashCode.Combine(newHash, MapView.GetPathOpacity(child));
+                    //
+                    // if (localPath.Count < 2) return;
+                    //
+                    // // this is for optimization (if values not changed - no need to update)
+                    // if (newHash == _lastHash) return;
+                    // _lastHash = newHash;
+
+                    // Canvas.SetLeft(this, minX);
+                    // Canvas.SetTop(this, minY);
+                    //
+                    // var truePath = new List<Point>(pathPoints.Length);
+                    // foreach (var p in localPath)
+                    // {
+                    //     p.Offset(-minX,-minY);
+                    //     truePath.Add(new Point(p.X, p.Y));
+                    // }
+
+                    // Create a StreamGeometry to use to specify _myPath.
+                    var lineGeometry = new PathGeometry();
+
+
+                    // using (var ctx = lineGeometry.Open())
+                    // {
+                    //     foreach (var line in lines)
+                    //     {
+                    //         ctx.BeginFigure(line.StartPoint, false);
+                    //         ctx.LineTo(line.Segments[0].);
+                    //     }
+                    // }
+                    foreach (var line in lines)
+                    {
+                        lineGeometry.Figures.Add(line);
+                    }
+
+                    #endregion
+
+                    if (Shape == null)
+                    {
+                        // Create a path to draw a geometry with.
+                        Shape = new Path();
+                        {
+                            // Specify the shape of the Path using the StreamGeometry.
+                            Shape.Data = lineGeometry;
+                            Shape.Stroke = MapView.GetStroke(child);
+                            Shape.StrokeThickness = MapView.GetStrokeThickness(child);
+                            Shape.StrokeDashArray = MapView.GetStrokeDashArray(child);
+                            Shape.Fill = MapView.GetFill(child);
+                            Shape.Opacity = MapView.GetPathOpacity(child);
+                            Shape.StrokeJoin = PenLineJoin.Round;
+                            Shape.StrokeLineCap = PenLineCap.Square;
+                            Shape.IsHitTestVisible = false;
+                        }
+                    }
+                    else
+                    {
+                        Shape.Data = lineGeometry;
                         Shape.Stroke = MapView.GetStroke(child);
                         Shape.StrokeThickness = MapView.GetStrokeThickness(child);
                         Shape.StrokeDashArray = MapView.GetStrokeDashArray(child);
                         Shape.Fill = MapView.GetFill(child);
                         Shape.Opacity = MapView.GetPathOpacity(child);
-                        Shape.StrokeJoin = PenLineJoin.Round;
-                        Shape.StrokeLineCap = PenLineCap.Square;
-                        Shape.IsHitTestVisible = false;
                     }
                 }
                 else
                 {
-                    Shape.Data = geometry;
-                    Shape.Stroke = MapView.GetStroke(child);
-                    Shape.StrokeThickness = MapView.GetStrokeThickness(child);
-                    Shape.StrokeDashArray = MapView.GetStrokeDashArray(child);
-                    Shape.Fill = MapView.GetFill(child);
-                    Shape.Opacity = MapView.GetPathOpacity(child);
+                    IsShapeNotAvailable = true;
+                    var location = MapView.GetLocation(child);
+                    var point = _map.FromLatLngToLocal(location);
+                    var offsetX = MapView.GetOffsetX(child);
+                    var offsetY = MapView.GetOffsetY(child);
+                    if (double.IsNaN(offsetX))
+                    {
+                        offsetX = Bounds.Width / 2.0;
+                    }
+
+                    if (double.IsNaN(offsetY))
+                    {
+                        offsetY = Bounds.Height / 2.0;
+                    }
+
+                    point.Offset(-(long)(_map.MapTranslateTransform.X + offsetX),
+                        -(long)(_map.MapTranslateTransform.Y + offsetY));
+                    Canvas.SetLeft(this, point.X);
+                    Canvas.SetTop(this, point.Y);
                 }
-            }
-            else
-            {
-                IsShapeNotAvailable = true;
-                var location = MapView.GetLocation(child);
-                var point = _map.FromLatLngToLocal(location);
-                var offsetX = MapView.GetOffsetX(child);
-                var offsetY = MapView.GetOffsetY(child);
-                if (double.IsNaN(offsetX))
-                {
-                    offsetX = Bounds.Width / 2.0;
-                }
-                if (double.IsNaN(offsetY))
-                {
-                    offsetY = Bounds.Height / 2.0;
-                }
-                point.Offset(-(long)(_map.MapTranslateTransform.X + offsetX),
-                    -(long)(_map.MapTranslateTransform.Y+ offsetY));
-                Canvas.SetLeft(this, point.X);
-                Canvas.SetTop(this, point.Y);
             }
         }
 

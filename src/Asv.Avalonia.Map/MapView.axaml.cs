@@ -50,6 +50,7 @@ namespace Asv.Avalonia.Map
             OffsetXProperty.Changed.Subscribe(_ => UpdateLocalPosition(_.Sender));
             OffsetYProperty.Changed.Subscribe(_ => UpdateLocalPosition(_.Sender));
             PathProperty.Changed.Subscribe(_ => UpdatePath(_.Sender));
+            LinesProperty.Changed.Subscribe(_ => UpdateLines(_.Sender));
             ZOrderProperty.Changed.Subscribe(_ => UpdateZOrder(_.Sender, _.NewValue));
             IsEditableProperty.Changed.Subscribe(_ => UpdateIsEditable(_.Sender, _.NewValue));
             IsSelectedProperty.Changed.Subscribe(_ => UpdateIsSelected(_.Sender, _.NewValue));
@@ -85,6 +86,12 @@ namespace Asv.Avalonia.Map
         {
             var find = (obj as ILogical)?.GetLogicalParent<MapViewItem>();
             find?.UpdatePathCollection();
+        }
+
+        private static void UpdateLines(AvaloniaObject obj)
+        {
+            var find = (obj as ILogical)?.GetLogicalParent<MapViewItem>();
+            find?.UpdateLinesCollection();
         }
 
         private static void UpdateLocalPosition(AvaloniaObject obj)
@@ -192,6 +199,15 @@ namespace Asv.Avalonia.Map
 
         public static IList<GeoPoint> GetPath(AvaloniaObject element) =>
             (IList<GeoPoint>)element.GetValue(PathProperty)!;
+
+        public static readonly AttachedProperty<IList<PathFigure>> LinesProperty =
+            AvaloniaProperty.RegisterAttached<MapView, AvaloniaObject, IList<PathFigure>>("Lines");
+
+        public static void SetLines(AvaloniaObject element, IList<PathFigure> value) =>
+            element.SetValue(LinesProperty, value);
+
+        public static IList<PathFigure> GetLines(AvaloniaObject element) =>
+            (IList<PathFigure>)element.GetValue(LinesProperty);
 
         public static readonly AttachedProperty<GeoPoint> LocationProperty =
             AvaloniaProperty.RegisterAttached<MapView, AvaloniaObject, GeoPoint>("Location", GeoPoint.ZeroWithAlt);
