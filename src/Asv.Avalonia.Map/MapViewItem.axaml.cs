@@ -395,6 +395,8 @@ namespace Asv.Avalonia.Map
                         Shape.StrokeJoin = PenLineJoin.Round;
                         Shape.StrokeLineCap = PenLineCap.Square;
                         Shape.IsHitTestVisible = false;
+                        Shape.MinHeight = 4;
+                        Shape.MinWidth = 4;
                     }
                 }
                 else
