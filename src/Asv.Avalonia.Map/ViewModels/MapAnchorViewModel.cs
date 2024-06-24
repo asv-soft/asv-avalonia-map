@@ -231,14 +231,6 @@ namespace Asv.Avalonia.Map
         /// </value>
         IBrush Stroke { get; set; }
 
-        /// <summary>
-        /// The base thickness of the stroke for the map anchor.
-        /// </summary>
-        /// <remarks>
-        /// This property determines the base thickness of the stroke for the map anchor. The stroke thickness can be modified using the <see cref="StrokeThickness"/> property, which takes into account the base stroke thickness.
-        /// </remarks>
-        double BaseStrokeThickness { get; set; }
-
         /// property `StrokeThickness` in C#
         double StrokeThickness { get; set; }
 
@@ -519,13 +511,6 @@ namespace Asv.Avalonia.Map
         /// This property is reactive, meaning that changes to this property will automatically
         [Reactive]
         public double StrokeThickness { get; set; } = 3;
-
-                
-        /// <summary>
-        /// Gets or sets the thickness of the stroke used to outline the shape.
-        /// The default value is 3.
-        /// </summary>
-        [Reactive] public double BaseStrokeThickness { get; set; } = 3;
         
         /// <summary>
         /// Gets or sets the collection of values that specify the pattern of dashes and gaps used to stroke lines.

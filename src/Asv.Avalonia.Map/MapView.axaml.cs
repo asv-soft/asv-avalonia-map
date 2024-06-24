@@ -555,22 +555,9 @@ namespace Asv.Avalonia.Map
                             <= 12 and > 10 => marker.BaseSize * MediumSizeFactor,
                             _ => marker.BaseSize * LargeSizeFactor
                         };
-
-                        marker.StrokeThickness = Zoom switch
-                        {
-                            <= 5 => marker.BaseStrokeThickness * SmallStrokeFactor,
-                            var zoom and > 5 and <= 10 => CalculateMediumStrokeFactor(marker),
-                            _ => marker.BaseStrokeThickness * LargeStrokeFactor
-                        };
                     }
                 }
             }
-        }
-        
-        private double CalculateMediumStrokeFactor(MapAnchorViewModel model)
-        {
-            return model.BaseStrokeThickness * ((2 + ((Zoom - 5) / 5) * (5 - 2)) / 3);
-
         }
 
         #endregion
