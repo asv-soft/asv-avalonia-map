@@ -5,13 +5,76 @@
     <Design.PreviewWith>
         <controls:MapViewItem />
     </Design.PreviewWith>
-
-    <Style Selector="controls|MapViewItem">
+ <Style Selector="controls|MapViewItem:animated">
+        <!-- Set Animated -->
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid>
+                    <ContentControl Content="{TemplateBinding Shape}">
+                        <ContentControl.Styles>
+                            <Style Selector="Path">
+                                <Style.Animations >
+                                    <Animation  Duration="1:0:0" IterationCount="INFINITE">
+                                        <KeyFrame Cue="0%">
+                                            <Setter Property="StrokeDashOffset" x:DataType="controls:MapViewItem" Value="6000" />
+                                        </KeyFrame>
+                                        <KeyFrame Cue="100%">
+                                            <Setter Property="StrokeDashOffset" x:DataType="controls:MapViewItem"   Value="0" />
+                                        </KeyFrame>
+                                    </Animation>
+                                </Style.Animations>
+                            </Style>
+                        </ContentControl.Styles>
+                    </ContentControl>
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      IsVisible="{TemplateBinding IsShapeNotAvailable}"
+                                      Background="{TemplateBinding Background}"
+                                      BorderBrush="{TemplateBinding BorderBrush}"
+                                      BorderThickness="{TemplateBinding BorderThickness}"
+                                      CornerRadius="{TemplateBinding CornerRadius}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      Content="{TemplateBinding Content}"
+                                      Padding="{TemplateBinding Padding}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="ContextFlyout">
+            <Flyout>
+                <ItemsControl>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Spacing="8" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="controls:MapAnchorSelectionActionViewModel">
+                            <Button Command="{CompiledBinding Command}" HorizontalAlignment="Stretch">
+                                <DockPanel>
+                                    <StackPanel DockPanel.Dock="Right">
+                                        <TextBlock VerticalAlignment="Center"
+                                                   Text="{CompiledBinding Title}" />
+                                        <TextBlock VerticalAlignment="Center"
+                                                   Text="{CompiledBinding Location}" />
+                                    </StackPanel>
+                                    <avalonia:MaterialIcon Margin="8" Width="25" Height="25"
+                                                           Kind="{CompiledBinding Icon}" />
+                                </DockPanel>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Flyout>
+        </Setter>
+    </Style>
+   <Style Selector="controls|MapViewItem">
         <!-- Set Defaults -->
         <Setter Property="Template">
             <ControlTemplate>
                 <Grid>
-                    <ContentControl Content="{TemplateBinding Shape}"/>
+                    <ContentControl Content="{TemplateBinding Shape}">
+                    </ContentControl>
                     <ContentPresenter Name="PART_ContentPresenter"
                                       IsVisible="{TemplateBinding IsShapeNotAvailable}"
                                       Background="{TemplateBinding Background}"

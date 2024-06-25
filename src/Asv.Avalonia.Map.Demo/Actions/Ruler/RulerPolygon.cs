@@ -23,6 +23,7 @@ public class RulerPolygon : MapAnchorViewModel
         PathOpacity = 0.6;
         StrokeThickness = 5;
         Stroke = Brushes.Purple;
+        IsAnimated = true;
         IsVisible = false;
         StrokeDashArray = new AvaloniaList<double>(2, 2);
 
