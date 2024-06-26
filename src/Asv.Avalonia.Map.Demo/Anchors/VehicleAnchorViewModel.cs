@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System;
+using System.Linq;
 using System.Reactive;
+using System.Reactive.Linq;
 using DynamicData;
 using Material.Icons;
 using ReactiveUI;
@@ -44,6 +46,7 @@ public class VehicleAnchorViewModel : MapAnchorViewModel
             Command = ReactiveCommand.Create(() => { })
         });
 
+        /*
         _actionSource.AddOrUpdate(new MapAnchorActionViewModel
         {
             Order = 1,
@@ -51,6 +54,24 @@ public class VehicleAnchorViewModel : MapAnchorViewModel
             Title = "Dog",
             Command = ReactiveCommand.Create(() => { })
         });
+        _actionSource.AddOrUpdate(new MapAnchorActionViewModel
+        {
+            Order = 2,
+            Icon = MaterialIconKind.Cab,
+            Title = "Cab",
+            Command = ReactiveCommand.Create(() => { })
+        });*/
+        Observable.Timer(TimeSpan.FromSeconds(10),TimeSpan.FromSeconds(3))
+            .Take(10).ObserveOn(RxApp.MainThreadScheduler).Subscribe(x =>
+            {
+                _actionSource.AddOrUpdate(new MapAnchorActionViewModel
+                {
+                    Order = (int)x,
+                    Icon = MaterialIconKind.Cab,
+                    Title = $"Action {x +2}",
+                    Command = ReactiveCommand.Create(() => { })
+                });
+            });
     }
 
     public override ReadOnlyObservableCollection<MapAnchorActionViewModel> Actions => _actions;

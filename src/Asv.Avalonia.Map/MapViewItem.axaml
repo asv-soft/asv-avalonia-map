@@ -26,32 +26,6 @@
                 </Grid>
             </ControlTemplate>
         </Setter>
-        <Setter Property="ContextFlyout">
-            <Flyout>
-                <ItemsControl>
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Spacing="8" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="controls:MapAnchorSelectionActionViewModel">
-                            <Button Command="{CompiledBinding Command}" HorizontalAlignment="Stretch">
-                                <DockPanel>
-                                    <StackPanel DockPanel.Dock="Right">
-                                        <TextBlock VerticalAlignment="Center"
-                                                   Text="{CompiledBinding Title}" />
-                                        <TextBlock VerticalAlignment="Center"
-                                                   Text="{CompiledBinding Location}" />
-                                    </StackPanel>
-                                    <avalonia:MaterialIcon Margin="8" Width="25" Height="25"
-                                                           Kind="{CompiledBinding Icon}" />
-                                </DockPanel>
-                            </Button>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </Flyout>
-        </Setter>
+       
     </Style>
 </Styles>

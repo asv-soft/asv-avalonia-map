@@ -6,6 +6,7 @@
         xmlns:map="clr-namespace:Asv.Avalonia.Map;assembly=Asv.Avalonia.Map"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:system="clr-namespace:System;assembly=System.Runtime"
         x:Class="Asv.Avalonia.Map.Demo.MainWindow"
         Title="Asv.Avalonia.Map.Demo">
 
@@ -55,6 +56,7 @@
                 </DataTemplate>
             </map:MapView.ItemTemplate>
         </map:MapView>
+        
         <Border Background="{DynamicResource  SolidBackgroundFillColorBase}"
                 HorizontalAlignment="Center"
                 CornerRadius="10"

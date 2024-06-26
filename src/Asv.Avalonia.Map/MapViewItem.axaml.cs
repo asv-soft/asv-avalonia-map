@@ -57,45 +57,10 @@ namespace Asv.Avalonia.Map
                         handler => PointerMoved -= handler).Subscribe(_ => DragPointerMoved(_.EventArgs))
                     .DisposeItWith(disp);
                 
-                ContextFlyout.Opened += ContextFlyoutOnOpened;
+                
             });
         }
 
-        private void ContextFlyoutOnOpened(object? sender, EventArgs e)
-        {
-            if (ItemsControl.ItemsControlFromItemContaner(this) is MapView owner && 
-                _map.SelectedItem is MapAnchorViewModel anchorViewModel && 
-                sender is Flyout flyout)
-            {
-                var overlappingAnchors = FindOverlappingAnchors(
-                    _map.FromLatLngToLocal(anchorViewModel.Location),
-                    owner.Items.Cast<MapAnchorViewModel>().ToList()).Where(_ => _ != anchorViewModel).ToList();
-                
-                if (overlappingAnchors.Count >= 1)
-                {
-                    var overlapActions = overlappingAnchors.Select(anchor => new MapAnchorSelectionActionViewModel
-                    {
-                        Icon = anchor.Icon,
-                        Title = anchor.Title,
-                        Command = ReactiveCommand.Create(() =>
-                        {
-                            flyout.Hide();
-                            _map.SelectedItem = anchor;
-                        }),
-                        Location = anchor.Location
-                    });
-
-                    if (flyout.Content is ItemsControl itemsControl)
-                    {
-                        itemsControl.ItemsSource = overlapActions;
-                    }
-                }
-                else
-                {
-                    flyout.Hide();
-                }
-            }
-        }
         
         private IEnumerable<MapAnchorViewModel> FindOverlappingAnchors(GPoint selectedPoint, List<MapAnchorViewModel> anchors)
         {
@@ -362,8 +327,7 @@ namespace Asv.Avalonia.Map
                 
                 // Create a StreamGeometry to use to specify _myPath.
                 var geometry = new StreamGeometry();
-            
-                
+
                 using (var ctx = geometry.Open())
                 {
                     ctx.BeginFigure(truePath[0], MapView.GetIsFilled(child));

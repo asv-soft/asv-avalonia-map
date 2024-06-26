@@ -40,6 +40,7 @@ public class MainWindowViewModel : ReactiveObject
                 Title = "Hello!!!"
             }
         };
+        _markers.Add(new VehicleAnchorViewModel());
         _markers.Add(new RulerAnchor("1", Ruler, RulerPosition.Start));
         _markers.Add(new RulerAnchor("2", Ruler, RulerPosition.Stop));
         _markers.Add(new RulerPolygon(Ruler));
