@@ -37,16 +37,12 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="controls:MapAnchorSelectionActionViewModel">
                             <Button Command="{CompiledBinding Command}" HorizontalAlignment="Stretch">
-                                <DockPanel>
-                                    <StackPanel DockPanel.Dock="Right">
+                                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                                        <avalonia:MaterialIcon Margin="5" Width="15" Height="15" VerticalAlignment="Center"
+                                                               Kind="{CompiledBinding Icon}" />
                                         <TextBlock VerticalAlignment="Center"
-                                                   Text="{CompiledBinding Title}" />
-                                        <TextBlock VerticalAlignment="Center"
-                                                   Text="{CompiledBinding Location}" />
+                                                   Text="{CompiledBinding Title}"/>
                                     </StackPanel>
-                                    <avalonia:MaterialIcon Margin="8" Width="25" Height="25"
-                                                           Kind="{CompiledBinding Icon}" />
-                                </DockPanel>
                             </Button>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

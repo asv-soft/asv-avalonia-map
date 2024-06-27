@@ -82,7 +82,6 @@ namespace Asv.Avalonia.Map
                             flyout.Hide();
                             _map.SelectedItem = anchor;
                         }),
-                        Location = anchor.Location
                     });
 
                     if (flyout.Content is ItemsControl itemsControl)
