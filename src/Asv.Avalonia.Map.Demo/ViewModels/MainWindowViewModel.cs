@@ -7,9 +7,9 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Asv.Avalonia.GMap.Demo;
+using Asv.Avalonia.Map.HeightProviders;
 using Asv.Common;
 using Avalonia.Media;
-using DynamicData;
 using DynamicData.Binding;
 using Material.Icons;
 using ReactiveUI;
@@ -111,7 +111,6 @@ public class MainWindowViewModel : ReactiveObject
             {
                 return;
             }
-
         polygon.Ruler.Value.IsVisible.OnNext(isEnabled);
     }
 
@@ -119,17 +118,18 @@ public class MainWindowViewModel : ReactiveObject
     {
         await _tokenSource.CancelAsync();
         _tokenSource = new CancellationTokenSource();
-
         try
         {
             var userPoint = await ShowTargetDialog("Set a point",
                 _tokenSource.Token);
-
+            var heightMapViewModel = new TopographyMapViewModel();
+            var pointWithAltitude = heightMapViewModel.AsterProvider.GetPointAltitude(userPoint).Result;
             if (SelectedAnchorVariant is VehicleAnchorViewModel)
             {
                 _markers.Add(new VehicleAnchorViewModel
                 {
-                    Location = userPoint
+                    Location = pointWithAltitude,
+                    Description = $@"{pointWithAltitude.Latitude}, {pointWithAltitude.Longitude}, {pointWithAltitude.Altitude}"
                 });
             }
             else
@@ -146,7 +146,8 @@ public class MainWindowViewModel : ReactiveObject
                     Size = SelectedAnchorVariant.Size,
                     IconBrush = SelectedAnchorVariant.IconBrush,
                     Title = SelectedAnchorVariant.Title,
-                    Location = userPoint
+                    Location = pointWithAltitude,
+                    Description = $@"{pointWithAltitude.Latitude:0.000000}, {pointWithAltitude.Longitude:0.000000}, {pointWithAltitude.Altitude}"
                 };
                 _markers.Add(newAnchor);
             }
