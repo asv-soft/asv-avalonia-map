@@ -111,8 +111,16 @@ namespace Asv.Avalonia.Map
             get => GetValue(IsSelectedProperty);
             set => SetValue(IsSelectedProperty, value);
         }
+        
+        public static readonly StyledProperty<bool> IsItemDraggingProperty =
+            AvaloniaProperty.Register<MapAnchorView, bool>(nameof(IsItemDragging));
 
-
+        public bool IsItemDragging
+        {
+            get => GetValue(IsItemDraggingProperty);
+            set => SetValue(IsItemDraggingProperty, value);
+        }
+        
         public static readonly StyledProperty<double> RotateCenterXProperty =
             AvaloniaProperty.Register<MapAnchorView, double>(nameof(RotateCenterX));
 

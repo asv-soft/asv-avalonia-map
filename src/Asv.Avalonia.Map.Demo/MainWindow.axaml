@@ -8,7 +8,6 @@
         xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
         x:Class="Asv.Avalonia.Map.Demo.MainWindow"
         Title="Asv.Avalonia.Map.Demo">
-
     <Design.DataContext>
         <demo:MainWindowViewModel />
     </Design.DataContext>
@@ -51,7 +50,8 @@
                                        RotateAngle="{CompiledBinding RotateAngle}"
                                        Size="{CompiledBinding Size}"
                                        Actions="{CompiledBinding Actions} "
-                                       Description="{CompiledBinding Description}" />
+                                       Description="{CompiledBinding Description}"
+                                       IsItemDragging="{CompiledBinding IsItemDragging, Mode=TwoWay}"/>
                 </DataTemplate>
             </map:MapView.ItemTemplate>
         </map:MapView>
@@ -77,10 +77,14 @@
                           DisplayMemberBinding="{Binding Title}"
                           SelectedItem="{CompiledBinding SelectedAnchorVariant,Mode=TwoWay}" />
                 <Button Margin="10,0"
-                        Command="{Binding AddAnchor}">
+                        Command="{Binding AddAnchorCommand}">
                     <avalonia:MaterialIcon Kind="Plus" />
                 </Button>
+                <Button Command="{Binding AddAnchorsAreaCommand}" >
+                    <avalonia:MaterialIcon Kind="SurfaceArea"></avalonia:MaterialIcon>
+                </Button>
                 <Button
+                    Margin="10,0"
                     Command="{Binding RemoveAllAnchorsCommand}">
                     <avalonia:MaterialIcon Kind="Trash" />
                 </Button>

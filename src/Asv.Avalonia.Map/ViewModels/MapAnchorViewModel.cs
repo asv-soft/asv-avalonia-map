@@ -110,6 +110,14 @@ namespace Asv.Avalonia.Map
         /// <c>true</c> if the item is visible; otherwise, <c>false</c>.
         /// </value>
         bool IsVisible { get; set; }
+        
+        /// <summary>
+        ///  Indicate whether an item is dragging on map
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the object is dragging; otherwise, <c>false</c>
+        /// </value>
+        bool IsItemDragging { get; set; }
 
         /// <summary>
         /// Gets or sets the location of an object using coordinates in a GeoPoint format.
@@ -337,6 +345,7 @@ namespace Asv.Avalonia.Map
         /// </summary>
         /// <remarks>
         /// The visibility status determines
+        /// </remarks>
         [Reactive] public bool IsVisible { get; set; }
 
         /// <summary>
@@ -351,6 +360,17 @@ namespace Asv.Avalonia.Map
         /// </value>
         [Reactive]
         public bool IsInEditMode { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether the object is dragging.
+        /// </summary>
+        /// <remarks>
+        /// When the property is true, it indicates that the object is dragging on the map by user.
+        /// </remarks>
+        /// <value>
+        /// <c>true</c> if the object is dragging; otherwise, <c>false</c>.
+        /// </value>
+        [Reactive]
+        public bool IsItemDragging { get; set; }
 
         /// <summary>
         /// Gets or sets the location of a geo point.

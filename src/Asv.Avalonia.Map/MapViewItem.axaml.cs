@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -10,13 +9,10 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Mixins;
-using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Layout;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
-using Material.Icons.Avalonia;
 using ReactiveUI;
 using Path = Avalonia.Controls.Shapes.Path;
 
@@ -35,19 +31,13 @@ namespace Asv.Avalonia.Map
             PressedMixin.Attach<MapViewItem>();
             FocusableProperty.OverrideDefaultValue<MapViewItem>(true);
         }
-
-        private void OnIsSelectedChanged(RoutedEventArgs routedEventArgs)
-        {
-            
-        }
-
+        
         public MapViewItem()
         {
             this.WhenActivated(disp =>
             {
                 this.WhenAnyValue(_ => _.IsSelected).Subscribe(UpdateSelectableZindex).DisposeWith(disp);
                 this.WhenAnyValue(_ => _.Bounds).Subscribe(_ => UpdateLocalPosition()).DisposeWith(disp);
-
                 Observable.FromEventPattern<EventHandler<PointerPressedEventArgs>, PointerPressedEventArgs>(
                         handler => PointerPressed += handler,
                         handler => PointerPressed -= handler).Subscribe(_ => DragPointerPressed(_.EventArgs))
@@ -110,7 +100,6 @@ namespace Asv.Avalonia.Map
                     overlappingAnchors.Add(anchorViewModel);
                 }
             }
-
             return overlappingAnchors;
         }
 
@@ -134,6 +123,9 @@ namespace Asv.Avalonia.Map
             {
                 var child = LogicalChildren.FirstOrDefault() as Visual;
                 if (child == null) return;
+                var anchor =  LogicalChildren.FirstOrDefault() as MapAnchorView;
+                if(anchor is null) return;
+                anchor.IsItemDragging = true;
                 var offsetX = 0;
                 var offsetY = 0;
                 var old = MapView.GetLocation(child);
@@ -146,6 +138,9 @@ namespace Asv.Avalonia.Map
         {
             if (_map.IsInAnchorEditMode)
             {
+                var anchor =  LogicalChildren.FirstOrDefault() as MapAnchorView;
+                if(anchor is null) return;
+                anchor.IsItemDragging = true;
                 IsSelected = true;
                 args.Handled = true;
             }
@@ -182,7 +177,6 @@ namespace Asv.Avalonia.Map
             IsEditable = MapView.GetIsEditable(child);
             _isVisibleSubscribe?.Dispose();
             _isVisibleSubscribe = child.WhenAnyValue(_ => _.IsVisible).Subscribe(_ => IsVisible = _);
-
         }
 
         protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -230,9 +224,7 @@ namespace Asv.Avalonia.Map
         protected override void OnPointerPressed(PointerPressedEventArgs e)
         {
             base.OnPointerPressed(e);
-
             _pointerDownPoint = s_invalidPoint;
-
             if (e.Handled)
                 return;
 
@@ -265,7 +257,6 @@ namespace Asv.Avalonia.Map
         protected override void OnPointerReleased(PointerReleasedEventArgs e)
         {
             base.OnPointerReleased(e);
-
             if (!e.Handled && 
                 !double.IsNaN(_pointerDownPoint.X) &&
                 e.InitialPressMouseButton is MouseButton.Left or MouseButton.Right)
@@ -286,22 +277,18 @@ namespace Asv.Avalonia.Map
             }
 
             _pointerDownPoint = s_invalidPoint;
+            var anchor =  LogicalChildren.FirstOrDefault() as MapAnchorView;
+            if(anchor is null) return;
+            anchor.IsItemDragging = false;
         }
         
         public void UpdateLocalPosition()
         {
             if (_map == null) return;
-
             var child = LogicalChildren.FirstOrDefault() as Visual;
             if (child == null) return;
-
             if (IsVisible == false) return;
-            
             var pathPoints = MapView.GetPath(child)?.ToArray();
-                        
-            
-                        
-            
             if (pathPoints is { Length: > 1 })
             {
                 IsShapeNotAvailable = false;// this is for hide content and draw only path
@@ -445,11 +432,7 @@ namespace Asv.Avalonia.Map
             get => GetValue(ShapeProperty);
             set => SetValue(ShapeProperty, value);
         }
-
         
-        
-
-
         public static IEnumerable<TSource[]> Chunked<TSource>(IEnumerable<TSource> source, int size)
         {
             return ChunkIterator(source, size);
@@ -485,16 +468,11 @@ namespace Asv.Avalonia.Map
 
         public static readonly StyledProperty<bool> IsSelectedProperty =
             AvaloniaProperty.Register<MapViewItem, bool>(nameof(IsSelected));
-
         
-
-
         public bool IsSelected
         {
             get => GetValue(IsSelectedProperty);
             set => SetValue(IsSelectedProperty, value);
         }
-
-        
     }
 }
