@@ -8,6 +8,7 @@ namespace Asv.Avalonia.Map.HeightProviders;
 
 public abstract class HeightProviderBase 
 {
+    protected HttpRequestMessage RequestMessage = new();
     protected readonly HttpClient Client = new ();
     protected static string ToWebString(double latitude, double longitude)
     {
