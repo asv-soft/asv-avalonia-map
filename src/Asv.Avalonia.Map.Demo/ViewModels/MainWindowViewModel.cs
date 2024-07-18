@@ -55,11 +55,11 @@ public class MainWindowViewModel : ReactiveObject
         RemoveAllAnchorsCommand = ReactiveCommand.Create(RemoveAllAnchors);
         SelectedItem = Markers[0];
         var provider = new AsterHeightProvider();
-         this.WhenValueChanged(vm => vm.SelectedItem.Location).Subscribe(x =>
-         {
-             SelectedItem.Description =
-                 $@"Lat:{x.Latitude:0.000000},Lon: {x.Longitude:0.000000},Alt: {x.Altitude}m";
-         });
+        this.WhenValueChanged(vm => vm.SelectedItem.Location).Subscribe(x =>
+        {
+            SelectedItem.Description =
+                $@"Lat:{x.Latitude:0.000000},Lon: {x.Longitude:0.000000},Alt: {x.Altitude}m";
+        });
         this.WhenValueChanged(vm => vm.SelectedItem.IsItemDragging).Subscribe(x =>
         {
             if (SelectedItem.IsItemDragging) return;
@@ -99,6 +99,7 @@ public class MainWindowViewModel : ReactiveObject
             _markers.Add(new RulerAnchor("2", Ruler, RulerPosition.Stop));
             _markers.Add(polygon);
         }
+
         _tokenSource.Cancel();
         _tokenSource = new CancellationTokenSource();
         if (isEnabled)
@@ -127,6 +128,7 @@ public class MainWindowViewModel : ReactiveObject
             {
                 return;
             }
+
         polygon.Ruler.Value.IsVisible.OnNext(isEnabled);
     }
 
@@ -145,7 +147,8 @@ public class MainWindowViewModel : ReactiveObject
                 _markers.Add(new VehicleAnchorViewModel
                 {
                     Location = pointWithAltitude,
-                    Description = $@"{pointWithAltitude.Latitude}, {pointWithAltitude.Longitude}, {pointWithAltitude.Altitude}"
+                    Description =
+                        $@"{pointWithAltitude.Latitude}, {pointWithAltitude.Longitude}, {pointWithAltitude.Altitude}"
                 });
             }
             else
@@ -163,7 +166,8 @@ public class MainWindowViewModel : ReactiveObject
                     IconBrush = SelectedAnchorVariant.IconBrush,
                     Title = SelectedAnchorVariant.Title,
                     Location = pointWithAltitude,
-                    Description = $@"{pointWithAltitude.Latitude:0.000000}, {pointWithAltitude.Longitude:0.000000}, {pointWithAltitude.Altitude}"
+                    Description =
+                        $@"{pointWithAltitude.Latitude:0.000000}, {pointWithAltitude.Longitude:0.000000}, {pointWithAltitude.Altitude}"
                 };
                 _markers.Add(newAnchor);
             }

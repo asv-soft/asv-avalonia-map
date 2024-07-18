@@ -51,7 +51,7 @@
                                        Size="{CompiledBinding Size}"
                                        Actions="{CompiledBinding Actions} "
                                        Description="{CompiledBinding Description}"
-                                       IsItemDragging="{CompiledBinding IsItemDragging, Mode=TwoWay}"/>
+                                       IsItemDragging="{CompiledBinding IsItemDragging, Mode=TwoWay}" />
                 </DataTemplate>
             </map:MapView.ItemTemplate>
         </map:MapView>
@@ -71,8 +71,8 @@
                 </ToggleButton>
                 <Label Content="Anchor type:"
                        VerticalAlignment="Center" />
-                <ComboBox x:DataType="demo:MainWindowViewModel" 
-                          MinWidth="130" 
+                <ComboBox x:DataType="demo:MainWindowViewModel"
+                          MinWidth="130"
                           ItemsSource="{Binding AnchorViewModels}"
                           DisplayMemberBinding="{Binding Title}"
                           SelectedItem="{CompiledBinding SelectedAnchorVariant,Mode=TwoWay}" />
@@ -80,7 +80,7 @@
                         Command="{Binding AddAnchorCommand}">
                     <avalonia:MaterialIcon Kind="Plus" />
                 </Button>
-                <Button Command="{Binding AddAnchorsAreaCommand}" >
+                <Button Command="{Binding AddAnchorsAreaCommand}">
                     <avalonia:MaterialIcon Kind="SurfaceArea"></avalonia:MaterialIcon>
                 </Button>
                 <Button

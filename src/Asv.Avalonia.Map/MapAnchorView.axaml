@@ -62,8 +62,6 @@
         <Setter Property="Stroke" Value="#03DAC6" />
         <Setter Property="StrokeThickness" Value="2" />
     </Style>
-
-
 	<Style Selector="controls|MapAnchorView">
         <Setter Property="Template">
 			<ControlTemplate>
@@ -87,11 +85,8 @@
                         <Border IsVisible="{TemplateBinding IsPopupNotEmpty}" Background="{DynamicResource SolidBackgroundFillColorBase}" Padding="10" CornerRadius="{DynamicResource ControlCornerRadius}" >
                                 <TextBlock Text="{TemplateBinding Description}"/>
                         </Border>
-                        
-                        
                     </Popup>
                 </Grid>
-                
 			</ControlTemplate>
 		</Setter>
 	</Style>

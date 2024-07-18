@@ -4,7 +4,6 @@
     <Design.PreviewWith>
         <controls:MapView />
     </Design.PreviewWith>
-
     <Style Selector="controls|MapView">
         <Setter Property="ItemsPanel">
             <ItemsPanelTemplate>
@@ -27,7 +26,6 @@
                                      ItemsPanel="{TemplateBinding ItemsPanel}"
                                      Margin="{TemplateBinding Padding}"/>
                 </Grid>
-
             </ControlTemplate>
         </Setter>
     </Style>

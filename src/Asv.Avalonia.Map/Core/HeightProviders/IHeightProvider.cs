@@ -26,6 +26,7 @@ public interface IHeightProvider
     /// <returns>A Task that represents the asynchronous operation.
     /// The Task.Result property returns a GeoPoint object that holds the altitude information.</returns>
     public Task<GeoPoint> GetPointAltitude(GeoPoint point);
+
     /// <summary>
     /// Asynchronously retrieves a collection of geographical points with altitude information.
     /// The collection is observable, allowing automatic UI updates in response to collection changes.
