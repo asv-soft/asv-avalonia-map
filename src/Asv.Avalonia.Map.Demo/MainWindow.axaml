@@ -80,9 +80,6 @@
                         Command="{Binding AddAnchorCommand}">
                     <avalonia:MaterialIcon Kind="Plus" />
                 </Button>
-                <Button Command="{Binding AddAnchorsAreaCommand}">
-                    <avalonia:MaterialIcon Kind="SurfaceArea"></avalonia:MaterialIcon>
-                </Button>
                 <Button
                     Margin="10,0"
                     Command="{Binding RemoveAllAnchorsCommand}">
@@ -91,6 +88,9 @@
                 <ToggleButton Margin="10,0"
                               IsChecked="{Binding IsRulerEnabled}">
                     <avalonia:MaterialIcon Kind="TapeMeasure" />
+                </ToggleButton>
+                <ToggleButton IsChecked="{Binding IsAltimeterEnabled}">
+                    <avalonia:MaterialIcon Kind="Altimeter"/>
                 </ToggleButton>
             </StackPanel>
         </Border>

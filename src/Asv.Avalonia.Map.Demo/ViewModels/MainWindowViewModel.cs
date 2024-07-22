@@ -19,6 +19,11 @@ namespace Asv.Avalonia.Map.Demo;
 
 public class MainWindowViewModel : ReactiveObject
 {
+    private AsterHeightProvider HeightProvider = new();
+    private CancellationTokenSource _rulerTokenSource = new();
+    private CancellationTokenSource _altimeterTokenSource = new();
+    private readonly ObservableCollection<MapAnchorViewModel> _markers;
+
     public MainWindowViewModel()
     {
         CurrentMapProvider = GMapProviders.GoogleMap;
@@ -38,34 +43,35 @@ public class MainWindowViewModel : ReactiveObject
                 BaseSize = 32,
                 IconBrush = Brushes.LightSeaGreen,
                 Title = "Hello!!!"
-            }
+            },
+            AltimeterAnchor
         };
         _markers.Add(new RulerAnchor("1", Ruler, RulerPosition.Start));
         _markers.Add(new RulerAnchor("2", Ruler, RulerPosition.Stop));
         _markers.Add(new RulerPolygon(Ruler));
+        AddAnchorCommand = ReactiveCommand.CreateFromTask(AddNewAnchor);
+        RemoveAllAnchorsCommand = ReactiveCommand.Create(RemoveAllAnchors);
+        SelectedItem = Markers[0];
+        SelectedAnchorVariant = AnchorViewModels[0];
         this.WhenValueChanged(vm => vm.IsInAnchorEditMode).Subscribe(v =>
         {
             foreach (var marker in _markers)
                 if (marker.IsEditable)
                     marker.IsInEditMode = v;
         });
-        this.WhenValueChanged(vm => vm.IsRulerEnabled).Subscribe(v => SetUpRuler(v));
-        AddAnchorCommand = ReactiveCommand.CreateFromTask(AddNewAnchor);
-        AddAnchorsAreaCommand = ReactiveCommand.Create(AddAnchorsArea);
-        RemoveAllAnchorsCommand = ReactiveCommand.Create(RemoveAllAnchors);
-        SelectedItem = Markers[0];
-        var provider = new AsterHeightProvider();
-        this.WhenValueChanged(vm => vm.SelectedItem.Location).Subscribe(x =>
+        this.WhenValueChanged(vm => vm.IsRulerEnabled).Subscribe(SetUpRuler);
+        this.WhenValueChanged(vm => vm.IsAltimeterEnabled).Subscribe(SetUpAltimeter);
+        this.WhenValueChanged(vm => vm.AltimeterAnchor.Location).Subscribe(x =>
         {
-            SelectedItem.Description =
-                $@"Lat:{x.Latitude:0.000000},Lon: {x.Longitude:0.000000},Alt: {x.Altitude}m";
+            AltimeterAnchor.Description =
+                $@"Lat:{x.Latitude:0.00,00,00},Lon: {x.Longitude:0.00,00,00},Alt: {x.Altitude}m";
         });
-        this.WhenValueChanged(vm => vm.SelectedItem.IsItemDragging).Subscribe(x =>
+        this.WhenValueChanged(vm => vm.AltimeterAnchor.IsItemDragging).Subscribe(x =>
         {
-            if (SelectedItem.IsItemDragging) return;
-            var locationWithAlt = provider.GetPointAltitude(SelectedItem.Location).Result;
-            SelectedItem.Location = locationWithAlt;
-            SelectedItem.Description =
+            if (AltimeterAnchor.IsItemDragging) return;
+            var locationWithAlt = HeightProvider.GetPointAltitude(AltimeterAnchor.Location).Result;
+            AltimeterAnchor.Location = locationWithAlt;
+            AltimeterAnchor.Description =
                 $@"Lat:{locationWithAlt.Latitude:0.000000},Lon: {locationWithAlt.Longitude:0.000000},Alt: {locationWithAlt.Altitude}m";
         });
     }
@@ -75,10 +81,29 @@ public class MainWindowViewModel : ReactiveObject
     public Ruler Ruler = new();
     [Reactive] public bool IsInAnchorEditMode { get; set; }
     [Reactive] public bool IsRulerEnabled { get; set; }
+    [Reactive] public bool IsAltimeterEnabled { get; set; }
     [Reactive] public ReactiveCommand<Unit, Unit> AddAnchorCommand { get; set; }
-    [Reactive] public ReactiveCommand<Unit, Unit> AddAnchorsAreaCommand { get; set; }
     [Reactive] public ReactiveCommand<Unit, Unit> RemoveAllAnchorsCommand { get; set; }
     [Reactive] public MapAnchorViewModel SelectedAnchorVariant { get; set; }
+
+    [Reactive]
+    public MapAnchorViewModel AltimeterAnchor { get; set; } = new()
+    {
+        Stroke = Brushes.Blue,
+        StrokeThickness = 2,
+        IsEditable = true,
+        ZOrder = 0,
+        OffsetX = OffsetXEnum.Center,
+        OffsetY = OffsetYEnum.Center,
+        IsSelected = false,
+        IsVisible = false,
+        Icon = MaterialIconKind.Altimeter,
+        Size = 34,
+        BaseSize = 34,
+        IconBrush = Brushes.CornflowerBlue,
+        Title = "Altimeter"
+    };
+
     public IEnumerable<GMapProvider> AvailableProviders => GMapProviders.List;
     [Reactive] public GMapProvider CurrentMapProvider { get; set; }
 
@@ -86,8 +111,6 @@ public class MainWindowViewModel : ReactiveObject
     {
         _markers.Clear();
     }
-
-    private CancellationTokenSource _tokenSource = new();
 
     private async void SetUpRuler(bool isEnabled)
     {
@@ -100,13 +123,13 @@ public class MainWindowViewModel : ReactiveObject
             _markers.Add(polygon);
         }
 
-        _tokenSource.Cancel();
-        _tokenSource = new CancellationTokenSource();
+        _rulerTokenSource.Cancel();
+        _rulerTokenSource = new CancellationTokenSource();
         if (isEnabled)
             try
             {
                 var start = await ShowTargetDialog("Set a start point",
-                    _tokenSource.Token);
+                    _rulerTokenSource.Token);
                 if (start.Equals(GeoPoint.NaN))
                 {
                     IsRulerEnabled = false;
@@ -114,7 +137,7 @@ public class MainWindowViewModel : ReactiveObject
                 }
 
                 var stop = await ShowTargetDialog("Set a end point",
-                    _tokenSource.Token);
+                    _rulerTokenSource.Token);
                 if (stop.Equals(GeoPoint.NaN))
                 {
                     IsRulerEnabled = false;
@@ -132,23 +155,52 @@ public class MainWindowViewModel : ReactiveObject
         polygon.Ruler.Value.IsVisible.OnNext(isEnabled);
     }
 
+    private async void SetUpAltimeter(bool IsEnabled)
+    {
+        if (IsEnabled)
+        {
+            _altimeterTokenSource.Cancel();
+            _altimeterTokenSource = new CancellationTokenSource();
+            try
+            {
+                var altimeter = _markers.FirstOrDefault(x => x.Equals(AltimeterAnchor));
+                var point = await ShowTargetDialog("Set a point which altitude you need", _altimeterTokenSource.Token);
+                var pointWithAltitude = HeightProvider.GetPointAltitude(point).Result;
+                AltimeterAnchor.Location = new GeoPoint(point.Latitude, point.Longitude, pointWithAltitude.Altitude);
+                AltimeterAnchor.Description =
+                    $@"Lat:{point.Latitude:0.000000},Lon: {point.Longitude:0.000000},Alt: {pointWithAltitude.Altitude}m";
+                AltimeterAnchor.IsVisible = true;
+                if (altimeter is null)
+                {
+                    _markers.Add(AltimeterAnchor);
+                }
+            }
+            catch (TaskCanceledException)
+            {
+                IsAltimeterEnabled = false;
+            }
+        }
+        else
+        {
+            AltimeterAnchor.IsVisible = false;
+        }
+    }
+
     private async Task AddNewAnchor()
     {
-        await _tokenSource.CancelAsync();
-        _tokenSource = new CancellationTokenSource();
+        await _rulerTokenSource.CancelAsync();
+        _rulerTokenSource = new CancellationTokenSource();
         try
         {
             var userPoint = await ShowTargetDialog("Set a point",
-                _tokenSource.Token);
-            var heightProvider = new SRTMHeightProvider();
-            var pointWithAltitude = heightProvider.GetPointAltitude(userPoint).Result;
+                _rulerTokenSource.Token);
             if (SelectedAnchorVariant is VehicleAnchorViewModel)
             {
                 _markers.Add(new VehicleAnchorViewModel
                 {
-                    Location = pointWithAltitude,
+                    Location = userPoint,
                     Description =
-                        $@"{pointWithAltitude.Latitude}, {pointWithAltitude.Longitude}, {pointWithAltitude.Altitude}"
+                        $@"{userPoint.Latitude}, {userPoint.Longitude}, {userPoint.Altitude}"
                 });
             }
             else
@@ -165,90 +217,11 @@ public class MainWindowViewModel : ReactiveObject
                     Size = SelectedAnchorVariant.Size,
                     IconBrush = SelectedAnchorVariant.IconBrush,
                     Title = SelectedAnchorVariant.Title,
-                    Location = pointWithAltitude,
+                    Location = userPoint,
                     Description =
-                        $@"{pointWithAltitude.Latitude:0.000000}, {pointWithAltitude.Longitude:0.000000}, {pointWithAltitude.Altitude}"
+                        $@"{userPoint.Latitude:0.000000}, {userPoint.Longitude:0.000000}, {userPoint.Altitude}"
                 };
                 _markers.Add(newAnchor);
-            }
-        }
-        catch (TaskCanceledException)
-        {
-        }
-    }
-
-    private async void AddAnchorsArea()
-    {
-        await _tokenSource.CancelAsync();
-        _tokenSource = new CancellationTokenSource();
-        try
-        {
-            var userPoint = await ShowTargetDialog("Set a point",
-                _tokenSource.Token);
-            ObservableCollection<GeoPoint> pointsCollection = new ObservableCollection<GeoPoint>()
-            {
-                new(userPoint.Latitude + 0.0001, userPoint.Longitude + 0.0001, userPoint.Altitude),
-                new(userPoint.Latitude + 0.0001, userPoint.Longitude - 0.0001, userPoint.Altitude),
-                new(userPoint.Latitude + 0.0002, userPoint.Longitude + 0.0002, userPoint.Altitude),
-                new(userPoint.Latitude + 0.0002, userPoint.Longitude - 0.0002, userPoint.Altitude),
-                new(userPoint.Latitude + 0.0003, userPoint.Longitude + 0.0003, userPoint.Altitude),
-                new(userPoint.Latitude + 0.0003, userPoint.Longitude - 0.0003, userPoint.Altitude),
-                new(userPoint.Latitude + 0.0004, userPoint.Longitude + 0.0004, userPoint.Altitude),
-                new(userPoint.Latitude + 0.0004, userPoint.Longitude - 0.0004, userPoint.Altitude),
-                new(userPoint.Latitude + 0.0004, userPoint.Longitude - 0.0004, userPoint.Altitude),
-                new(userPoint.Latitude + 0.0004, userPoint.Longitude + 0.0004, userPoint.Altitude),
-                new(userPoint.Latitude + 0.0004, userPoint.Longitude + 0.0001, userPoint.Altitude),
-                new(userPoint.Latitude + 0.0004, userPoint.Longitude - 0.0001, userPoint.Altitude),
-                new(userPoint.Latitude + 0.0004, userPoint.Longitude, userPoint.Altitude),
-                new(userPoint.Latitude + 0.0005, userPoint.Longitude, userPoint.Altitude),
-                new(userPoint.Latitude + 0.0005, userPoint.Longitude + 0.0005, userPoint.Altitude),
-                new(userPoint.Latitude + 0.0005, userPoint.Longitude - 0.0005, userPoint.Altitude),
-                new(userPoint.Latitude + 0.0006, userPoint.Longitude - 0.0004, userPoint.Altitude),
-                new(userPoint.Latitude + 0.0006, userPoint.Longitude + 0.0004, userPoint.Altitude),
-                new(userPoint.Latitude + 0.0007, userPoint.Longitude - 0.0003, userPoint.Altitude),
-                new(userPoint.Latitude + 0.0007, userPoint.Longitude + 0.0003, userPoint.Altitude),
-                new(userPoint.Latitude + 0.0008, userPoint.Longitude + 0.0002, userPoint.Altitude),
-                new(userPoint.Latitude + 0.0008, userPoint.Longitude - 0.0002, userPoint.Altitude),
-                new(userPoint.Latitude + 0.0008, userPoint.Longitude + 0.0001, userPoint.Altitude),
-                new(userPoint.Latitude + 0.0008, userPoint.Longitude - 0.0001, userPoint.Altitude),
-                new(userPoint.Latitude + 0.0008, userPoint.Longitude, userPoint.Altitude),
-                new(userPoint.Latitude, userPoint.Longitude, userPoint.Altitude),
-                new(userPoint.Latitude + 0.0015, userPoint.Longitude - 0.0015, userPoint.Altitude),
-                new(userPoint.Latitude + 0.0015, userPoint.Longitude, userPoint.Altitude),
-                new(userPoint.Latitude + 0.0015, userPoint.Longitude + 0.0015, userPoint.Altitude),
-                new(userPoint.Latitude + 0.0015, userPoint.Longitude - 0.001, userPoint.Altitude),
-                new(userPoint.Latitude + 0.0015, userPoint.Longitude + 0.001, userPoint.Altitude),
-                new(userPoint.Latitude, userPoint.Longitude + 0.0015, userPoint.Altitude),
-                new(userPoint.Latitude, userPoint.Longitude - 0.0015, userPoint.Altitude),
-                new(userPoint.Latitude + 0.001, userPoint.Longitude + 0.0015, userPoint.Altitude),
-                new(userPoint.Latitude - 0.001, userPoint.Longitude - 0.0015, userPoint.Altitude),
-                new(userPoint.Latitude - 0.0015, userPoint.Longitude - 0.0015, userPoint.Altitude),
-                new(userPoint.Latitude - 0.0015, userPoint.Longitude - 0.001, userPoint.Altitude),
-                new(userPoint.Latitude - 0.0015, userPoint.Longitude + 0.001, userPoint.Altitude),
-                new(userPoint.Latitude - 0.0015, userPoint.Longitude, userPoint.Altitude),
-                new(userPoint.Latitude - 0.0015, userPoint.Longitude + 0.0015, userPoint.Altitude),
-            };
-            var provider = new SRTMHeightProvider();
-            pointsCollection = await provider.GetPointAltitudeCollection(pointsCollection);
-            foreach (var item in pointsCollection)
-            {
-                _markers.Add(new MapAnchorViewModel()
-                {
-                    Stroke = Brushes.Aqua,
-                    StrokeThickness = 2,
-                    IsEditable = true,
-                    ZOrder = 0,
-                    OffsetX = OffsetXEnum.Center,
-                    OffsetY = OffsetYEnum.Bottom,
-                    IsSelected = false,
-                    IsVisible = true,
-                    Icon = MaterialIconKind.MapMarker,
-                    Size = 34,
-                    BaseSize = 34,
-                    IconBrush = Brushes.Crimson,
-                    Location = item,
-                    Description = $@"Lat:{item.Latitude:0.000000},Lon: {item.Longitude:0.000000},Alt: {item.Altitude}m"
-                });
             }
         }
         catch (TaskCanceledException)
@@ -287,7 +260,6 @@ public class MainWindowViewModel : ReactiveObject
     [Reactive] public GeoPoint DialogTarget { get; set; }
     [Reactive] public bool IsInDialogMode { get; set; }
     [Reactive] public string DialogText { get; set; }
-    private readonly ObservableCollection<MapAnchorViewModel> _markers;
 
     private async Task<GeoPoint> ShowTargetDialog(string text, CancellationToken cancel)
     {
