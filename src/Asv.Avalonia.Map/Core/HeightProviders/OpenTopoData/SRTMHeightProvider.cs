@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Asv.Common;
 using Newtonsoft.Json.Linq;
 
-namespace Asv.Avalonia.Map.HeightProviders;
+namespace Asv.Avalonia.Map;
 
 // ReSharper disable once InconsistentNaming
 public class SRTMHeightProvider : HeightProviderBase

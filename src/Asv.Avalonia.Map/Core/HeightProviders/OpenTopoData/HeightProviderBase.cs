@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Asv.Common;
 
-namespace Asv.Avalonia.Map.HeightProviders;
+namespace Asv.Avalonia.Map;
 
 public abstract class HeightProviderBase
 {

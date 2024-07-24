@@ -7,7 +7,6 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Asv.Avalonia.GMap.Demo;
-using Asv.Avalonia.Map.HeightProviders;
 using Asv.Common;
 using Avalonia.Media;
 using DynamicData.Binding;
@@ -44,11 +43,11 @@ public class MainWindowViewModel : ReactiveObject
                 IconBrush = Brushes.LightSeaGreen,
                 Title = "Hello!!!"
             },
-            AltimeterAnchor
         };
         _markers.Add(new RulerAnchor("1", Ruler, RulerPosition.Start));
         _markers.Add(new RulerAnchor("2", Ruler, RulerPosition.Stop));
         _markers.Add(new RulerPolygon(Ruler));
+        _markers.Add(new AltimeterAnchor());
         AddAnchorCommand = ReactiveCommand.CreateFromTask(AddNewAnchor);
         RemoveAllAnchorsCommand = ReactiveCommand.Create(RemoveAllAnchors);
         SelectedItem = Markers[0];
@@ -66,9 +65,9 @@ public class MainWindowViewModel : ReactiveObject
             AltimeterAnchor.Description =
                 $@"Lat:{x.Latitude:0.00,00,00},Lon: {x.Longitude:0.00,00,00},Alt: {x.Altitude}m";
         });
-        this.WhenValueChanged(vm => vm.AltimeterAnchor.IsItemDragging).Subscribe(x =>
+        this.WhenValueChanged(vm => vm.AltimeterAnchor.IsDragged).Subscribe(x =>
         {
-            if (AltimeterAnchor.IsItemDragging) return;
+            if (AltimeterAnchor.IsDragged) return;
             var locationWithAlt = HeightProvider.GetPointAltitude(AltimeterAnchor.Location).Result;
             AltimeterAnchor.Location = locationWithAlt;
             AltimeterAnchor.Description =
@@ -79,31 +78,14 @@ public class MainWindowViewModel : ReactiveObject
     #region Anchors Actions
 
     public Ruler Ruler = new();
+    [Reactive]
+    public AltimeterAnchor AltimeterAnchor {get; set; } = new();
     [Reactive] public bool IsInAnchorEditMode { get; set; }
     [Reactive] public bool IsRulerEnabled { get; set; }
     [Reactive] public bool IsAltimeterEnabled { get; set; }
     [Reactive] public ReactiveCommand<Unit, Unit> AddAnchorCommand { get; set; }
     [Reactive] public ReactiveCommand<Unit, Unit> RemoveAllAnchorsCommand { get; set; }
     [Reactive] public MapAnchorViewModel SelectedAnchorVariant { get; set; }
-
-    [Reactive]
-    public MapAnchorViewModel AltimeterAnchor { get; set; } = new()
-    {
-        Stroke = Brushes.Blue,
-        StrokeThickness = 2,
-        IsEditable = true,
-        ZOrder = 0,
-        OffsetX = OffsetXEnum.Center,
-        OffsetY = OffsetYEnum.Center,
-        IsSelected = false,
-        IsVisible = false,
-        Icon = MaterialIconKind.Altimeter,
-        Size = 34,
-        BaseSize = 34,
-        IconBrush = Brushes.CornflowerBlue,
-        Title = "Altimeter"
-    };
-
     public IEnumerable<GMapProvider> AvailableProviders => GMapProviders.List;
     [Reactive] public GMapProvider CurrentMapProvider { get; set; }
 

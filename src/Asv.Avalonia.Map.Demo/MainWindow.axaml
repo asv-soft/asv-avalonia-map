@@ -51,7 +51,7 @@
                                        Size="{CompiledBinding Size}"
                                        Actions="{CompiledBinding Actions} "
                                        Description="{CompiledBinding Description}"
-                                       IsItemDragging="{CompiledBinding IsItemDragging, Mode=TwoWay}" />
+                                       IsItemDragging="{CompiledBinding IsDragged, Mode=TwoWay}" />
                 </DataTemplate>
             </map:MapView.ItemTemplate>
         </map:MapView>

@@ -117,7 +117,7 @@ namespace Asv.Avalonia.Map
         /// <value>
         /// <c>true</c> if the object is dragging; otherwise, <c>false</c>
         /// </value>
-        bool IsItemDragging { get; set; }
+        bool IsDragged { get; set; }
 
         /// <summary>
         /// Gets or sets the location of an object using coordinates in a GeoPoint format.
@@ -370,7 +370,7 @@ namespace Asv.Avalonia.Map
         /// <c>true</c> if the object is dragging; otherwise, <c>false</c>.
         /// </value>
         [Reactive]
-        public bool IsItemDragging { get; set; }
+        public bool IsDragged { get; set; }
 
         /// <summary>
         /// Gets or sets the location of a geo point.
