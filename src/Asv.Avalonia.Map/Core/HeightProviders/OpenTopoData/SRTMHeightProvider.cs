@@ -15,7 +15,7 @@ public class SRTMHeightProvider : HeightProviderBase
         var locationsString = ToWebString(point.Latitude, point.Longitude);
         RequestMessage = new HttpRequestMessage(HttpMethod.Get,
             $"http://api.opentopodata.org/v1/{DataSet.ToString().ToLower()}?locations={locationsString}&interpolation={Interpolation.ToString().ToLower()}");
-        var response = Client.Send(RequestMessage);
+        var response =  Client.SendAsync(RequestMessage).GetAwaiter().GetResult();
         var content = await response.Content.ReadAsStringAsync();
         var elevationString = JObject.Parse(content)["results"]?[0]?["elevation"]?.ToString();
         double.TryParse(elevationString, out var elevation);
@@ -30,7 +30,7 @@ public class SRTMHeightProvider : HeightProviderBase
             (current, item) => current + $"{ToWebString(item.Latitude, item.Longitude)}|");
         RequestMessage = new HttpRequestMessage(HttpMethod.Get,
             $"http://api.opentopodata.org/v1/{DataSet.ToString().ToLower()}?locations={locationsString}&interpolation={Interpolation.ToString().ToLower()}");
-        var response = Client.Send(RequestMessage);
+        var response = Client.SendAsync(RequestMessage).GetAwaiter().GetResult();
         var content = await response.Content.ReadAsStringAsync();
         var jObject = JObject.Parse(content)["results"];
         if (jObject is null) return pointsCollection;

@@ -14,7 +14,7 @@ public class AsterHeightProvider : HeightProviderBase
         var locationsString = ToWebString(point.Latitude, point.Longitude);
         RequestMessage = new HttpRequestMessage(HttpMethod.Get,
             $"https://api.opentopodata.org/v1/aster30m?locations={locationsString}");
-        var response = Client.Send(RequestMessage);
+        var response = Client.SendAsync(RequestMessage).GetAwaiter().GetResult();
         var content = await response.Content.ReadAsStringAsync();
         var elevationString = JObject.Parse(content)["results"]?[0]?["elevation"]?.ToString();
         double.TryParse(elevationString, out var elevation);
@@ -29,7 +29,7 @@ public class AsterHeightProvider : HeightProviderBase
             (current, item) => current + $"{ToWebString(item.Latitude, item.Longitude)}|");
         RequestMessage = new HttpRequestMessage(HttpMethod.Get,
             $"https://api.opentopodata.org/v1/aster30m?locations={locationsString}");
-        var response = Client.Send(RequestMessage);
+        var response = Client.SendAsync(RequestMessage).GetAwaiter().GetResult();
         var content = await response.Content.ReadAsStringAsync();
         var jObject = JObject.Parse(content)["results"];
         if (jObject is null) return pointsCollection;
