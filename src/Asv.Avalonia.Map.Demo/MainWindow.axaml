@@ -11,12 +11,12 @@
     <Design.DataContext>
         <demo:MainWindowViewModel />
     </Design.DataContext>
-    <Grid RowDefinitions="*,100" ColumnDefinitions="*, Auto">
+    <Grid RowDefinitions="*,100" ColumnDefinitions="*, Auto,Auto">
         <map:MapView x:DataType="demo:MainWindowViewModel"
                      Name="GMap" MaxZoom="24" MinZoom="1"
                      MapProvider="{Binding CurrentMapProvider}"
                      Grid.RowSpan="2"
-                     Grid.ColumnSpan="2"
+                     Grid.ColumnSpan="3"
                      IsInAnchorEditMode="{Binding IsInAnchorEditMode }"
                      SelectedItem="{Binding SelectedItem}"
                      Position="{Binding Center, Mode=TwoWay}"
@@ -59,7 +59,7 @@
                 HorizontalAlignment="Center"
                 CornerRadius="10"
                 VerticalAlignment="Center"
-                Grid.ColumnSpan="2"
+                Grid.ColumnSpan="3"
                 Grid.Row="1"
                 Grid.Column="0">
             <StackPanel
@@ -101,7 +101,7 @@
                 MaxHeight="50"
                 VerticalAlignment="Top"
                 CornerRadius="10">
-            <ComboBox ItemsSource="{Binding AvailableProviders}"
+            <ComboBox ItemsSource="{Binding AvailableMapProviders}"
                       SelectedItem="{Binding CurrentMapProvider}"
                       Margin="10">
                 <ComboBox.ItemsPanel>
@@ -109,6 +109,29 @@
                         <StackPanel Width="200" />
                     </ItemsPanelTemplate>
                 </ComboBox.ItemsPanel>
+            </ComboBox>
+        </Border>
+        <Border Grid.Column="2"
+                Grid.Row="0"
+                Margin="10"
+                Background="{DynamicResource SolidBackgroundFillColorBase}"
+                MaxHeight="50"
+                MaxWidth="100"
+                VerticalAlignment="Top"
+                CornerRadius="10">
+            <ComboBox ItemsSource="{Binding AvailableHeightProviders}"
+                      SelectedItem="{Binding CurrentHeightProvider}"
+                      Margin="10">
+                <ComboBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Width="200" />
+                    </ItemsPanelTemplate>
+                </ComboBox.ItemsPanel>
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
             </ComboBox>
         </Border>
     </Grid>
