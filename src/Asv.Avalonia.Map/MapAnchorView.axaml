@@ -73,7 +73,7 @@
                                        DockPanel.Dock="Bottom" HorizontalAlignment="Center" TextAlignment="Center"
                                        Margin="0,0,0,0" Text="{TemplateBinding Title}" />
                         </Border>
-                        <Canvas Name="IconCanvas" Bounds="{TemplateBinding CanvasBounds, Mode=OneWayToSource}"
+                        <Canvas Name="IconCanvas" Bounds="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CanvasBounds, Mode=OneWayToSource}"
                                 HorizontalAlignment="Center" Grid.Row="1" Width="{TemplateBinding Size}"
                                 Height="{TemplateBinding Size}">
                             <Canvas.RenderTransform>
