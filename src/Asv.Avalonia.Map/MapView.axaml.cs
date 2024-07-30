@@ -35,7 +35,7 @@ namespace Asv.Avalonia.Map
         internal readonly TranslateTransform MapOverlayTranslateTransform = new();
         internal ScaleTransform MapScaleTransform = new();
         private readonly ScaleTransform _lastScaleTransform = new();
-        
+
         const double SmallSizeFactor = 0.5;
         const double MediumSizeFactor = 1.1;
         const double LargeSizeFactor = 1.2;
@@ -543,7 +543,7 @@ namespace Asv.Avalonia.Map
                 }
 
                 if (ItemsSource == null || ItemsSource.Count() <= 0) return;
-                
+
                 foreach (var item in ItemsSource)
                 {
                     if (item is MapAnchorViewModel marker)
@@ -920,7 +920,6 @@ namespace Asv.Avalonia.Map
                 toggle,
                 e.GetCurrentPoint(source).Properties.IsRightButtonPressed);
         }
-
 
 
         #region Pointer events

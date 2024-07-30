@@ -5,13 +5,12 @@
     <Design.PreviewWith>
         <controls:MapViewItem />
     </Design.PreviewWith>
-
     <Style Selector="controls|MapViewItem">
         <!-- Set Defaults -->
         <Setter Property="Template">
             <ControlTemplate>
                 <Grid>
-                    <ContentControl Content="{TemplateBinding Shape}"/>
+                    <ContentControl Content="{TemplateBinding Shape}" />
                     <ContentPresenter Name="PART_ContentPresenter"
                                       IsVisible="{TemplateBinding IsShapeNotAvailable}"
                                       Background="{TemplateBinding Background}"
@@ -37,12 +36,12 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="controls:MapAnchorSelectionActionViewModel">
                             <Button Command="{CompiledBinding Command}" HorizontalAlignment="Stretch">
-                                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
-                                        <avalonia:MaterialIcon Margin="5" Width="15" Height="15" VerticalAlignment="Center"
-                                                               Kind="{CompiledBinding Icon}" />
-                                        <TextBlock VerticalAlignment="Center"
-                                                   Text="{CompiledBinding Title}"/>
-                                    </StackPanel>
+                                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                                    <avalonia:MaterialIcon Margin="5" Width="15" Height="15" VerticalAlignment="Center"
+                                                           Kind="{CompiledBinding Icon}" />
+                                    <TextBlock VerticalAlignment="Center"
+                                               Text="{CompiledBinding Title}" />
+                                </StackPanel>
                             </Button>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

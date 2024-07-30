@@ -8,16 +8,15 @@
         xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
         x:Class="Asv.Avalonia.Map.Demo.MainWindow"
         Title="Asv.Avalonia.Map.Demo">
-
     <Design.DataContext>
         <demo:MainWindowViewModel />
     </Design.DataContext>
-    <Grid RowDefinitions="*,100" ColumnDefinitions="*, Auto">
+    <Grid RowDefinitions="*,100" ColumnDefinitions="*, Auto,Auto">
         <map:MapView x:DataType="demo:MainWindowViewModel"
                      Name="GMap" MaxZoom="24" MinZoom="1"
                      MapProvider="{Binding CurrentMapProvider}"
                      Grid.RowSpan="2"
-                     Grid.ColumnSpan="2"
+                     Grid.ColumnSpan="3"
                      IsInAnchorEditMode="{Binding IsInAnchorEditMode }"
                      SelectedItem="{Binding SelectedItem}"
                      Position="{Binding Center, Mode=TwoWay}"
@@ -51,7 +50,8 @@
                                        RotateAngle="{CompiledBinding RotateAngle}"
                                        Size="{CompiledBinding Size}"
                                        Actions="{CompiledBinding Actions} "
-                                       Description="{CompiledBinding Description}" />
+                                       Description="{CompiledBinding Description}"
+                                       ItemIsDragged="{CompiledBinding IsDragged, Mode=TwoWay}" />
                 </DataTemplate>
             </map:MapView.ItemTemplate>
         </map:MapView>
@@ -59,7 +59,7 @@
                 HorizontalAlignment="Center"
                 CornerRadius="10"
                 VerticalAlignment="Center"
-                Grid.ColumnSpan="2"
+                Grid.ColumnSpan="3"
                 Grid.Row="1"
                 Grid.Column="0">
             <StackPanel
@@ -71,22 +71,26 @@
                 </ToggleButton>
                 <Label Content="Anchor type:"
                        VerticalAlignment="Center" />
-                <ComboBox x:DataType="demo:MainWindowViewModel" 
-                          MinWidth="130" 
+                <ComboBox x:DataType="demo:MainWindowViewModel"
+                          MinWidth="130"
                           ItemsSource="{Binding AnchorViewModels}"
                           DisplayMemberBinding="{Binding Title}"
                           SelectedItem="{CompiledBinding SelectedAnchorVariant,Mode=TwoWay}" />
                 <Button Margin="10,0"
-                        Command="{Binding AddAnchor}">
+                        Command="{Binding AddAnchorCommand}">
                     <avalonia:MaterialIcon Kind="Plus" />
                 </Button>
                 <Button
+                    Margin="10,0"
                     Command="{Binding RemoveAllAnchorsCommand}">
                     <avalonia:MaterialIcon Kind="Trash" />
                 </Button>
                 <ToggleButton Margin="10,0"
                               IsChecked="{Binding IsRulerEnabled}">
                     <avalonia:MaterialIcon Kind="TapeMeasure" />
+                </ToggleButton>
+                <ToggleButton IsChecked="{Binding IsAltimeterEnabled}">
+                    <avalonia:MaterialIcon Kind="Altimeter"/>
                 </ToggleButton>
             </StackPanel>
         </Border>
@@ -97,7 +101,7 @@
                 MaxHeight="50"
                 VerticalAlignment="Top"
                 CornerRadius="10">
-            <ComboBox ItemsSource="{Binding AvailableProviders}"
+            <ComboBox ItemsSource="{Binding AvailableMapProviders}"
                       SelectedItem="{Binding CurrentMapProvider}"
                       Margin="10">
                 <ComboBox.ItemsPanel>
@@ -105,6 +109,29 @@
                         <StackPanel Width="200" />
                     </ItemsPanelTemplate>
                 </ComboBox.ItemsPanel>
+            </ComboBox>
+        </Border>
+        <Border Grid.Column="2"
+                Grid.Row="0"
+                Margin="10"
+                Background="{DynamicResource SolidBackgroundFillColorBase}"
+                MaxHeight="50"
+                MaxWidth="100"
+                VerticalAlignment="Top"
+                CornerRadius="10">
+            <ComboBox ItemsSource="{Binding AvailableHeightProviders}"
+                      SelectedItem="{Binding CurrentHeightProvider}"
+                      Margin="10">
+                <ComboBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Width="200" />
+                    </ItemsPanelTemplate>
+                </ComboBox.ItemsPanel>
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
             </ComboBox>
         </Border>
     </Grid>
