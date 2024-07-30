@@ -6,7 +6,7 @@ using Asv.Common;
 
 namespace Asv.Avalonia.Map;
 
-public abstract class HeightProviderBase
+public abstract class HeightProviderBase : IHeightProvider
 {
     protected HttpRequestMessage RequestMessage = new();
     protected readonly HttpClient Client = new();

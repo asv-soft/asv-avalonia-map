@@ -361,13 +361,13 @@ namespace Asv.Avalonia.Map
         [Reactive]
         public bool IsInEditMode { get; set; }
         /// <summary>
-        /// Gets or sets a value indicating whether the object is dragging.
+        /// Gets or sets a value indicating whether the object is dragged.
         /// </summary>
         /// <remarks>
-        /// When the property is true, it indicates that the object is dragging on the map by user.
+        /// When the property is true, it indicates that the object is being dragged by user.
         /// </remarks>
         /// <value>
-        /// <c>true</c> if the object is dragging; otherwise, <c>false</c>.
+        /// <c>true</c> if the object is being dragged; otherwise, <c>false</c>.
         /// </value>
         [Reactive]
         public bool IsDragged { get; set; }

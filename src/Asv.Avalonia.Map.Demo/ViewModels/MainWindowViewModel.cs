@@ -52,7 +52,7 @@ public class MainWindowViewModel : ReactiveObject
         _markers.Add(new RulerAnchor("1", Ruler, RulerPosition.Start));
         _markers.Add(new RulerAnchor("2", Ruler, RulerPosition.Stop));
         _markers.Add(new RulerPolygon(Ruler));
-        _markers.Add(AltimeterAnchor = new()
+        _markers.Add(AltimeterAnchor = new AltimeterAnchor
         {
             HeightProvider = CurrentHeightProvider.HeightProvider
         });
@@ -263,10 +263,4 @@ public class MainWindowViewModel : ReactiveObject
     [Reactive] public ObservableCollection<HeightProvidersPair> AvailableHeightProviders { get; set; }
 
     #endregion
-}
-
-public class HeightProvidersPair
-{
-    public HeightProviderBase HeightProvider { get; set; }
-    public string Name { get; set; }
 }
