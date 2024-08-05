@@ -7,10 +7,12 @@
     </Design.PreviewWith>
     <Style Selector="controls|MapViewItem">
         <!-- Set Defaults -->
+        <Setter Property="ClipToBounds" Value="False" />
         <Setter Property="Template">
             <ControlTemplate>
                 <Grid>
-                    <ContentControl Content="{TemplateBinding Shape}" />
+                    <ContentControl ClipToBounds="False"
+                                    Content="{TemplateBinding Shape}" />
                     <ContentPresenter Name="PART_ContentPresenter"
                                       IsVisible="{TemplateBinding IsShapeNotAvailable}"
                                       Background="{TemplateBinding Background}"
