@@ -311,12 +311,10 @@ namespace Asv.Avalonia.Map
                     _firstCall = false;
                     UpdatePathCollection();
                 }
-                
                 var newHash = 0;
                 var localPath = new List<GPoint>(pathPoints.Length);
                 var minX = long.MaxValue;
                 var minY = long.MaxValue;
-                var lastPointAdded = GPoint.Empty;
                 foreach (var p in pathPoints)
                 {
                     var itemPoint = _map.FromLatLngToLocal(p);
@@ -329,10 +327,7 @@ namespace Asv.Avalonia.Map
                     {
                         minY = itemPoint.Y;
                     }
-                    // this is for optimization (if last two points are the same - no need to draw it)
-                    if (lastPointAdded == itemPoint) continue;
                     localPath.Add(itemPoint);
-                    lastPointAdded = itemPoint;
                     newHash = HashCode.Combine(newHash, itemPoint);
                 }
                 newHash = HashCode.Combine(newHash, Opacity);
