@@ -45,7 +45,7 @@ jobs:
       - name: Read version from Directory.Build.props
         id: read-version
         run: |
-          version=$(grep -oP '<${{env.PROPS_VERSION_VAR_NAME}}>\K[^<]+' ./Directory.Build.props)
+          version=$(grep -oP '<${{env.PROPS_VERSION_VAR_NAME}}>\K[^<]+' ./src/Directory.Build.props)
           echo "PropsVersion=${version}" >> $GITHUB_ENV
 
       - name: Compare tag with NuGet package version
