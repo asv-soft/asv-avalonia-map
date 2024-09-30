@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <Nullable>enable</Nullable>
-    <ProductVersion>2.0.8-rc</ProductVersion>
+    <ProductVersion>2.0.8</ProductVersion>
     <AvaloniaVersion>11.1.0</AvaloniaVersion>
     <AsvCommonVersion>1.13.1</AsvCommonVersion>
     <FluentAvaloniaUIVersion>2.0.0</FluentAvaloniaUIVersion>
