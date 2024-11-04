@@ -9,9 +9,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly YandexHybridMapProvider Instance;
 
-        YandexHybridMapProvider()
-        {
-        }
+        YandexHybridMapProvider() { }
 
         static YandexHybridMapProvider()
         {
@@ -20,15 +18,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("78A3830F-5EE3-432C-A32E-91B7AF6BBCB9");
+        public override Guid Id { get; } = new Guid("78A3830F-5EE3-432C-A32E-91B7AF6BBCB9");
 
-        public override string Name
-        {
-            get;
-        } = "YandexHybridMap";
+        public override string Name { get; } = "YandexHybridMap";
 
         GMapProvider[] _overlays;
 
@@ -38,7 +30,7 @@ namespace Asv.Avalonia.Map
             {
                 if (_overlays == null)
                 {
-                    _overlays = new GMapProvider[] {YandexSatelliteMapProvider.Instance, this};
+                    _overlays = new GMapProvider[] { YandexSatelliteMapProvider.Instance, this };
                 }
 
                 return _overlays;
@@ -56,7 +48,8 @@ namespace Asv.Avalonia.Map
 
         string MakeTileImageUrl(GPoint pos, int zoom, string language)
         {
-            return string.Format(UrlFormat,
+            return string.Format(
+                UrlFormat,
                 UrlServer,
                 GetServerNum(pos, 4) + 1,
                 Version,
@@ -64,10 +57,12 @@ namespace Asv.Avalonia.Map
                 pos.Y,
                 zoom,
                 language,
-                Server);
+                Server
+            );
         }
 
         static readonly string UrlServer = "vec";
-        static readonly string UrlFormat = "http://{0}0{1}.{7}/tiles?l=skl&v={2}&x={3}&y={4}&z={5}&lang={6}";
+        static readonly string UrlFormat =
+            "http://{0}0{1}.{7}/tiles?l=skl&v={2}&x={3}&y={4}&z={5}&lang={6}";
     }
 }

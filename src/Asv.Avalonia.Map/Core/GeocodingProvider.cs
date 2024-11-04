@@ -43,7 +43,6 @@ namespace Asv.Avalonia.Map
         /// <returns>The geographical point for the given keywords, or null if not found.</returns>
         GeoPoint? GetPoint(string keywords, out GeoCoderStatusCode status);
 
-
         /// <summary>
         /// Retrieves the points associated with a given <see cref="Placemark"/>.
         /// </summary>
@@ -76,7 +75,6 @@ namespace Asv.Avalonia.Map
         /// providing information such as success, failure, or any error codes encountered.
         /// </remarks>
         GeoPoint? GetPoint(Placemark placemark, out GeoCoderStatusCode status);
-
 
         /// <summary>
         /// Retrieves the placemarks for the specified location.

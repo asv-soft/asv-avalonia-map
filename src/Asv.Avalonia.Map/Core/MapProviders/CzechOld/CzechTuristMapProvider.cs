@@ -9,9 +9,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly CzechTuristMapProviderOld Instance;
 
-        CzechTuristMapProviderOld()
-        {
-        }
+        CzechTuristMapProviderOld() { }
 
         static CzechTuristMapProviderOld()
         {
@@ -20,15 +18,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("B923C81D-880C-42EB-88AB-AF8FE42B564D");
+        public override Guid Id { get; } = new Guid("B923C81D-880C-42EB-88AB-AF8FE42B564D");
 
-        public override string Name
-        {
-            get;
-        } = "CzechTuristOldMap";
+        public override string Name { get; } = "CzechTuristOldMap";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {

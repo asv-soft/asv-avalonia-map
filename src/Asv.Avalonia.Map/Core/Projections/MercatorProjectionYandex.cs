@@ -24,25 +24,16 @@ namespace Asv.Avalonia.Map
             }
         }
 
-        public override GSize TileSize
-        {
-            get;
-        } = new GSize(256, 256);
+        public override GSize TileSize { get; } = new GSize(256, 256);
 
         public override double Axis
         {
-            get
-            {
-                return 6356752.3142;
-            }
+            get { return 6356752.3142; }
         }
 
         public override double Flattening
         {
-            get
-            {
-                return 1.0 / 298.257223563;
-            }
+            get { return 1.0 / 298.257223563; }
         }
 
         public override GPoint FromLatLngToPixel(double lat, double lng, int zoom)
@@ -50,14 +41,15 @@ namespace Asv.Avalonia.Map
             lat = Clip(lat, MinLatitude, MaxLatitude);
             lng = Clip(lng, MinLongitude, MaxLongitude);
 
-            double rLon = lng * DEG_RAD; // Math.PI / 180; 
-            double rLat = lat * DEG_RAD; // Math.PI / 180; 
+            double rLon = lng * DEG_RAD; // Math.PI / 180;
+            double rLat = lat * DEG_RAD; // Math.PI / 180;
 
             double a = 6378137;
             double k = 0.0818191908426;
 
-            double z = Math.Tan(MathPiDiv4 + rLat / 2) /
-                       Math.Pow(Math.Tan(MathPiDiv4 + Math.Asin(k * Math.Sin(rLat)) / 2), k);
+            double z =
+                Math.Tan(MathPiDiv4 + rLat / 2)
+                / Math.Pow(Math.Tan(MathPiDiv4 + Math.Asin(k * Math.Sin(rLat)) / 2), k);
             double z1 = Math.Pow(2, 23 - zoom);
 
             double dx = (20037508.342789 + a * rLon) * 53.5865938 / z1;
@@ -83,9 +75,14 @@ namespace Asv.Avalonia.Map
             double mercY = 20037508.342789 - y * Math.Pow(2, z1) / 53.5865938;
 
             double g = Math.PI / 2 - 2 * Math.Atan(1 / Math.Exp(mercY / a));
-            double z = g + c1 * Math.Sin(2 * g) + c2 * Math.Sin(4 * g) + c3 * Math.Sin(6 * g) + c4 * Math.Sin(8 * g);
+            double z =
+                g
+                + c1 * Math.Sin(2 * g)
+                + c2 * Math.Sin(4 * g)
+                + c3 * Math.Sin(6 * g)
+                + c4 * Math.Sin(8 * g);
 
-            return new GeoPoint(z * RAD_DEG, mercX / a * RAD_DEG,0);
+            return new GeoPoint(z * RAD_DEG, mercX / a * RAD_DEG, 0);
         }
 
         public override GSize GetTileMatrixMinXY(int zoom)

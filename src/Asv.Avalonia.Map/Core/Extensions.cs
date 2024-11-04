@@ -6,7 +6,6 @@ namespace Asv.Avalonia.Map
 {
     public static class Extensions
     {
-        
         /// <summary>
         ///     Retrieves a value from the SerializationInfo of the given type.
         /// </summary>
@@ -14,7 +13,8 @@ namespace Asv.Avalonia.Map
         /// <param name="info">The SerializationInfo.</param>
         /// <param name="key">The key of the value we wish to retrieve.</param>
         /// <returns>The value if found, otherwise null.</returns>
-        public static T GetValue<T>(SerializationInfo info, string key) where T : class
+        public static T GetValue<T>(SerializationInfo info, string key)
+            where T : class
         {
             try
             {
@@ -36,7 +36,8 @@ namespace Asv.Avalonia.Map
         /// <param name="key">The key of the value we wish to retrieve.</param>
         /// <param name="defaultValue">The default value if the de-serialized value was null.</param>
         /// <returns>The value if found, otherwise the default value.</returns>
-        public static T GetValue<T>(SerializationInfo info, string key, T defaultValue) where T : class
+        public static T GetValue<T>(SerializationInfo info, string key, T defaultValue)
+            where T : class
         {
             T deserializedValue = GetValue<T>(info, key);
             if (deserializedValue != null)
@@ -55,7 +56,8 @@ namespace Asv.Avalonia.Map
         /// <param name="key">The key of the value we wish to retrieve.</param>
         /// <param name="defaultValue">The default value if the de-serialized value was null.</param>
         /// <returns>The value if found, otherwise the default value.</returns>
-        public static T GetStruct<T>(SerializationInfo info, string key, T defaultValue) where T : struct
+        public static T GetStruct<T>(SerializationInfo info, string key, T defaultValue)
+            where T : struct
         {
             try
             {
@@ -76,7 +78,11 @@ namespace Asv.Avalonia.Map
         /// <param name="key">The key of the value we wish to retrieve.</param>
         /// <param name="defaultValue">The default value if the de-serialized value was null.</param>
         /// <returns>The value if found, otherwise the default value.</returns>
-        public static Nullable<T> GetStruct<T>(SerializationInfo info, string key, Nullable<T> defaultValue)
+        public static Nullable<T> GetStruct<T>(
+            SerializationInfo info,
+            string key,
+            Nullable<T> defaultValue
+        )
             where T : struct
         {
             try

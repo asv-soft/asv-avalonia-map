@@ -9,9 +9,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly ArcGIS_World_Physical_MapProvider Instance;
 
-        ArcGIS_World_Physical_MapProvider()
-        {
-        }
+        ArcGIS_World_Physical_MapProvider() { }
 
         static ArcGIS_World_Physical_MapProvider()
         {
@@ -20,15 +18,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("0C0E73E3-5EA6-4F08-901C-AE85BCB1BFC8");
+        public override Guid Id { get; } = new Guid("0C0E73E3-5EA6-4F08-901C-AE85BCB1BFC8");
 
-        public override string Name
-        {
-            get;
-        } = "ArcGIS_World_Physical_Map";
+        public override string Name { get; } = "ArcGIS_World_Physical_Map";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {

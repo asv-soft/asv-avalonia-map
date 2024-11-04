@@ -9,9 +9,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly YahooSatelliteMapProvider Instance;
 
-        YahooSatelliteMapProvider()
-        {
-        }
+        YahooSatelliteMapProvider() { }
 
         static YahooSatelliteMapProvider()
         {
@@ -22,15 +20,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("55D71878-913F-4320-B5B6-B4167A3F148F");
+        public override Guid Id { get; } = new Guid("55D71878-913F-4320-B5B6-B4167A3F148F");
 
-        public override string Name
-        {
-            get;
-        } = "YahooSatelliteMap";
+        public override string Name { get; } = "YahooSatelliteMap";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {
@@ -45,13 +37,15 @@ namespace Asv.Avalonia.Map
         {
             // http://maps3.yimg.com/ae/ximg?v=1.9&t=a&s=256&.intl=en&x=15&y=7&z=7&r=1
 
-            return string.Format(UrlFormat,
+            return string.Format(
+                UrlFormat,
                 GetServerNum(pos, 2) + 1,
                 Version,
                 language,
                 pos.X,
                 ((1 << zoom) >> 1) - 1 - pos.Y,
-                zoom + 1);
+                zoom + 1
+            );
         }
 
         static readonly string UrlFormat =

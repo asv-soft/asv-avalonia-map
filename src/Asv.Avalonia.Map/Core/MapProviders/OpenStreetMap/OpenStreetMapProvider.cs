@@ -8,16 +8,21 @@ using Asv.Common;
 
 namespace Asv.Avalonia.Map
 {
-    public abstract class OpenStreetMapProviderBase : GMapProvider, RoutingProvider, GeocodingProvider
+    public abstract class OpenStreetMapProviderBase
+        : GMapProvider,
+            RoutingProvider,
+            GeocodingProvider
     {
-        
         public OpenStreetMapProviderBase()
         {
             MaxZoom = null;
-            //Tile usage policy of openstreetmap (https://operations.osmfoundation.org/policies/tiles/) define as optional and providing referer 
+            //Tile usage policy of openstreetmap (https://operations.osmfoundation.org/policies/tiles/) define as optional and providing referer
             //only if one valid available. by providing http://www.openstreetmap.org/ a 418 error is given by the server.
             //RefererUrl = "http://www.openstreetmap.org/";
-            Copyright = string.Format("© OpenStreetMap - Map data ©{0} OpenStreetMap", DateTime.Today.Year);
+            Copyright = string.Format(
+                "© OpenStreetMap - Map data ©{0} OpenStreetMap",
+                DateTime.Today.Year
+            );
         }
 
         public readonly string ServerLetters = "abc";
@@ -27,34 +32,22 @@ namespace Asv.Avalonia.Map
 
         public override Guid Id
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
         }
 
         public override string Name
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
         }
 
         public override PureProjection Projection
         {
-            get
-            {
-                return MercatorProjection.Instance;
-            }
+            get { return MercatorProjection.Instance; }
         }
 
         public override GMapProvider[] Overlays
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
         }
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
@@ -66,13 +59,20 @@ namespace Asv.Avalonia.Map
 
         #region GMapRoutingProvider Members
 
-        public virtual MapRoute GetRoute(GeoPoint start, GeoPoint end, bool avoidHighways, bool walkingMode,
-            int zoom)
+        public virtual MapRoute GetRoute(
+            GeoPoint start,
+            GeoPoint end,
+            bool avoidHighways,
+            bool walkingMode,
+            int zoom
+        )
         {
             //List<GeoPoint> points = GetRoutePoints(MakeRoutingUrl(start, end, walkingMode ? TravelTypeFoot : TravelTypeMotorCar));
             //MapRoute route = points != null ? new MapRoute(points, walkingMode ? WalkingStr : DrivingStr) : null;
             //return route;
-            return GetRoute(MakeRoutingUrl(start, end, walkingMode ? TravelTypeFoot : TravelTypeMotorCar));
+            return GetRoute(
+                MakeRoutingUrl(start, end, walkingMode ? TravelTypeFoot : TravelTypeMotorCar)
+            );
         }
 
         /// <summary>
@@ -84,7 +84,13 @@ namespace Asv.Avalonia.Map
         /// <param name="walkingMode"></param>
         /// <param name="zoom"></param>
         /// <returns></returns>
-        public virtual MapRoute GetRoute(string start, string end, bool avoidHighways, bool walkingMode, int zoom)
+        public virtual MapRoute GetRoute(
+            string start,
+            string end,
+            bool avoidHighways,
+            bool walkingMode,
+            int zoom
+        )
         {
             throw new NotImplementedException("use GetRoute(GeoPoint start, GeoPoint end...");
         }
@@ -93,13 +99,15 @@ namespace Asv.Avalonia.Map
 
         string MakeRoutingUrl(GeoPoint start, GeoPoint end, string travelType)
         {
-            return string.Format(CultureInfo.InvariantCulture,
+            return string.Format(
+                CultureInfo.InvariantCulture,
                 RoutingUrlFormat,
                 start.Latitude,
                 start.Longitude,
                 end.Latitude,
                 end.Longitude,
-                travelType);
+                travelType
+            );
         }
 
         MapRoute GetRoute(string url)
@@ -109,7 +117,11 @@ namespace Asv.Avalonia.Map
             try
             {
                 string route = GMaps.Instance.UseRouteCache
-                    ? Cache.Instance.GetContent(url, CacheType.RouteCache, TimeSpan.FromHours(TTLCache))
+                    ? Cache.Instance.GetContent(
+                        url,
+                        CacheType.RouteCache,
+                        TimeSpan.FromHours(TTLCache)
+                    )
                     : string.Empty;
                 bool cache = false;
 
@@ -134,7 +146,8 @@ namespace Asv.Avalonia.Map
                     // /Folder/Placemark/LineString/coordinates
                     var coordNode = xmldoc.SelectSingleNode(
                         "/sm:kml/sm:Document/sm:Folder/sm:Placemark/sm:LineString/sm:coordinates",
-                        xmlnsManager);
+                        xmlnsManager
+                    );
 
                     var coordinates = coordNode.InnerText.Split('\n');
 
@@ -158,25 +171,34 @@ namespace Asv.Avalonia.Map
                                 {
                                     double lat = double.Parse(xy[1], CultureInfo.InvariantCulture);
                                     double lng = double.Parse(xy[0], CultureInfo.InvariantCulture);
-                                    ret.Points.Add(new GeoPoint(lat, lng,0));
+                                    ret.Points.Add(new GeoPoint(lat, lng, 0));
                                 }
                             }
                         }
 
-                        var travelTimeNode = xmldoc.SelectSingleNode("/sm:kml/sm:Document/sm:traveltime", xmlnsManager);
+                        var travelTimeNode = xmldoc.SelectSingleNode(
+                            "/sm:kml/sm:Document/sm:traveltime",
+                            xmlnsManager
+                        );
 
                         if (travelTimeNode != null && travelTimeNode.InnerText.Length > 0)
                         {
-                            ret.Duration = Math.Round(Convert.ToDecimal(travelTimeNode.InnerText) / 60) + " mins";
+                            ret.Duration =
+                                Math.Round(Convert.ToDecimal(travelTimeNode.InnerText) / 60)
+                                + " mins";
                         }
 
-                        var instructionsNode =
-                            xmldoc.SelectSingleNode("/sm:kml/sm:Document/sm:description", xmlnsManager);
+                        var instructionsNode = xmldoc.SelectSingleNode(
+                            "/sm:kml/sm:Document/sm:description",
+                            xmlnsManager
+                        );
 
                         if (instructionsNode != null && instructionsNode.InnerText.Length > 0)
                         {
-                            var instructions = instructionsNode.InnerText.Split(new string[1] {"<br>"},
-                                StringSplitOptions.RemoveEmptyEntries);
+                            var instructions = instructionsNode.InnerText.Split(
+                                new string[1] { "<br>" },
+                                StringSplitOptions.RemoveEmptyEntries
+                            );
 
                             if (instructions != null && instructions.Length > 0)
                             {
@@ -224,7 +246,7 @@ namespace Asv.Avalonia.Map
             //<place place_id="53849547" osm_type="way" osm_id="55469274" place_rank="30" boundingbox="54.6896553039551,54.690486907959,25.2675743103027,25.2692089080811" lat="54.6900227236882" lon="25.2683589759401" display_name="Ministry of Foreign Affairs of the Republic of Lithuania, 2, J. Tumo Vaižganto g., Naujamiesčio seniūnija, Vilnius, Vilnius County, Vilniaus m. savivaldybė, Vilniaus apskritis, LT-01104, Lithuania" class="amenity" type="public_building"/>
             //<place place_id="8831058" osm_type="node" osm_id="836234960" place_rank="30" boundingbox="54.6670935059,54.6870973206,25.2638857269,25.2838876343" lat="54.677095" lon="25.2738876" display_name="Railway Museum of Lithuania, 15, Mindaugo g., Senamiesčio seniūnija, Vilnius, Vilnius County, Vilniaus m. savivaldybė, Vilniaus apskritis, 03215, Lithuania" class="tourism" type="museum" icon="http://open.mapquestapi.com/nominatim/v1/images/mapicons/tourist_museum.p.20.png"/>
             //<place place_id="29614806" osm_type="way" osm_id="24845629" place_rank="30" boundingbox="54.6904983520508,54.6920852661133,25.2606296539307,25.2628803253174" lat="54.6913385159005" lon="25.2617684209873" display_name="Seimas (Parliament) of the Republic of Lithuania, 53, Gedimino pr., Naujamiesčio seniūnija, Vilnius, Vilnius County, Vilniaus m. savivaldybė, Vilniaus apskritis, LT-01111, Lithuania" class="amenity" type="public_building"/>
-            //</searchresults> 
+            //</searchresults>
 
             #endregion
 
@@ -246,7 +268,7 @@ namespace Asv.Avalonia.Map
 
             //<searchresults timestamp="Thu, 29 Nov 12 08:38:23 +0000" attribution="Data © OpenStreetMap contributors, ODbL 1.0. http://www.openstreetmap.org/copyright" querystring="vilnius, lithuania" polygon="false" exclude_place_ids="98093941" more_url="http://nominatim.openstreetmap.org/search?format=xml&exclude_place_ids=98093941&accept-language=de-de,de;q=0.8,en-us;q=0.5,en;q=0.3&q=vilnius%2C+lithuania">
             //<place place_id="98093941" osm_type="relation" osm_id="1529146" place_rank="16" boundingbox="54.5693359375,54.8323097229004,25.0250644683838,25.4815216064453" lat="54.6843135" lon="25.2853984" display_name="Vilnius, Vilniaus m. savivaldybė, Distrikt Vilnius, Litauen" class="boundary" type="administrative" icon="http://nominatim.openstreetmap.org/images/mapicons/poi_boundary_administrative.p.20.png"/>
-            //</searchresults> 
+            //</searchresults>
 
             #endregion
 
@@ -260,7 +282,10 @@ namespace Asv.Avalonia.Map
             return pointList != null && pointList.Count > 0 ? pointList[0] : (GeoPoint?)null;
         }
 
-        public GeoCoderStatusCode GetPlacemarks(GeoPoint location, out List<Placemark> placemarkList)
+        public GeoCoderStatusCode GetPlacemarks(
+            GeoPoint location,
+            out List<Placemark> placemarkList
+        )
         {
             throw new NotImplementedException("use GetPlacemark");
         }
@@ -325,20 +350,29 @@ namespace Asv.Avalonia.Map
 
         string MakeDetailedGeocoderUrl(Placemark placemark)
         {
-            string street = String.Join(" ", new[] {placemark.HouseNo, placemark.ThoroughfareName}).Trim();
+            string street = String
+                .Join(" ", new[] { placemark.HouseNo, placemark.ThoroughfareName })
+                .Trim();
 
-            return string.Format(GeocoderDetailedUrlFormat,
+            return string.Format(
+                GeocoderDetailedUrlFormat,
                 street.Replace(' ', '+'),
                 placemark.LocalityName.Replace(' ', '+'),
                 placemark.SubAdministrativeAreaName.Replace(' ', '+'),
                 placemark.AdministrativeAreaName.Replace(' ', '+'),
                 placemark.CountryName.Replace(' ', '+'),
-                placemark.PostalCodeNumber.Replace(' ', '+'));
+                placemark.PostalCodeNumber.Replace(' ', '+')
+            );
         }
 
         string MakeReverseGeocoderUrl(GeoPoint pt)
         {
-            return string.Format(CultureInfo.InvariantCulture, ReverseGeocoderUrlFormat, pt.Latitude, pt.Longitude);
+            return string.Format(
+                CultureInfo.InvariantCulture,
+                ReverseGeocoderUrlFormat,
+                pt.Latitude,
+                pt.Longitude
+            );
         }
 
         GeoCoderStatusCode GetLatLngFromGeocoderUrl(string url, out List<GeoPoint> pointList)
@@ -349,7 +383,11 @@ namespace Asv.Avalonia.Map
             try
             {
                 string geo = GMaps.Instance.UseGeocoderCache
-                    ? Cache.Instance.GetContent(url, CacheType.GeocoderCache, TimeSpan.FromHours(TTLCache))
+                    ? Cache.Instance.GetContent(
+                        url,
+                        CacheType.GeocoderCache,
+                        TimeSpan.FromHours(TTLCache)
+                    )
                     : string.Empty;
 
                 bool cache = false;
@@ -395,13 +433,19 @@ namespace Asv.Avalonia.Map
                                     nn = n.Attributes["lat"];
                                     if (nn != null)
                                     {
-                                        double lat = double.Parse(nn.Value, CultureInfo.InvariantCulture);
+                                        double lat = double.Parse(
+                                            nn.Value,
+                                            CultureInfo.InvariantCulture
+                                        );
 
                                         nn = n.Attributes["lon"];
                                         if (nn != null)
                                         {
-                                            double lng = double.Parse(nn.Value, CultureInfo.InvariantCulture);
-                                            pointList.Add(new GeoPoint(lat, lng,0));
+                                            double lng = double.Parse(
+                                                nn.Value,
+                                                CultureInfo.InvariantCulture
+                                            );
+                                            pointList.Add(new GeoPoint(lat, lng, 0));
                                         }
                                     }
                                 }
@@ -429,7 +473,11 @@ namespace Asv.Avalonia.Map
             try
             {
                 string geo = GMaps.Instance.UsePlacemarkCache
-                    ? Cache.Instance.GetContent(url, CacheType.PlacemarkCache, TimeSpan.FromHours(TTLCache))
+                    ? Cache.Instance.GetContent(
+                        url,
+                        CacheType.PlacemarkCache,
+                        TimeSpan.FromHours(TTLCache)
+                    )
                     : string.Empty;
 
                 bool cache = false;
@@ -523,7 +571,8 @@ namespace Asv.Avalonia.Map
         static readonly string ReverseGeocoderUrlFormat =
             "https://nominatim.openstreetmap.org/reverse?format=xml&lat={0}&lon={1}&zoom=18&addressdetails=1";
 
-        static readonly string GeocoderUrlFormat = "https://nominatim.openstreetmap.org/search?q={0}&format=xml";
+        static readonly string GeocoderUrlFormat =
+            "https://nominatim.openstreetmap.org/search?q={0}&format=xml";
 
         static readonly string GeocoderDetailedUrlFormat =
             "https://nominatim.openstreetmap.org/search?street={0}&city={1}&county={2}&state={3}&country={4}&postalcode={5}&format=xml";
@@ -540,9 +589,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly OpenStreetMapProvider Instance;
 
-        OpenStreetMapProvider()
-        {
-        }
+        OpenStreetMapProvider() { }
 
         static OpenStreetMapProvider()
         {
@@ -551,15 +598,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("0521335C-92EC-47A8-98A5-6FD333DDA9C0");
+        public override Guid Id { get; } = new Guid("0521335C-92EC-47A8-98A5-6FD333DDA9C0");
 
-        public override string Name
-        {
-            get;
-        } = "OpenStreetMap";
+        public override string Name { get; } = "OpenStreetMap";
 
         public string YoursClientName { get; set; }
 
@@ -571,7 +612,7 @@ namespace Asv.Avalonia.Map
             {
                 if (_overlays == null)
                 {
-                    _overlays = new GMapProvider[] {this};
+                    _overlays = new GMapProvider[] { this };
                 }
 
                 return _overlays;

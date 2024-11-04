@@ -35,44 +35,61 @@ namespace Asv.Avalonia.Map
         {
             this.WhenActivated(disp =>
             {
-                this.WhenAnyValue(_ => _.IsSelected).Subscribe(UpdateSelectableZindex).DisposeWith(disp);
-                this.WhenAnyValue(_ => _.Bounds).Subscribe(_ => UpdateLocalPosition()).DisposeWith(disp);
+                this.WhenAnyValue(_ => _.IsSelected)
+                    .Subscribe(UpdateSelectableZindex)
+                    .DisposeWith(disp);
+                this.WhenAnyValue(_ => _.Bounds)
+                    .Subscribe(_ => UpdateLocalPosition())
+                    .DisposeWith(disp);
 
-                Observable.FromEventPattern<EventHandler<PointerPressedEventArgs>, PointerPressedEventArgs>(
-                        handler => PointerPressed += handler,
-                        handler => PointerPressed -= handler).Subscribe(_ => DragPointerPressed(_.EventArgs))
+                Observable
+                    .FromEventPattern<
+                        EventHandler<PointerPressedEventArgs>,
+                        PointerPressedEventArgs
+                    >(handler => PointerPressed += handler, handler => PointerPressed -= handler)
+                    .Subscribe(_ => DragPointerPressed(_.EventArgs))
                     .DisposeItWith(disp);
-                Observable.FromEventPattern<EventHandler<PointerEventArgs>, PointerEventArgs>(
+                Observable
+                    .FromEventPattern<EventHandler<PointerEventArgs>, PointerEventArgs>(
                         handler => PointerMoved += handler,
-                        handler => PointerMoved -= handler).Subscribe(_ => DragPointerMoved(_.EventArgs))
+                        handler => PointerMoved -= handler
+                    )
+                    .Subscribe(_ => DragPointerMoved(_.EventArgs))
                     .DisposeItWith(disp);
-                
+
                 ContextFlyout.Opened += ContextFlyoutOnOpened;
             });
         }
 
         private void ContextFlyoutOnOpened(object? sender, EventArgs e)
         {
-            if (ItemsControl.ItemsControlFromItemContaner(this) is MapView owner &&
-                _map.SelectedItem is MapAnchorViewModel anchorViewModel &&
-                sender is Flyout flyout)
+            if (
+                ItemsControl.ItemsControlFromItemContaner(this) is MapView owner
+                && _map.SelectedItem is MapAnchorViewModel anchorViewModel
+                && sender is Flyout flyout
+            )
             {
                 var overlappingAnchors = FindOverlappingAnchors(
-                    _map.FromLatLngToLocal(anchorViewModel.Location),
-                    owner.Items.Cast<MapAnchorViewModel>().ToList()).Where(_ => _ != anchorViewModel).ToList();
-                
+                        _map.FromLatLngToLocal(anchorViewModel.Location),
+                        owner.Items.Cast<MapAnchorViewModel>().ToList()
+                    )
+                    .Where(_ => _ != anchorViewModel)
+                    .ToList();
+
                 if (overlappingAnchors.Count >= 1)
                 {
-                    var overlapActions = overlappingAnchors.Select(anchor => new MapAnchorSelectionActionViewModel
-                    {
-                        Icon = anchor.Icon,
-                        Title = anchor.Title,
-                        Command = ReactiveCommand.Create(() =>
+                    var overlapActions = overlappingAnchors.Select(
+                        anchor => new MapAnchorSelectionActionViewModel
                         {
-                            flyout.Hide();
-                            _map.SelectedItem = anchor;
-                        }),
-                    });
+                            Icon = anchor.Icon,
+                            Title = anchor.Title,
+                            Command = ReactiveCommand.Create(() =>
+                            {
+                                flyout.Hide();
+                                _map.SelectedItem = anchor;
+                            }),
+                        }
+                    );
 
                     if (flyout.Content is ItemsControl itemsControl)
                     {
@@ -86,8 +103,10 @@ namespace Asv.Avalonia.Map
             }
         }
 
-        private IEnumerable<MapAnchorViewModel> FindOverlappingAnchors(GPoint selectedPoint,
-            List<MapAnchorViewModel> anchors)
+        private IEnumerable<MapAnchorViewModel> FindOverlappingAnchors(
+            GPoint selectedPoint,
+            List<MapAnchorViewModel> anchors
+        )
         {
             var threshold = 50;
             var overlappingAnchors = new List<MapAnchorViewModel>();
@@ -95,8 +114,11 @@ namespace Asv.Avalonia.Map
             {
                 var relativePoint = _map.FromLatLngToLocal(anchorViewModel.Location);
 
-                if (IsOverlappingPoints(relativePoint, selectedPoint, threshold) &&
-                    !overlappingAnchors.Contains(anchorViewModel) && anchorViewModel.IsVisible)
+                if (
+                    IsOverlappingPoints(relativePoint, selectedPoint, threshold)
+                    && !overlappingAnchors.Contains(anchorViewModel)
+                    && anchorViewModel.IsVisible
+                )
                 {
                     overlappingAnchors.Add(anchorViewModel);
                 }
@@ -108,7 +130,7 @@ namespace Asv.Avalonia.Map
         private bool IsOverlappingPoints(GPoint firstPoint, GPoint secondPoint, long threshold)
         {
             return Math.Abs(firstPoint.X - secondPoint.X) < threshold
-                   && Math.Abs(firstPoint.Y - secondPoint.Y) < threshold;
+                && Math.Abs(firstPoint.Y - secondPoint.Y) < threshold;
         }
 
         public bool IsEditable
@@ -119,20 +141,30 @@ namespace Asv.Avalonia.Map
 
         private void DragPointerMoved(PointerEventArgs args)
         {
-            if (_map == null) return;
+            if (_map == null)
+                return;
             var point = args.GetCurrentPoint(_map.MapCanvas);
-            if (_map.IsInAnchorEditMode && IsSelected && IsEditable && point.Properties.IsLeftButtonPressed)
+            if (
+                _map.IsInAnchorEditMode
+                && IsSelected
+                && IsEditable
+                && point.Properties.IsLeftButtonPressed
+            )
             {
                 var child = LogicalChildren.FirstOrDefault() as Visual;
-                if (child == null) return;
+                if (child == null)
+                    return;
                 var anchor = LogicalChildren.FirstOrDefault() as MapAnchorView;
-                if (anchor is null) return;
+                if (anchor is null)
+                    return;
                 anchor.ItemIsDragged = true;
                 var offsetX = 0;
                 var offsetY = 0;
                 var old = MapView.GetLocation(child);
-                var location = _map.FromLocalToLatLng((int)(point.Position.X + _map.MapTranslateTransform.X + offsetX),
-                    (int)(point.Position.Y + _map.MapTranslateTransform.Y + offsetY));
+                var location = _map.FromLocalToLatLng(
+                    (int)(point.Position.X + _map.MapTranslateTransform.X + offsetX),
+                    (int)(point.Position.Y + _map.MapTranslateTransform.Y + offsetY)
+                );
                 location = new GeoPoint(location.Latitude, location.Longitude, old.Altitude);
                 MapView.SetLocation(child, location);
             }
@@ -143,7 +175,8 @@ namespace Asv.Avalonia.Map
             if (_map.IsInAnchorEditMode)
             {
                 var anchor = LogicalChildren.FirstOrDefault() as MapAnchorView;
-                if (anchor is null) return;
+                if (anchor is null)
+                    return;
                 anchor.ItemIsDragged = true;
                 IsSelected = true;
                 args.Handled = true;
@@ -174,14 +207,20 @@ namespace Asv.Avalonia.Map
 
         private IDisposable _isVisibleSubscribe;
 
-        protected override void LogicalChildrenCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        protected override void LogicalChildrenCollectionChanged(
+            object sender,
+            NotifyCollectionChangedEventArgs e
+        )
         {
             base.LogicalChildrenCollectionChanged(sender, e);
-            if (LogicalChildren.FirstOrDefault() is not Visual child) return;
+            if (LogicalChildren.FirstOrDefault() is not Visual child)
+                return;
             ZIndex = MapView.GetZOrder(child);
             IsEditable = MapView.GetIsEditable(child);
             _isVisibleSubscribe?.Dispose();
-            _isVisibleSubscribe = child.WhenAnyValue(_ => _.IsVisible).Subscribe(_ => IsVisible = _);
+            _isVisibleSubscribe = child
+                .WhenAnyValue(_ => _.IsVisible)
+                .Subscribe(_ => IsVisible = _);
         }
 
         protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -201,7 +240,6 @@ namespace Asv.Avalonia.Map
             }
         }
 
-
         private IDisposable _collectionSubscribe;
         private bool _firstCall = true;
         private int? _lastHash;
@@ -209,13 +247,16 @@ namespace Asv.Avalonia.Map
         public void UpdatePathCollection()
         {
             _collectionSubscribe?.Dispose();
-            if (LogicalChildren.FirstOrDefault() is not Visual child) return;
+            if (LogicalChildren.FirstOrDefault() is not Visual child)
+                return;
             var pathPoints = MapView.GetPath(child);
             if (pathPoints is INotifyCollectionChanged coll)
             {
                 _collectionSubscribe = Observable
-                    .FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(
-                        _ => coll.CollectionChanged += _, _ => coll.CollectionChanged -= _)
+                    .FromEventPattern<
+                        NotifyCollectionChangedEventHandler,
+                        NotifyCollectionChangedEventArgs
+                    >(_ => coll.CollectionChanged += _, _ => coll.CollectionChanged -= _)
                     .ObserveOn(RxApp.MainThreadScheduler)
                     .Subscribe(_ => UpdateLocalPosition());
             }
@@ -239,9 +280,12 @@ namespace Asv.Avalonia.Map
             if (!e.Handled && ItemsControl.ItemsControlFromItemContaner(this) is MapView owner)
             {
                 var p = e.GetCurrentPoint(this);
-                
-                if (p.Properties.PointerUpdateKind is PointerUpdateKind.LeftButtonPressed or
-                    PointerUpdateKind.RightButtonPressed)
+
+                if (
+                    p.Properties.PointerUpdateKind
+                    is PointerUpdateKind.LeftButtonPressed
+                        or PointerUpdateKind.RightButtonPressed
+                )
                 {
                     if (p.Pointer.Type == PointerType.Mouse)
                     {
@@ -265,19 +309,24 @@ namespace Asv.Avalonia.Map
         protected override void OnPointerReleased(PointerReleasedEventArgs e)
         {
             base.OnPointerReleased(e);
-            if (!e.Handled &&
-                !double.IsNaN(_pointerDownPoint.X) &&
-                e.InitialPressMouseButton is MouseButton.Left or MouseButton.Right)
+            if (
+                !e.Handled
+                && !double.IsNaN(_pointerDownPoint.X)
+                && e.InitialPressMouseButton is MouseButton.Left or MouseButton.Right
+            )
             {
                 var point = e.GetCurrentPoint(this);
                 var settings = TopLevel.GetTopLevel(e.Source as Visual)?.PlatformSettings;
                 var tapSize = settings?.GetTapSize(point.Pointer.Type) ?? new Size(4, 4);
-                var tapRect = new Rect(_pointerDownPoint, new Size())
-                    .Inflate(new Thickness(tapSize.Width, tapSize.Height));
+                var tapRect = new Rect(_pointerDownPoint, new Size()).Inflate(
+                    new Thickness(tapSize.Width, tapSize.Height)
+                );
 
-                if (new Rect(Bounds.Size).ContainsExclusive(point.Position) &&
-                    tapRect.ContainsExclusive(point.Position) &&
-                    ItemsControl.ItemsControlFromItemContaner(this) is MapView owner)
+                if (
+                    new Rect(Bounds.Size).ContainsExclusive(point.Position)
+                    && tapRect.ContainsExclusive(point.Position)
+                    && ItemsControl.ItemsControlFromItemContaner(this) is MapView owner
+                )
                 {
                     if (owner.UpdateSelectionFromPointerEvent(this, e))
                         e.Handled = true;
@@ -286,26 +335,30 @@ namespace Asv.Avalonia.Map
 
             _pointerDownPoint = s_invalidPoint;
             var anchor = LogicalChildren.FirstOrDefault() as MapAnchorView;
-            if (anchor is null) return;
+            if (anchor is null)
+                return;
             anchor.ItemIsDragged = false;
         }
 
         public void UpdateLocalPosition()
         {
-            if (_map == null) return;
+            if (_map == null)
+                return;
 
             var child = LogicalChildren.FirstOrDefault() as Visual;
-            
-            if (child == null) return;
 
-            if (IsVisible == false) return;
-            
+            if (child == null)
+                return;
+
+            if (IsVisible == false)
+                return;
+
             var pathPoints = MapView.GetPath(child)?.ToArray();
-            
+
             if (pathPoints is { Length: > 1 })
             {
                 IsShapeNotAvailable = false; // this is for hide content and draw only path
-                
+
                 if (_firstCall)
                 {
                     _firstCall = false;
@@ -318,7 +371,10 @@ namespace Asv.Avalonia.Map
                 foreach (var p in pathPoints)
                 {
                     var itemPoint = _map.FromLatLngToLocal(p);
-                    itemPoint.Offset(-(long)(_map.MapTranslateTransform.X), -(long)(_map.MapTranslateTransform.Y));
+                    itemPoint.Offset(
+                        -(long)(_map.MapTranslateTransform.X),
+                        -(long)(_map.MapTranslateTransform.Y)
+                    );
                     if (itemPoint.X < minX)
                     {
                         minX = itemPoint.X;
@@ -336,19 +392,21 @@ namespace Asv.Avalonia.Map
                 newHash = HashCode.Combine(newHash, MapView.GetStrokeThickness(child));
                 newHash = HashCode.Combine(newHash, MapView.GetStrokeDashArray(child));
                 newHash = HashCode.Combine(newHash, MapView.GetPathOpacity(child));
-                
-                if (localPath.Count < 2) return;
-                
+
+                if (localPath.Count < 2)
+                    return;
+
                 // this is for optimization (if values not changed - no need to update)
-                if (newHash == _lastHash) return;
-                
+                if (newHash == _lastHash)
+                    return;
+
                 _lastHash = newHash;
                 Canvas.SetLeft(this, minX);
                 Canvas.SetTop(this, minY);
                 var truePath = new List<Point>(pathPoints.Length);
                 foreach (var p in localPath)
                 {
-                    p.Offset(-minX,-minY);
+                    p.Offset(-minX, -minY);
                     truePath.Add(new Point(p.X, p.Y));
                 }
                 // Create a StreamGeometry to use to specify _myPath.
@@ -368,7 +426,7 @@ namespace Asv.Avalonia.Map
                     }
                     //ctx.PolyLineTo(localPath, true, true);
                 }
-                
+
                 if (Shape == null)
                 {
                     // Create a path to draw a geometry with.
@@ -411,40 +469,52 @@ namespace Asv.Avalonia.Map
                 {
                     offsetY = Bounds.Height / 2.0;
                 }
-                point.Offset(-(long)(_map.MapTranslateTransform.X + offsetX),
-                    -(long)(_map.MapTranslateTransform.Y + offsetY));
+                point.Offset(
+                    -(long)(_map.MapTranslateTransform.X + offsetX),
+                    -(long)(_map.MapTranslateTransform.Y + offsetY)
+                );
                 Canvas.SetLeft(this, point.X);
                 Canvas.SetTop(this, point.Y);
             }
         }
 
         public static readonly DirectProperty<MapViewItem, bool> IsShapeNotAvailableProperty =
-            AvaloniaProperty.RegisterDirect<MapViewItem, bool>(nameof(IsShapeNotAvailable), o => o.IsShapeNotAvailable);
+            AvaloniaProperty.RegisterDirect<MapViewItem, bool>(
+                nameof(IsShapeNotAvailable),
+                o => o.IsShapeNotAvailable
+            );
         private bool _isShapeNotAvailable = true;
         private bool _isEditable;
 
         public bool IsShapeNotAvailable
         {
             get => _isShapeNotAvailable;
-            private set => SetAndRaise(IsShapeNotAvailableProperty, ref _isShapeNotAvailable, value);
+            private set =>
+                SetAndRaise(IsShapeNotAvailableProperty, ref _isShapeNotAvailable, value);
         }
 
-        public static readonly StyledProperty<Path> ShapeProperty =
-            AvaloniaProperty.Register<MapViewItem, Path>(nameof(Shape));
+        public static readonly StyledProperty<Path> ShapeProperty = AvaloniaProperty.Register<
+            MapViewItem,
+            Path
+        >(nameof(Shape));
         public Path Shape
         {
             get => GetValue(ShapeProperty);
             set => SetValue(ShapeProperty, value);
         }
-        
+
         public static IEnumerable<TSource[]> Chunked<TSource>(IEnumerable<TSource> source, int size)
         {
             return ChunkIterator(source, size);
         }
 
-        private static IEnumerable<TSource[]> ChunkIterator<TSource>(IEnumerable<TSource> source, int size)
+        private static IEnumerable<TSource[]> ChunkIterator<TSource>(
+            IEnumerable<TSource> source,
+            int size
+        )
         {
-            if (size <= 0) throw new ArgumentOutOfRangeException(nameof(size));
+            if (size <= 0)
+                throw new ArgumentOutOfRangeException(nameof(size));
             using IEnumerator<TSource> e = source.GetEnumerator();
             while (e.MoveNext())
             {
@@ -470,9 +540,11 @@ namespace Asv.Avalonia.Map
             }
         }
 
-        public static readonly StyledProperty<bool> IsSelectedProperty =
-            AvaloniaProperty.Register<MapViewItem, bool>(nameof(IsSelected));
-        
+        public static readonly StyledProperty<bool> IsSelectedProperty = AvaloniaProperty.Register<
+            MapViewItem,
+            bool
+        >(nameof(IsSelected));
+
         public bool IsSelected
         {
             get => GetValue(IsSelectedProperty);

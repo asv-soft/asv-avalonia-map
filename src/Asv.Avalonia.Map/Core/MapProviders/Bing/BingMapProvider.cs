@@ -13,13 +13,14 @@ namespace Asv.Avalonia.Map
 {
     public abstract class BingMapProviderBase : GMapProvider, RoutingProvider, GeocodingProvider
     {
-        
         public BingMapProviderBase()
         {
             MaxZoom = null;
             RefererUrl = "http://www.bing.com/maps/";
-            Copyright = string.Format("©{0} Microsoft Corporation, ©{0} NAVTEQ, ©{0} Image courtesy of NASA",
-                DateTime.Today.Year);
+            Copyright = string.Format(
+                "©{0} Microsoft Corporation, ©{0} NAVTEQ, ©{0} Image courtesy of NASA",
+                DateTime.Today.Year
+            );
         }
 
         public string Version = "4810";
@@ -86,7 +87,12 @@ namespace Asv.Avalonia.Map
         /// <param name="tileX">Output parameter receiving the tile X coordinate.</param>
         /// <param name="tileY">Output parameter receiving the tile Y coordinate.</param>
         /// <param name="levelOfDetail">Output parameter receiving the level of detail.</param>
-        internal void QuadKeyToTileXY(string quadKey, out int tileX, out int tileY, out int levelOfDetail)
+        internal void QuadKeyToTileXY(
+            string quadKey,
+            out int tileX,
+            out int tileY,
+            out int levelOfDetail
+        )
         {
             tileX = tileY = 0;
             levelOfDetail = quadKey.Length;
@@ -121,26 +127,17 @@ namespace Asv.Avalonia.Map
 
         public override Guid Id
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
         }
 
         public override string Name
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
         }
 
         public override PureProjection Projection
         {
-            get
-            {
-                return MercatorProjection.Instance;
-            }
+            get { return MercatorProjection.Instance; }
         }
 
         GMapProvider[] _overlays;
@@ -151,7 +148,7 @@ namespace Asv.Avalonia.Map
             {
                 if (_overlays == null)
                 {
-                    _overlays = new GMapProvider[] {this};
+                    _overlays = new GMapProvider[] { this };
                 }
 
                 return _overlays;
@@ -189,7 +186,8 @@ namespace Asv.Avalonia.Map
                     {
                         //old: Vx8dmDflxzT02jJUG8bEjMU07Xr9QWRpPTeRuAZTC1uZFQdDCvK/jUbHKdyHEWj4LvccTPoKofDHtzHsWu/0xuo5u2Y9rj88
                         key = Stuff.GString(
-                            "Jq7FrGTyaYqcrvv9ugBKv4OVSKnmzpigqZtdvtcDdgZexmOZ2RugOexFSmVzTAhOWiHrdhFoNCoySnNF3MyyIOo5u2Y9rj88");
+                            "Jq7FrGTyaYqcrvv9ugBKv4OVSKnmzpigqZtdvtcDdgZexmOZ2RugOexFSmVzTAhOWiHrdhFoNCoySnNF3MyyIOo5u2Y9rj88"
+                        );
                     }
 
                     #region -- try get sesion key --
@@ -197,9 +195,11 @@ namespace Asv.Avalonia.Map
                     if (!string.IsNullOrEmpty(key))
                     {
                         string keyResponse = GMaps.Instance.UseUrlCache
-                            ? Cache.Instance.GetContent("BingLoggingServiceV1" + key,
+                            ? Cache.Instance.GetContent(
+                                "BingLoggingServiceV1" + key,
                                 CacheType.UrlCache,
-                                TimeSpan.FromHours(TTLCache))
+                                TimeSpan.FromHours(TTLCache)
+                            )
                             : string.Empty;
 
                         if (string.IsNullOrEmpty(keyResponse))
@@ -207,27 +207,41 @@ namespace Asv.Avalonia.Map
                             // Bing Maps WPF Control
                             // http://dev.virtualearth.net/webservices/v1/LoggingService/LoggingService.svc/Log?entry=0&auth={0}&fmt=1&type=3&group=MapControl&name=WPF&version=1.0.0.0&session=00000000-0000-0000-0000-000000000000&mkt=en-US
 
-                            keyResponse = GetContentUsingHttp(string.Format(
-                                "http://dev.virtualearth.net/webservices/v1/LoggingService/LoggingService.svc/Log?entry=0&fmt=1&type=3&group=MapControl&name=AJAX&mkt=en-us&auth={0}&jsonp=microsoftMapsNetworkCallback",
-                                key));
+                            keyResponse = GetContentUsingHttp(
+                                string.Format(
+                                    "http://dev.virtualearth.net/webservices/v1/LoggingService/LoggingService.svc/Log?entry=0&fmt=1&type=3&group=MapControl&name=AJAX&mkt=en-us&auth={0}&jsonp=microsoftMapsNetworkCallback",
+                                    key
+                                )
+                            );
 
-                            if (!string.IsNullOrEmpty(keyResponse) && keyResponse.Contains("ValidCredentials"))
+                            if (
+                                !string.IsNullOrEmpty(keyResponse)
+                                && keyResponse.Contains("ValidCredentials")
+                            )
                             {
                                 if (GMaps.Instance.UseUrlCache)
                                 {
-                                    Cache.Instance.SaveContent("BingLoggingServiceV1" + key,
+                                    Cache.Instance.SaveContent(
+                                        "BingLoggingServiceV1" + key,
                                         CacheType.UrlCache,
-                                        keyResponse);
+                                        keyResponse
+                                    );
                                 }
                             }
                         }
 
-                        if (!string.IsNullOrEmpty(keyResponse) && keyResponse.Contains("sessionId") &&
-                            keyResponse.Contains("ValidCredentials"))
+                        if (
+                            !string.IsNullOrEmpty(keyResponse)
+                            && keyResponse.Contains("sessionId")
+                            && keyResponse.Contains("ValidCredentials")
+                        )
                         {
                             // microsoftMapsNetworkCallback({"sessionId" : "xxx", "authenticationResultCode" : "ValidCredentials"})
 
-                            SessionId = keyResponse.Split(',')[0].Split(':')[1].Replace("\"", string.Empty)
+                            SessionId = keyResponse
+                                .Split(',')[0]
+                                .Split(':')[1]
+                                .Replace("\"", string.Empty)
                                 .Replace(" ", string.Empty);
                             Debug.WriteLine("GMapProviders.BingMap.SessionId: " + SessionId);
                         }
@@ -247,7 +261,11 @@ namespace Asv.Avalonia.Map
 
                         string url = @"http://www.bing.com/maps";
                         string html = GMaps.Instance.UseUrlCache
-                            ? Cache.Instance.GetContent(url, CacheType.UrlCache, TimeSpan.FromDays(TTLCache))
+                            ? Cache.Instance.GetContent(
+                                url,
+                                CacheType.UrlCache,
+                                TimeSpan.FromDays(TTLCache)
+                            )
                             : string.Empty;
 
                         if (string.IsNullOrEmpty(html))
@@ -284,8 +302,13 @@ namespace Asv.Avalonia.Map
                                         GMapProviders.BingHybridMap.Version = ver;
                                         GMapProviders.BingOSMap.Version = ver;
 #if DEBUG
-                                        Debug.WriteLine("GMapProviders.BingMap.Version: " + ver + ", old: " + old +
-                                                        ", consider updating source");
+                                        Debug.WriteLine(
+                                            "GMapProviders.BingMap.Version: "
+                                                + ver
+                                                + ", old: "
+                                                + old
+                                                + ", consider updating source"
+                                        );
                                         if (Debugger.IsAttached)
                                         {
                                             Thread.Sleep(5555);
@@ -294,7 +317,9 @@ namespace Asv.Avalonia.Map
                                     }
                                     else
                                     {
-                                        Debug.WriteLine("GMapProviders.BingMap.Version: " + ver + ", OK");
+                                        Debug.WriteLine(
+                                            "GMapProviders.BingMap.Version: " + ver + ", OK"
+                                        );
                                     }
                                 }
                             }
@@ -332,7 +357,7 @@ namespace Asv.Avalonia.Map
         internal string GetTileUrl(string imageryType)
         {
             //Retrieve map tile URL from the Imagery Metadata service: http://msdn.microsoft.com/en-us/library/ff701716.aspx
-            //This ensures that the current tile URL is always used. 
+            //This ensures that the current tile URL is always used.
             //This will prevent the app from breaking when the map tiles change.
 
             string ret = string.Empty;
@@ -340,13 +365,18 @@ namespace Asv.Avalonia.Map
             {
                 try
                 {
-                    string url = "http://dev.virtualearth.net/REST/V1/Imagery/Metadata/" + imageryType +
-                                 "?output=xml&key=" + SessionId;
+                    string url =
+                        "http://dev.virtualearth.net/REST/V1/Imagery/Metadata/"
+                        + imageryType
+                        + "?output=xml&key="
+                        + SessionId;
 
                     string r = GMaps.Instance.UseUrlCache
-                        ? Cache.Instance.GetContent("GetTileUrl" + imageryType,
+                        ? Cache.Instance.GetContent(
+                            "GetTileUrl" + imageryType,
                             CacheType.UrlCache,
-                            TimeSpan.FromHours(TTLCache))
+                            TimeSpan.FromHours(TTLCache)
+                        )
                         : string.Empty;
                     bool cache = false;
 
@@ -377,22 +407,33 @@ namespace Asv.Avalonia.Map
                                 {
                                     if (cache && GMaps.Instance.UseUrlCache)
                                     {
-                                        Cache.Instance.SaveContent("GetTileUrl" + imageryType, CacheType.UrlCache, r);
+                                        Cache.Instance.SaveContent(
+                                            "GetTileUrl" + imageryType,
+                                            CacheType.UrlCache,
+                                            r
+                                        );
                                     }
 
                                     string baseTileUrl = imageUrl.InnerText;
 
-                                    if (baseTileUrl.Contains("{key}") || baseTileUrl.Contains("{token}"))
+                                    if (
+                                        baseTileUrl.Contains("{key}")
+                                        || baseTileUrl.Contains("{token}")
+                                    )
                                     {
-                                        baseTileUrl.Replace("{key}", SessionId).Replace("{token}", SessionId);
+                                        baseTileUrl
+                                            .Replace("{key}", SessionId)
+                                            .Replace("{token}", SessionId);
                                     }
                                     else if (ForceSessionIdOnTileAccess)
                                     {
-                                        // haven't seen anyone doing that, yet? ;/                            
+                                        // haven't seen anyone doing that, yet? ;/
                                         baseTileUrl += "&key=" + SessionId;
                                     }
 
-                                    Debug.WriteLine("GetTileUrl, UrlFormat[" + imageryType + "]: " + baseTileUrl);
+                                    Debug.WriteLine(
+                                        "GetTileUrl, UrlFormat[" + imageryType + "]: " + baseTileUrl
+                                    );
 
                                     ret = baseTileUrl;
                                     break;
@@ -412,17 +453,25 @@ namespace Asv.Avalonia.Map
 
         #region RoutingProvider
 
-        public MapRoute GetRoute(GeoPoint start, GeoPoint end, bool avoidHighways, bool walkingMode, int zoom)
+        public MapRoute GetRoute(
+            GeoPoint start,
+            GeoPoint end,
+            bool avoidHighways,
+            bool walkingMode,
+            int zoom
+        )
         {
             string tooltip;
             int numLevels;
             int zoomFactor;
             MapRoute ret = null;
-            var points = GetRoutePoints(MakeRouteUrl(start, end, LanguageStr, avoidHighways, walkingMode),
+            var points = GetRoutePoints(
+                MakeRouteUrl(start, end, LanguageStr, avoidHighways, walkingMode),
                 zoom,
                 out tooltip,
                 out numLevels,
-                out zoomFactor);
+                out zoomFactor
+            );
             if (points != null)
             {
                 ret = new MapRoute(points, tooltip);
@@ -431,17 +480,25 @@ namespace Asv.Avalonia.Map
             return ret;
         }
 
-        public MapRoute GetRoute(string start, string end, bool avoidHighways, bool walkingMode, int zoom)
+        public MapRoute GetRoute(
+            string start,
+            string end,
+            bool avoidHighways,
+            bool walkingMode,
+            int zoom
+        )
         {
             string tooltip;
             int numLevels;
             int zoomFactor;
             MapRoute ret = null;
-            var points = GetRoutePoints(MakeRouteUrl(start, end, LanguageStr, avoidHighways, walkingMode),
+            var points = GetRoutePoints(
+                MakeRouteUrl(start, end, LanguageStr, avoidHighways, walkingMode),
                 zoom,
                 out tooltip,
                 out numLevels,
-                out zoomFactor);
+                out zoomFactor
+            );
             if (points != null)
             {
                 ret = new MapRoute(points, tooltip);
@@ -450,26 +507,41 @@ namespace Asv.Avalonia.Map
             return ret;
         }
 
-        string MakeRouteUrl(string start, string end, string language, bool avoidHighways, bool walkingMode)
+        string MakeRouteUrl(
+            string start,
+            string end,
+            string language,
+            bool avoidHighways,
+            bool walkingMode
+        )
         {
             string addition = avoidHighways ? "&avoid=highways" : string.Empty;
             string mode = walkingMode ? "Walking" : "Driving";
 
-            return string.Format(CultureInfo.InvariantCulture,
+            return string.Format(
+                CultureInfo.InvariantCulture,
                 RouteUrlFormatPointQueries,
                 mode,
                 start,
                 end,
                 addition,
-                SessionId);
+                SessionId
+            );
         }
 
-        string MakeRouteUrl(GeoPoint start, GeoPoint end, string language, bool avoidHighways, bool walkingMode)
+        string MakeRouteUrl(
+            GeoPoint start,
+            GeoPoint end,
+            string language,
+            bool avoidHighways,
+            bool walkingMode
+        )
         {
             string addition = avoidHighways ? "&avoid=highways" : string.Empty;
             string mode = walkingMode ? "Walking" : "Driving";
 
-            return string.Format(CultureInfo.InvariantCulture,
+            return string.Format(
+                CultureInfo.InvariantCulture,
                 RouteUrlFormatGeoPoint,
                 mode,
                 start.Latitude,
@@ -477,11 +549,17 @@ namespace Asv.Avalonia.Map
                 end.Latitude,
                 end.Longitude,
                 addition,
-                SessionId);
+                SessionId
+            );
         }
 
-        List<GeoPoint> GetRoutePoints(string url, int zoom, out string tooltipHtml, out int numLevel,
-            out int zoomFactor)
+        List<GeoPoint> GetRoutePoints(
+            string url,
+            int zoom,
+            out string tooltipHtml,
+            out int numLevel,
+            out int zoomFactor
+        )
         {
             List<GeoPoint> points = null;
             tooltipHtml = string.Empty;
@@ -490,7 +568,11 @@ namespace Asv.Avalonia.Map
             try
             {
                 string route = GMaps.Instance.UseRouteCache
-                    ? Cache.Instance.GetContent(url, CacheType.RouteCache, TimeSpan.FromHours(TTLCache))
+                    ? Cache.Instance.GetContent(
+                        url,
+                        CacheType.RouteCache,
+                        TimeSpan.FromHours(TTLCache)
+                    )
                     : string.Empty;
 
                 if (string.IsNullOrEmpty(route))
@@ -541,7 +623,9 @@ namespace Asv.Avalonia.Map
                     {
                         case "200":
                         {
-                            xn = xn["ResourceSets"]["ResourceSet"]["Resources"]["Route"]["RoutePath"]["Line"];
+                            xn = xn["ResourceSets"]["ResourceSet"]["Resources"]["Route"][
+                                "RoutePath"
+                            ]["Line"];
                             var xnl = xn.ChildNodes;
                             if (xnl.Count > 0)
                             {
@@ -550,9 +634,19 @@ namespace Asv.Avalonia.Map
                                 {
                                     XmlNode latitude = xno["Latitude"];
                                     XmlNode longitude = xno["Longitude"];
-                                    points.Add(new GeoPoint(
-                                        double.Parse(latitude.InnerText, CultureInfo.InvariantCulture),
-                                        double.Parse(longitude.InnerText, CultureInfo.InvariantCulture),0));
+                                    points.Add(
+                                        new GeoPoint(
+                                            double.Parse(
+                                                latitude.InnerText,
+                                                CultureInfo.InvariantCulture
+                                            ),
+                                            double.Parse(
+                                                longitude.InnerText,
+                                                CultureInfo.InvariantCulture
+                                            ),
+                                            0
+                                        )
+                                    );
                                 }
                             }
 
@@ -563,18 +657,22 @@ namespace Asv.Avalonia.Map
                             throw new Exception("Bad Request, The request contained an error.");
                         case "401":
                             throw new Exception(
-                                "Unauthorized, Access was denied. You may have entered your credentials incorrectly, or you might not have access to the requested resource or operation.");
+                                "Unauthorized, Access was denied. You may have entered your credentials incorrectly, or you might not have access to the requested resource or operation."
+                            );
                         case "403":
                             throw new Exception(
-                                "Forbidden, The request is for something forbidden. Authorization will not help.");
+                                "Forbidden, The request is for something forbidden. Authorization will not help."
+                            );
                         case "404":
                             throw new Exception("Not Found, The requested resource was not found.");
                         case "500":
                             throw new Exception(
-                                "Internal Server Error, Your request could not be completed because there was a problem with the service.");
+                                "Internal Server Error, Your request could not be completed because there was a problem with the service."
+                            );
                         case "501":
                             throw new Exception(
-                                "Service Unavailable, There's a problem with the service right now. Please try again later.");
+                                "Service Unavailable, There's a problem with the service right now. Please try again later."
+                            );
                         default:
                             break; // unknown, for possible future error codes
                     }
@@ -605,7 +703,10 @@ namespace Asv.Avalonia.Map
         public GeoCoderStatusCode GetPoints(string keywords, out List<GeoPoint> pointList)
         {
             //Escape keywords to better handle special characters.
-            return GetLatLngFromGeocoderUrl(MakeGeocoderUrl("q=" + Uri.EscapeDataString(keywords)), out pointList);
+            return GetLatLngFromGeocoderUrl(
+                MakeGeocoderUrl("q=" + Uri.EscapeDataString(keywords)),
+                out pointList
+            );
         }
 
         public GeoPoint? GetPoint(string keywords, out GeoCoderStatusCode status)
@@ -639,7 +740,11 @@ namespace Asv.Avalonia.Map
             AddFieldIfNotEmpty(ref parameters, "postalCode", placemark.PostalCodeNumber);
 
             if (!string.IsNullOrEmpty(placemark.HouseNo))
-                AddFieldIfNotEmpty(ref parameters, "addressLine", placemark.ThoroughfareName + " " + placemark.HouseNo);
+                AddFieldIfNotEmpty(
+                    ref parameters,
+                    "addressLine",
+                    placemark.ThoroughfareName + " " + placemark.HouseNo
+                );
             else
                 AddFieldIfNotEmpty(ref parameters, "addressLine", placemark.ThoroughfareName);
 
@@ -663,7 +768,10 @@ namespace Asv.Avalonia.Map
             return false;
         }
 
-        public GeoCoderStatusCode GetPlacemarks(GeoPoint location, out List<Placemark> placemarkList)
+        public GeoCoderStatusCode GetPlacemarks(
+            GeoPoint location,
+            out List<Placemark> placemarkList
+        )
         {
             // http://msdn.microsoft.com/en-us/library/ff701713.aspx
             throw new NotImplementedException();
@@ -677,7 +785,12 @@ namespace Asv.Avalonia.Map
 
         string MakeGeocoderUrl(string keywords)
         {
-            return string.Format(CultureInfo.InvariantCulture, GeocoderUrlFormat, keywords, SessionId);
+            return string.Format(
+                CultureInfo.InvariantCulture,
+                GeocoderUrlFormat,
+                keywords,
+                SessionId
+            );
         }
 
         GeoCoderStatusCode GetLatLngFromGeocoderUrl(string url, out List<GeoPoint> pointList)
@@ -688,7 +801,11 @@ namespace Asv.Avalonia.Map
             try
             {
                 string geo = GMaps.Instance.UseGeocoderCache
-                    ? Cache.Instance.GetContent(url, CacheType.GeocoderCache, TimeSpan.FromHours(TTLCache))
+                    ? Cache.Instance.GetContent(
+                        url,
+                        CacheType.GeocoderCache,
+                        TimeSpan.FromHours(TTLCache)
+                    )
                     : string.Empty;
 
                 bool cache = false;
@@ -723,9 +840,19 @@ namespace Asv.Avalonia.Map
                                 {
                                     XmlNode latitude = xno["Point"]["Latitude"];
                                     XmlNode longitude = xno["Point"]["Longitude"];
-                                    pointList.Add(new GeoPoint(
-                                        Double.Parse(latitude.InnerText, CultureInfo.InvariantCulture),
-                                        Double.Parse(longitude.InnerText, CultureInfo.InvariantCulture),0));
+                                    pointList.Add(
+                                        new GeoPoint(
+                                            Double.Parse(
+                                                latitude.InnerText,
+                                                CultureInfo.InvariantCulture
+                                            ),
+                                            Double.Parse(
+                                                longitude.InnerText,
+                                                CultureInfo.InvariantCulture
+                                            ),
+                                            0
+                                        )
+                                    );
                                 }
 
                                 if (pointList.Count > 0)
@@ -734,7 +861,11 @@ namespace Asv.Avalonia.Map
 
                                     if (cache && GMaps.Instance.UseGeocoderCache)
                                     {
-                                        Cache.Instance.SaveContent(url, CacheType.GeocoderCache, geo);
+                                        Cache.Instance.SaveContent(
+                                            url,
+                                            CacheType.GeocoderCache,
+                                            geo
+                                        );
                                     }
 
                                     break;
@@ -755,7 +886,7 @@ namespace Asv.Avalonia.Map
                                 break; // Forbidden, The request is for something forbidden. Authorization will not help.
                             case "404":
                                 status = GeoCoderStatusCode.ZERO_RESULTS;
-                                break; // Not Found, The requested resource was not found. 
+                                break; // Not Found, The requested resource was not found.
                             case "500":
                                 status = GeoCoderStatusCode.ERROR;
                                 break; // Internal Server Error, Your request could not be completed because there was a problem with the service.
@@ -779,7 +910,8 @@ namespace Asv.Avalonia.Map
         }
 
         // http://dev.virtualearth.net/REST/v1/Locations/1%20Microsoft%20Way%20Redmond%20WA%2098052?o=xml&key=BingMapsKey
-        static readonly string GeocoderUrlFormat = "http://dev.virtualearth.net/REST/v1/Locations?{0}&o=xml&key={1}";
+        static readonly string GeocoderUrlFormat =
+            "http://dev.virtualearth.net/REST/v1/Locations?{0}&o=xml&key={1}";
 
         #endregion GeocodingProvider
     }
@@ -791,9 +923,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly BingMapProvider Instance;
 
-        BingMapProvider()
-        {
-        }
+        BingMapProvider() { }
 
         static BingMapProvider()
         {
@@ -802,15 +932,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("D0CEB371-F10A-4E12-A2C1-DF617D6674A8");
+        public override Guid Id { get; } = new Guid("D0CEB371-F10A-4E12-A2C1-DF617D6674A8");
 
-        public override string Name
-        {
-            get;
-        } = "BingMap";
+        public override string Name { get; } = "BingMap";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {
@@ -830,7 +954,9 @@ namespace Asv.Avalonia.Map
                 _urlDynamicFormat = GetTileUrl("Road");
                 if (!string.IsNullOrEmpty(_urlDynamicFormat))
                 {
-                    _urlDynamicFormat = _urlDynamicFormat.Replace("{subdomain}", "t{0}").Replace("{quadkey}", "{1}")
+                    _urlDynamicFormat = _urlDynamicFormat
+                        .Replace("{subdomain}", "t{0}")
+                        .Replace("{quadkey}", "{1}")
                         .Replace("{culture}", "{2}");
                 }
             }
@@ -847,12 +973,14 @@ namespace Asv.Avalonia.Map
                 return string.Format(_urlDynamicFormat, GetServerNum(pos, 4), key, language);
             }
 
-            return string.Format(UrlFormat,
+            return string.Format(
+                UrlFormat,
                 GetServerNum(pos, 4),
                 key,
                 Version,
                 language,
-                ForceSessionIdOnTileAccess ? "&key=" + SessionId : string.Empty);
+                ForceSessionIdOnTileAccess ? "&key=" + SessionId : string.Empty
+            );
         }
 
         string _urlDynamicFormat = string.Empty;

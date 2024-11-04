@@ -17,7 +17,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution 
 		..\publish_github.bat = ..\publish_github.bat
 		..\LICENSE = ..\LICENSE
 		..\.github\workflows\release-debug-version.yml = ..\.github\workflows\release-debug-version.yml
-		..\.github\workflows\release-pre-version.yml = ..\.github\workflows\release-pre-version.yml
 		..\.github\workflows\release-action.yml = ..\.github\workflows\release-action.yml
 	EndProjectSection
 EndProject

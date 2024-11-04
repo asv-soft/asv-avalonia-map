@@ -7,6 +7,24 @@
         <TrimMode>copyused</TrimMode>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <Version>1.0.3</Version>
+        <CodeAnalysisRuleSet>../CodeStyle.ruleset</CodeAnalysisRuleSet>
+        <WarningsAsErrors>
+            CS0169,
+            CS0618,
+            CS1502,
+            CS1503,
+            CS8524,
+            CS8600,
+            CS8601,
+            CS8602,
+            CS8603,
+            CS8604,
+            CS8625,
+            CS8629,
+            CS8762,
+            CA1510,
+            CA1851
+        </WarningsAsErrors>
     </PropertyGroup>
 
     <ItemGroup>
@@ -27,6 +45,14 @@
         <PackageReference Include="ReactiveUI.Fody" Version="$(ReactiveUIVersion)"/>
         <PackageReference Include="Material.Icons.Avalonia" Version="$(MaterialIconsAvaloniaVersion)"/>
         <PackageReference Include="FluentAvaloniaUI" Version="$(FluentAvaloniaUIVersion)"/>
+        <PackageReference Include="Roslynator.Analyzers" Version="4.12.9">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="XamlNameReferenceGenerator" Version="1.4.2"/>
     </ItemGroup>
     <ItemGroup>

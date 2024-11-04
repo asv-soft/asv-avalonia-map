@@ -21,15 +21,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("BDBAA939-6597-4D87-8F4F-261C49E35F56");
+        public override Guid Id { get; } = new Guid("BDBAA939-6597-4D87-8F4F-261C49E35F56");
 
-        public override string Name
-        {
-            get;
-        } = "OpenCycleLandscapeMap";
+        public override string Name { get; } = "OpenCycleLandscapeMap";
 
         GMapProvider[] _overlays;
 
@@ -39,7 +33,7 @@ namespace Asv.Avalonia.Map
             {
                 if (_overlays == null)
                 {
-                    _overlays = new GMapProvider[] {this};
+                    _overlays = new GMapProvider[] { this };
                 }
 
                 return _overlays;
@@ -61,7 +55,7 @@ namespace Asv.Avalonia.Map
             return string.Format(UrlFormat, letter, zoom, pos.X, pos.Y);
         }
 
-
-        static readonly string UrlFormat = "http://{0}.tile3.opencyclemap.org/landscape/{1}/{2}/{3}.png";
+        static readonly string UrlFormat =
+            "http://{0}.tile3.opencyclemap.org/landscape/{1}/{2}/{3}.png";
     }
 }

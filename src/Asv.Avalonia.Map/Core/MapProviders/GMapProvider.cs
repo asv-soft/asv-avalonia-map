@@ -15,7 +15,6 @@ namespace Asv.Avalonia.Map
     /// </summary>
     public class GMapProviders
     {
-        
         static GMapProviders()
         {
             List = new List<GMapProvider>();
@@ -46,15 +45,14 @@ namespace Asv.Avalonia.Map
             }
         }
 
-        GMapProviders()
-        {
-        }
+        GMapProviders() { }
 
         public static readonly EmptyProvider EmptyProvider = EmptyProvider.Instance;
 
         public static readonly OpenStreetMapProvider OpenStreetMap = OpenStreetMapProvider.Instance;
 
-        public static readonly OpenStreet4UMapProvider OpenStreet4UMap = OpenStreet4UMapProvider.Instance;
+        public static readonly OpenStreet4UMapProvider OpenStreet4UMap =
+            OpenStreet4UMapProvider.Instance;
 
         public static readonly OpenCycleMapProvider OpenCycleMap = OpenCycleMapProvider.Instance;
 
@@ -64,7 +62,8 @@ namespace Asv.Avalonia.Map
         public static readonly OpenCycleTransportMapProvider OpenCycleTransportMap =
             OpenCycleTransportMapProvider.Instance;
 
-        public static readonly OpenStreetMapQuestProvider OpenStreetMapQuest = OpenStreetMapQuestProvider.Instance;
+        public static readonly OpenStreetMapQuestProvider OpenStreetMapQuest =
+            OpenStreetMapQuestProvider.Instance;
 
         public static readonly OpenStreetMapQuestSatelliteProvider OpenStreetMapQuestSatellite =
             OpenStreetMapQuestSatelliteProvider.Instance;
@@ -72,76 +71,94 @@ namespace Asv.Avalonia.Map
         public static readonly OpenStreetMapQuestHybridProvider OpenStreetMapQuestHybrid =
             OpenStreetMapQuestHybridProvider.Instance;
 
-        public static readonly OpenSeaMapHybridProvider OpenSeaMapHybrid = OpenSeaMapHybridProvider.Instance;
+        public static readonly OpenSeaMapHybridProvider OpenSeaMapHybrid =
+            OpenSeaMapHybridProvider.Instance;
 
 #if OpenStreetOsm
-      public static readonly OpenStreetOsmProvider OpenStreetOsm = OpenStreetOsmProvider.Instance;
+        public static readonly OpenStreetOsmProvider OpenStreetOsm = OpenStreetOsmProvider.Instance;
 #endif
 
 #if OpenStreetMapSurfer
-      public static readonly OpenStreetMapSurferProvider OpenStreetMapSurfer = OpenStreetMapSurferProvider.Instance;
-      public static readonly OpenStreetMapSurferTerrainProvider OpenStreetMapSurferTerrain =
- OpenStreetMapSurferTerrainProvider.Instance;
+        public static readonly OpenStreetMapSurferProvider OpenStreetMapSurfer =
+            OpenStreetMapSurferProvider.Instance;
+        public static readonly OpenStreetMapSurferTerrainProvider OpenStreetMapSurferTerrain =
+            OpenStreetMapSurferTerrainProvider.Instance;
 #endif
         public static readonly WikiMapiaMapProvider WikiMapiaMap = WikiMapiaMapProvider.Instance;
 
         public static readonly BingMapProvider BingMap = BingMapProvider.Instance;
-        public static readonly BingSatelliteMapProvider BingSatelliteMap = BingSatelliteMapProvider.Instance;
+        public static readonly BingSatelliteMapProvider BingSatelliteMap =
+            BingSatelliteMapProvider.Instance;
         public static readonly BingHybridMapProvider BingHybridMap = BingHybridMapProvider.Instance;
         public static readonly BingOSMapProvider BingOSMap = BingOSMapProvider.Instance;
 
         public static readonly YahooMapProvider YahooMap = YahooMapProvider.Instance;
-        public static readonly YahooSatelliteMapProvider YahooSatelliteMap = YahooSatelliteMapProvider.Instance;
-        public static readonly YahooHybridMapProvider YahooHybridMap = YahooHybridMapProvider.Instance;
+        public static readonly YahooSatelliteMapProvider YahooSatelliteMap =
+            YahooSatelliteMapProvider.Instance;
+        public static readonly YahooHybridMapProvider YahooHybridMap =
+            YahooHybridMapProvider.Instance;
 
         public static readonly GoogleMapProvider GoogleMap = GoogleMapProvider.Instance;
-        public static readonly GoogleSatelliteMapProvider GoogleSatelliteMap = GoogleSatelliteMapProvider.Instance;
-        public static readonly GoogleHybridMapProvider GoogleHybridMap = GoogleHybridMapProvider.Instance;
-        public static readonly GoogleTerrainMapProvider GoogleTerrainMap = GoogleTerrainMapProvider.Instance;
+        public static readonly GoogleSatelliteMapProvider GoogleSatelliteMap =
+            GoogleSatelliteMapProvider.Instance;
+        public static readonly GoogleHybridMapProvider GoogleHybridMap =
+            GoogleHybridMapProvider.Instance;
+        public static readonly GoogleTerrainMapProvider GoogleTerrainMap =
+            GoogleTerrainMapProvider.Instance;
 
-        public static readonly GoogleChinaMapProvider GoogleChinaMap = GoogleChinaMapProvider.Instance;
+        public static readonly GoogleChinaMapProvider GoogleChinaMap =
+            GoogleChinaMapProvider.Instance;
 
         public static readonly GoogleChinaSatelliteMapProvider GoogleChinaSatelliteMap =
             GoogleChinaSatelliteMapProvider.Instance;
 
-        public static readonly GoogleChinaHybridMapProvider
-            GoogleChinaHybridMap = GoogleChinaHybridMapProvider.Instance;
+        public static readonly GoogleChinaHybridMapProvider GoogleChinaHybridMap =
+            GoogleChinaHybridMapProvider.Instance;
 
         public static readonly GoogleChinaTerrainMapProvider GoogleChinaTerrainMap =
             GoogleChinaTerrainMapProvider.Instance;
 
-        public static readonly GoogleKoreaMapProvider GoogleKoreaMap = GoogleKoreaMapProvider.Instance;
+        public static readonly GoogleKoreaMapProvider GoogleKoreaMap =
+            GoogleKoreaMapProvider.Instance;
 
         public static readonly GoogleKoreaSatelliteMapProvider GoogleKoreaSatelliteMap =
             GoogleKoreaSatelliteMapProvider.Instance;
 
-        public static readonly GoogleKoreaHybridMapProvider
-            GoogleKoreaHybridMap = GoogleKoreaHybridMapProvider.Instance;
+        public static readonly GoogleKoreaHybridMapProvider GoogleKoreaHybridMap =
+            GoogleKoreaHybridMapProvider.Instance;
 
         public static readonly NearMapProvider NearMap = NearMapProvider.Instance;
-        public static readonly NearSatelliteMapProvider NearSatelliteMap = NearSatelliteMapProvider.Instance;
+        public static readonly NearSatelliteMapProvider NearSatelliteMap =
+            NearSatelliteMapProvider.Instance;
         public static readonly NearHybridMapProvider NearHybridMap = NearHybridMapProvider.Instance;
 
         public static readonly HereMapProvider HereMap = HereMapProvider.Instance;
-        public static readonly HereSatelliteMapProvider HereSatelliteMap = HereSatelliteMapProvider.Instance;
+        public static readonly HereSatelliteMapProvider HereSatelliteMap =
+            HereSatelliteMapProvider.Instance;
         public static readonly HereHybridMapProvider HereHybridMap = HereHybridMapProvider.Instance;
-        public static readonly HereTerrainMapProvider HereTerrainMap = HereTerrainMapProvider.Instance;
+        public static readonly HereTerrainMapProvider HereTerrainMap =
+            HereTerrainMapProvider.Instance;
 
         public static readonly YandexMapProvider YandexMap = YandexMapProvider.Instance;
-        public static readonly YandexSatelliteMapProvider YandexSatelliteMap = YandexSatelliteMapProvider.Instance;
-        public static readonly YandexHybridMapProvider YandexHybridMap = YandexHybridMapProvider.Instance;
+        public static readonly YandexSatelliteMapProvider YandexSatelliteMap =
+            YandexSatelliteMapProvider.Instance;
+        public static readonly YandexHybridMapProvider YandexHybridMap =
+            YandexHybridMapProvider.Instance;
 
         public static readonly LithuaniaMapProvider LithuaniaMap = LithuaniaMapProvider.Instance;
-        public static readonly LithuaniaReliefMapProvider LithuaniaReliefMap = LithuaniaReliefMapProvider.Instance;
-        public static readonly Lithuania3dMapProvider Lithuania3dMap = Lithuania3dMapProvider.Instance;
+        public static readonly LithuaniaReliefMapProvider LithuaniaReliefMap =
+            LithuaniaReliefMapProvider.Instance;
+        public static readonly Lithuania3dMapProvider Lithuania3dMap =
+            Lithuania3dMapProvider.Instance;
 
-        public static readonly LithuaniaOrtoFotoMapProvider
-            LithuaniaOrtoFotoMap = LithuaniaOrtoFotoMapProvider.Instance;
+        public static readonly LithuaniaOrtoFotoMapProvider LithuaniaOrtoFotoMap =
+            LithuaniaOrtoFotoMapProvider.Instance;
 
         public static readonly LithuaniaOrtoFotoOldMapProvider LithuaniaOrtoFotoOldMap =
             LithuaniaOrtoFotoOldMapProvider.Instance;
 
-        public static readonly LithuaniaHybridMapProvider LithuaniaHybridMap = LithuaniaHybridMapProvider.Instance;
+        public static readonly LithuaniaHybridMapProvider LithuaniaHybridMap =
+            LithuaniaHybridMapProvider.Instance;
 
         public static readonly LithuaniaHybridOldMapProvider LithuaniaHybridOldMap =
             LithuaniaHybridOldMapProvider.Instance;
@@ -150,7 +167,8 @@ namespace Asv.Avalonia.Map
 
         public static readonly LatviaMapProvider LatviaMap = LatviaMapProvider.Instance;
 
-        public static readonly MapBenderWMSProvider MapBenderWMSdemoMap = MapBenderWMSProvider.Instance;
+        public static readonly MapBenderWMSProvider MapBenderWMSdemoMap =
+            MapBenderWMSProvider.Instance;
 
         public static readonly TurkeyMapProvider TurkeyMap = TurkeyMapProvider.Instance;
 
@@ -160,23 +178,31 @@ namespace Asv.Avalonia.Map
 
         public static readonly CzechMapProviderOld CzechOldMap = CzechMapProviderOld.Instance;
 
-        public static readonly CzechSatelliteMapProviderOld
-            CzechSatelliteOldMap = CzechSatelliteMapProviderOld.Instance;
+        public static readonly CzechSatelliteMapProviderOld CzechSatelliteOldMap =
+            CzechSatelliteMapProviderOld.Instance;
 
-        public static readonly CzechHybridMapProviderOld CzechHybridOldMap = CzechHybridMapProviderOld.Instance;
-        public static readonly CzechTuristMapProviderOld CzechTuristOldMap = CzechTuristMapProviderOld.Instance;
-        public static readonly CzechHistoryMapProviderOld CzechHistoryOldMap = CzechHistoryMapProviderOld.Instance;
+        public static readonly CzechHybridMapProviderOld CzechHybridOldMap =
+            CzechHybridMapProviderOld.Instance;
+        public static readonly CzechTuristMapProviderOld CzechTuristOldMap =
+            CzechTuristMapProviderOld.Instance;
+        public static readonly CzechHistoryMapProviderOld CzechHistoryOldMap =
+            CzechHistoryMapProviderOld.Instance;
 
         public static readonly CzechMapProvider CzechMap = CzechMapProvider.Instance;
-        public static readonly CzechSatelliteMapProvider CzechSatelliteMap = CzechSatelliteMapProvider.Instance;
-        public static readonly CzechHybridMapProvider CzechHybridMap = CzechHybridMapProvider.Instance;
-        public static readonly CzechTuristMapProvider CzechTuristMap = CzechTuristMapProvider.Instance;
+        public static readonly CzechSatelliteMapProvider CzechSatelliteMap =
+            CzechSatelliteMapProvider.Instance;
+        public static readonly CzechHybridMapProvider CzechHybridMap =
+            CzechHybridMapProvider.Instance;
+        public static readonly CzechTuristMapProvider CzechTuristMap =
+            CzechTuristMapProvider.Instance;
 
-        public static readonly CzechTuristWinterMapProvider
-            CzechTuristWinterMap = CzechTuristWinterMapProvider.Instance;
+        public static readonly CzechTuristWinterMapProvider CzechTuristWinterMap =
+            CzechTuristWinterMapProvider.Instance;
 
-        public static readonly CzechHistoryMapProvider CzechHistoryMap = CzechHistoryMapProvider.Instance;
-        public static readonly CzechGeographicMapProvider CzechGeographicMap = CzechGeographicMapProvider.Instance;
+        public static readonly CzechHistoryMapProvider CzechHistoryMap =
+            CzechHistoryMapProvider.Instance;
+        public static readonly CzechGeographicMapProvider CzechGeographicMap =
+            CzechGeographicMapProvider.Instance;
 
         public static readonly ArcGIS_Imagery_World_2D_MapProvider ArcGIS_Imagery_World_2D_Map =
             ArcGIS_Imagery_World_2D_MapProvider.Instance;
@@ -209,7 +235,8 @@ namespace Asv.Avalonia.Map
             ArcGIS_DarbAE_Q2_2011_NAVTQ_Eng_V5_MapProvider.Instance;
 
         public static readonly SwedenMapProvider SwedenMap = SwedenMapProvider.Instance;
-        public static readonly SwedenMapProviderAlt SwedenMapAlternative = SwedenMapProviderAlt.Instance;
+        public static readonly SwedenMapProviderAlt SwedenMapAlternative =
+            SwedenMapProviderAlt.Instance;
 
         public static readonly UMPMapProvider UMPMap = UMPMapProvider.Instance;
 
@@ -218,10 +245,7 @@ namespace Asv.Avalonia.Map
         /// <summary>
         ///     get all instances of the supported providers
         /// </summary>
-        public static List<GMapProvider> List
-        {
-            get;
-        }
+        public static List<GMapProvider> List { get; }
 
         static Dictionary<Guid, GMapProvider> Hash;
 
@@ -269,38 +293,25 @@ namespace Asv.Avalonia.Map
     /// </summary>
     public abstract class GMapProvider
     {
-        
         /// <summary>
         ///     unique provider id
         /// </summary>
-        public abstract Guid Id
-        {
-            get;
-        }
+        public abstract Guid Id { get; }
 
         /// <summary>
         ///     provider name
         /// </summary>
-        public abstract string Name
-        {
-            get;
-        }
+        public abstract string Name { get; }
 
         /// <summary>
         ///     provider projection
         /// </summary>
-        public abstract PureProjection Projection
-        {
-            get;
-        }
+        public abstract PureProjection Projection { get; }
 
         /// <summary>
         ///     provider overlays
         /// </summary>
-        public abstract GMapProvider[] Overlays
-        {
-            get;
-        }
+        public abstract GMapProvider[] Overlays { get; }
 
         /// <summary>
         ///     gets tile image using implemented provider
@@ -316,12 +327,16 @@ namespace Asv.Avalonia.Map
         {
             using (var hashProvider = SHA1.Create())
             {
-                DbId = Math.Abs(BitConverter.ToInt32(hashProvider.ComputeHash(Id.ToByteArray()), 0));
+                DbId = Math.Abs(
+                    BitConverter.ToInt32(hashProvider.ComputeHash(Id.ToByteArray()), 0)
+                );
             }
 
             if (MapProviders.Exists(p => p.Id == Id || p.DbId == DbId))
             {
-                throw new Exception("such provider id already exists, try regenerate your provider guid...");
+                throw new Exception(
+                    "such provider id already exists, try regenerate your provider guid..."
+                );
             }
 
             MapProviders.Add(this);
@@ -335,11 +350,7 @@ namespace Asv.Avalonia.Map
         /// <summary>
         ///     was provider initialized
         /// </summary>
-        public bool IsInitialized
-        {
-            get;
-            internal set;
-        }
+        public bool IsInitialized { get; internal set; }
 
         /// <summary>
         ///     called before first use
@@ -395,7 +406,11 @@ namespace Asv.Avalonia.Map
         /// </summary>
         public static string UserAgent = string.Format(
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:{0}.0) Gecko/20100101 Firefox/{0}.0",
-            Stuff.Random.Next((DateTime.Today.Year - 2012) * 10 - 10, (DateTime.Today.Year - 2012) * 10));
+            Stuff.Random.Next(
+                (DateTime.Today.Year - 2012) * 10 - 10,
+                (DateTime.Today.Year - 2012) * 10
+            )
+        );
 
         /// <summary>
         ///     timeout for provider connections
@@ -419,11 +434,7 @@ namespace Asv.Avalonia.Map
         /// </summary>
         public bool InvertedAxisY = false;
 
-        public static string LanguageStr
-        {
-            get;
-            private set;
-        } = "en";
+        public static string LanguageStr { get; private set; } = "en";
 
         static LanguageType _language = LanguageType.English;
 
@@ -432,10 +443,7 @@ namespace Asv.Avalonia.Map
         /// </summary>
         public static LanguageType Language
         {
-            get
-            {
-                return _language;
-            }
+            get { return _language; }
             set
             {
                 _language = value;
@@ -471,7 +479,9 @@ namespace Asv.Avalonia.Map
         /// <param name="userPassword"></param>
         public void ForceBasicHttpAuthentication(string userName, string userPassword)
         {
-            _authorization = "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(userName + ":" + userPassword));
+            _authorization =
+                "Basic "
+                + Convert.ToBase64String(Encoding.UTF8.GetBytes(userName + ":" + userPassword));
         }
 
         protected virtual void InitializeWebRequest(WebRequest request) { }
@@ -480,8 +490,10 @@ namespace Asv.Avalonia.Map
         {
             PureImage ret = null;
 
-            var request = IsSocksProxy ? SocksHttpWebRequest.Create(url) : 
-                WebRequestFactory != null ? WebRequestFactory(this, url) : WebRequest.Create(url);
+            var request =
+                IsSocksProxy ? SocksHttpWebRequest.Create(url)
+                : WebRequestFactory != null ? WebRequestFactory(this, url)
+                : WebRequest.Create(url);
 
             if (WebProxy != null)
             {
@@ -572,8 +584,10 @@ namespace Asv.Avalonia.Map
         {
             string ret = string.Empty;
 
-            var request = IsSocksProxy ? SocksHttpWebRequest.Create(url) : 
-                WebRequestFactory != null ? WebRequestFactory(this, url) : WebRequest.Create(url);
+            var request =
+                IsSocksProxy ? SocksHttpWebRequest.Create(url)
+                : WebRequestFactory != null ? WebRequestFactory(this, url)
+                : WebRequest.Create(url);
 
             if (WebProxy != null)
             {
@@ -585,7 +599,6 @@ namespace Asv.Avalonia.Map
                 request.PreAuthenticate = true;
                 request.Credentials = Credential;
             }
-
 
             if (!string.IsNullOrEmpty(_authorization))
             {
@@ -713,33 +726,21 @@ namespace Asv.Avalonia.Map
 
         public override Guid Id
         {
-            get
-            {
-                return Guid.Empty;
-            }
+            get { return Guid.Empty; }
         }
 
-        public override string Name
-        {
-            get;
-        } = "None";
+        public override string Name { get; } = "None";
 
         readonly MercatorProjection _projection = MercatorProjection.Instance;
 
         public override PureProjection Projection
         {
-            get
-            {
-                return _projection;
-            }
+            get { return _projection; }
         }
 
         public override GMapProvider[] Overlays
         {
-            get
-            {
-                return null;
-            }
+            get { return null; }
         }
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
@@ -754,11 +755,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly EmptyWebProxy Instance = new EmptyWebProxy();
 
-        public ICredentials Credentials
-        {
-            get;
-            set;
-        }
+        public ICredentials Credentials { get; set; }
 
         public Uri GetProxy(Uri uri)
         {

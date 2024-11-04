@@ -9,9 +9,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly BingOSMapProvider Instance;
 
-        BingOSMapProvider()
-        {
-        }
+        BingOSMapProvider() { }
 
         static BingOSMapProvider()
         {
@@ -20,15 +18,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("3C12C212-A79F-42D0-9A1B-22740E1103E8");
+        public override Guid Id { get; } = new Guid("3C12C212-A79F-42D0-9A1B-22740E1103E8");
 
-        public override string Name
-        {
-            get;
-        } = "BingOSMap";
+        public override string Name { get; } = "BingOSMap";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {
@@ -48,7 +40,9 @@ namespace Asv.Avalonia.Map
                 _urlDynamicFormat = GetTileUrl("OrdnanceSurvey");
                 if (!string.IsNullOrEmpty(_urlDynamicFormat))
                 {
-                    _urlDynamicFormat = _urlDynamicFormat.Replace("{subdomain}", "t{0}").Replace("{quadkey}", "{1}");
+                    _urlDynamicFormat = _urlDynamicFormat
+                        .Replace("{subdomain}", "t{0}")
+                        .Replace("{quadkey}", "{1}");
                 }
             }
         }
@@ -64,12 +58,14 @@ namespace Asv.Avalonia.Map
                 return string.Format(_urlDynamicFormat, GetServerNum(pos, 4), key);
             }
 
-            return string.Format(UrlFormat,
+            return string.Format(
+                UrlFormat,
                 GetServerNum(pos, 4),
                 key,
                 Version,
                 language,
-                ForceSessionIdOnTileAccess ? "&key=" + SessionId : string.Empty);
+                ForceSessionIdOnTileAccess ? "&key=" + SessionId : string.Empty
+            );
         }
 
         string _urlDynamicFormat = string.Empty;

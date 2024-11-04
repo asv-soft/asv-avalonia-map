@@ -29,17 +29,19 @@ namespace Asv.Avalonia.Map
             _notEmpty = true;
         }
 
-        public static RectLatLng FromLTRB(double leftLng, double topLat, double rightLng, double bottomLat)
+        public static RectLatLng FromLTRB(
+            double leftLng,
+            double topLat,
+            double rightLng,
+            double bottomLat
+        )
         {
             return new RectLatLng(topLat, leftLng, rightLng - leftLng, topLat - bottomLat);
         }
 
         public GeoPoint LocationTopLeft
         {
-            get
-            {
-                return new GeoPoint(Lat, Lng,0);
-            }
+            get { return new GeoPoint(Lat, Lng, 0); }
             set
             {
                 Lng = value.Longitude;
@@ -47,9 +49,9 @@ namespace Asv.Avalonia.Map
             }
         }
 
-        public GeoPoint LocationRightBottom => new(Lat - HeightLat, Lng + WidthLng,0);
+        public GeoPoint LocationRightBottom => new(Lat - HeightLat, Lng + WidthLng, 0);
 
-        public GeoPoint LocationMiddle => new(Lat - HeightLat / 2, Lng + WidthLng / 2,0);
+        public GeoPoint LocationMiddle => new(Lat - HeightLat / 2, Lng + WidthLng / 2, 0);
 
         public SizeLatLng Size
         {
@@ -71,34 +73,22 @@ namespace Asv.Avalonia.Map
 
         public double Left
         {
-            get
-            {
-                return Lng;
-            }
+            get { return Lng; }
         }
 
         public double Top
         {
-            get
-            {
-                return Lat;
-            }
+            get { return Lat; }
         }
 
         public double Right
         {
-            get
-            {
-                return Lng + WidthLng;
-            }
+            get { return Lng + WidthLng; }
         }
 
         public double Bottom
         {
-            get
-            {
-                return Lat - HeightLat;
-            }
+            get { return Lat - HeightLat; }
         }
 
         private bool _notEmpty;
@@ -108,10 +98,7 @@ namespace Asv.Avalonia.Map
         /// </summary>
         public bool IsEmpty
         {
-            get
-            {
-                return !_notEmpty;
-            }
+            get { return !_notEmpty; }
         }
 
         public override bool Equals(object obj)
@@ -122,14 +109,18 @@ namespace Asv.Avalonia.Map
             }
 
             var ef = (RectLatLng)obj;
-            return ef.Lng == Lng && ef.Lat == Lat && ef.WidthLng == WidthLng &&
-                   ef.HeightLat == HeightLat;
+            return ef.Lng == Lng
+                && ef.Lat == Lat
+                && ef.WidthLng == WidthLng
+                && ef.HeightLat == HeightLat;
         }
 
         public static bool operator ==(RectLatLng left, RectLatLng right)
         {
-            return left.Lng == right.Lng && left.Lat == right.Lat && left.WidthLng == right.WidthLng &&
-                   left.HeightLat == right.HeightLat;
+            return left.Lng == right.Lng
+                && left.Lat == right.Lat
+                && left.WidthLng == right.WidthLng
+                && left.HeightLat == right.HeightLat;
         }
 
         public static bool operator !=(RectLatLng left, RectLatLng right)
@@ -139,8 +130,7 @@ namespace Asv.Avalonia.Map
 
         public bool Contains(double lat, double lng)
         {
-            return Lng <= lng && lng < Lng + WidthLng && Lat >= lat &&
-                   lat > Lat - HeightLat;
+            return Lng <= lng && lng < Lng + WidthLng && Lat >= lat && lat > Lat - HeightLat;
         }
 
         public bool Contains(GeoPoint pt)
@@ -150,8 +140,10 @@ namespace Asv.Avalonia.Map
 
         public bool Contains(RectLatLng rect)
         {
-            return Lng <= rect.Lng && rect.Lng + rect.WidthLng <= Lng + WidthLng &&
-                   Lat >= rect.Lat && rect.Lat - rect.HeightLat >= Lat - HeightLat;
+            return Lng <= rect.Lng
+                && rect.Lng + rect.WidthLng <= Lng + WidthLng
+                && Lat >= rect.Lat
+                && rect.Lat - rect.HeightLat >= Lat - HeightLat;
         }
 
         public override int GetHashCode()
@@ -161,8 +153,10 @@ namespace Asv.Avalonia.Map
                 return 0;
             }
 
-            return Lng.GetHashCode() ^ Lat.GetHashCode() ^ WidthLng.GetHashCode() ^
-                   HeightLat.GetHashCode();
+            return Lng.GetHashCode()
+                ^ Lat.GetHashCode()
+                ^ WidthLng.GetHashCode()
+                ^ HeightLat.GetHashCode();
         }
 
         // from here down need to test each function to be sure they work good
@@ -232,7 +226,8 @@ namespace Asv.Avalonia.Map
                 Math.Min(a.Left, b.Left),
                 Math.Max(a.Top, b.Top),
                 Math.Max(a.Right, b.Right),
-                Math.Min(a.Bottom, b.Bottom));
+                Math.Min(a.Bottom, b.Bottom)
+            );
         }
 
         #endregion
@@ -254,10 +249,15 @@ namespace Asv.Avalonia.Map
 
         public override string ToString()
         {
-            return "{Lat=" + Lat.ToString(CultureInfo.CurrentCulture) + ",Lng=" +
-                   Lng.ToString(CultureInfo.CurrentCulture) + ",WidthLng=" +
-                   WidthLng.ToString(CultureInfo.CurrentCulture) + ",HeightLat=" +
-                   HeightLat.ToString(CultureInfo.CurrentCulture) + "}";
+            return "{Lat="
+                + Lat.ToString(CultureInfo.CurrentCulture)
+                + ",Lng="
+                + Lng.ToString(CultureInfo.CurrentCulture)
+                + ",WidthLng="
+                + WidthLng.ToString(CultureInfo.CurrentCulture)
+                + ",HeightLat="
+                + HeightLat.ToString(CultureInfo.CurrentCulture)
+                + "}";
         }
 
         static RectLatLng()

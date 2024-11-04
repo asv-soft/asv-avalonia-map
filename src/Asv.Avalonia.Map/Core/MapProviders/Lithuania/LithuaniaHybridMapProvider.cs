@@ -9,9 +9,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly LithuaniaHybridMapProvider Instance;
 
-        LithuaniaHybridMapProvider()
-        {
-        }
+        LithuaniaHybridMapProvider() { }
 
         static LithuaniaHybridMapProvider()
         {
@@ -20,15 +18,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("279AB0E0-4704-4AA6-86AD-87D13B1F8975");
+        public override Guid Id { get; } = new Guid("279AB0E0-4704-4AA6-86AD-87D13B1F8975");
 
-        public override string Name
-        {
-            get;
-        } = "LithuaniaHybridMap";
+        public override string Name { get; } = "LithuaniaHybridMap";
 
         GMapProvider[] _overlays;
 
@@ -38,7 +30,7 @@ namespace Asv.Avalonia.Map
             {
                 if (_overlays == null)
                 {
-                    _overlays = new GMapProvider[] {LithuaniaOrtoFotoMapProvider.Instance, this};
+                    _overlays = new GMapProvider[] { LithuaniaOrtoFotoMapProvider.Instance, this };
                 }
 
                 return _overlays;

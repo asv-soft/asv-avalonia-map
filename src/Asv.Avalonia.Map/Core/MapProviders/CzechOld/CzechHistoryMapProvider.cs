@@ -9,9 +9,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly CzechHistoryMapProviderOld Instance;
 
-        CzechHistoryMapProviderOld()
-        {
-        }
+        CzechHistoryMapProviderOld() { }
 
         static CzechHistoryMapProviderOld()
         {
@@ -20,15 +18,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("C666AAF4-9D27-418F-97CB-7F0D8CC44544");
+        public override Guid Id { get; } = new Guid("C666AAF4-9D27-418F-97CB-7F0D8CC44544");
 
-        public override string Name
-        {
-            get;
-        } = "CzechHistoryOldMap";
+        public override string Name { get; } = "CzechHistoryOldMap";
 
         GMapProvider[] _overlays;
 
@@ -38,7 +30,7 @@ namespace Asv.Avalonia.Map
             {
                 if (_overlays == null)
                 {
-                    _overlays = new GMapProvider[] {this, CzechHybridMapProviderOld.Instance};
+                    _overlays = new GMapProvider[] { this, CzechHybridMapProviderOld.Instance };
                 }
 
                 return _overlays;

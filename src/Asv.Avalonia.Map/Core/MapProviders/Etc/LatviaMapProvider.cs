@@ -7,36 +7,34 @@ namespace Asv.Avalonia.Map
         public LatviaMapProviderBase()
         {
             RefererUrl = "http://www.ikarte.lv/default.aspx?lang=en";
-            Copyright = string.Format("©{0} Hnit-Baltic - Map data ©{0} LR Valsts zemes dieniests, SIA Envirotech",
-                DateTime.Today.Year);
+            Copyright = string.Format(
+                "©{0} Hnit-Baltic - Map data ©{0} LR Valsts zemes dieniests, SIA Envirotech",
+                DateTime.Today.Year
+            );
             MaxZoom = 11;
-            Area = new RectLatLng(58.0794870805093, 20.3286067123543, 7.90883164336887, 2.506129113082);
+            Area = new RectLatLng(
+                58.0794870805093,
+                20.3286067123543,
+                7.90883164336887,
+                2.506129113082
+            );
         }
 
         #region GMapProvider Members
 
         public override Guid Id
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
         }
 
         public override string Name
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
         }
 
         public override PureProjection Projection
         {
-            get
-            {
-                return LKS92Projection.Instance;
-            }
+            get { return LKS92Projection.Instance; }
         }
 
         GMapProvider[] _overlays;
@@ -47,7 +45,7 @@ namespace Asv.Avalonia.Map
             {
                 if (_overlays == null)
                 {
-                    _overlays = new GMapProvider[] {this};
+                    _overlays = new GMapProvider[] { this };
                 }
 
                 return _overlays;
@@ -69,9 +67,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly LatviaMapProvider Instance;
 
-        LatviaMapProvider()
-        {
-        }
+        LatviaMapProvider() { }
 
         static LatviaMapProvider()
         {
@@ -80,15 +76,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("2A21CBB1-D37C-458D-905E-05F19536EF1F");
+        public override Guid Id { get; } = new Guid("2A21CBB1-D37C-458D-905E-05F19536EF1F");
 
-        public override string Name
-        {
-            get;
-        } = "LatviaMap";
+        public override string Name { get; } = "LatviaMap";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {

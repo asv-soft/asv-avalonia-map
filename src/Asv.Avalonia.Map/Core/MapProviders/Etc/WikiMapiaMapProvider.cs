@@ -8,41 +8,32 @@ namespace Asv.Avalonia.Map
         {
             MaxZoom = 22;
             RefererUrl = "http://wikimapia.org/";
-            Copyright = string.Format("© WikiMapia.org - Map data ©{0} WikiMapia", DateTime.Today.Year);
+            Copyright = string.Format(
+                "© WikiMapia.org - Map data ©{0} WikiMapia",
+                DateTime.Today.Year
+            );
         }
 
         #region GMapProvider Members
 
         public override Guid Id
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
         }
 
         public override string Name
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
         }
 
         public override PureProjection Projection
         {
-            get
-            {
-                return MercatorProjection.Instance;
-            }
+            get { return MercatorProjection.Instance; }
         }
 
         public override GMapProvider[] Overlays
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
         }
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
@@ -65,9 +56,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly WikiMapiaMapProvider Instance;
 
-        WikiMapiaMapProvider()
-        {
-        }
+        WikiMapiaMapProvider() { }
 
         static WikiMapiaMapProvider()
         {
@@ -76,15 +65,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("7974022B-1AA6-41F1-8D01-F49940E4B48C");
+        public override Guid Id { get; } = new Guid("7974022B-1AA6-41F1-8D01-F49940E4B48C");
 
-        public override string Name
-        {
-            get;
-        } = "WikiMapiaMap";
+        public override string Name { get; } = "WikiMapiaMap";
 
         GMapProvider[] _overlays;
 
@@ -94,7 +77,7 @@ namespace Asv.Avalonia.Map
             {
                 if (_overlays == null)
                 {
-                    _overlays = new GMapProvider[] {this};
+                    _overlays = new GMapProvider[] { this };
                 }
 
                 return _overlays;

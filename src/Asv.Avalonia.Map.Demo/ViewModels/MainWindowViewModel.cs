@@ -27,7 +27,7 @@ public class MainWindowViewModel : ReactiveObject
         AvailableHeightProviders = new ObservableCollection<HeightProvidersPair>
         {
             new() { HeightProvider = new AsterHeightProvider(), Name = "Aster" },
-            new() { HeightProvider = new SRTMHeightProvider(), Name = "SRTM" }
+            new() { HeightProvider = new SRTMHeightProvider(), Name = "SRTM" },
         };
         CurrentMapProvider = GMapProviders.GoogleSatelliteMap;
         CurrentHeightProvider = AvailableHeightProviders[0];
@@ -46,43 +46,59 @@ public class MainWindowViewModel : ReactiveObject
                 Size = 32,
                 BaseSize = 32,
                 IconBrush = Brushes.LightSeaGreen,
-                Title = "Hello!!!"
+                Title = "Hello!!!",
             },
         };
         _markers.Add(new RulerAnchor("1", Ruler, RulerPosition.Start));
         _markers.Add(new RulerAnchor("2", Ruler, RulerPosition.Stop));
         _markers.Add(new RulerPolygon(Ruler));
-        _markers.Add(AltimeterAnchor = new AltimeterAnchor
-        {
-            HeightProvider = CurrentHeightProvider.HeightProvider
-        });
+        _markers.Add(
+            AltimeterAnchor = new AltimeterAnchor
+            {
+                HeightProvider = CurrentHeightProvider.HeightProvider,
+            }
+        );
         AddAnchorCommand = ReactiveCommand.CreateFromTask(AddNewAnchor);
         RemoveAllAnchorsCommand = ReactiveCommand.Create(RemoveAllAnchors);
         SelectedItem = Markers[0];
         SelectedAnchorVariant = AnchorViewModels[0];
-        this.WhenValueChanged(vm => vm.IsInAnchorEditMode).Subscribe(v =>
-        {
-            foreach (var marker in _markers)
-                if (marker.IsEditable)
-                    marker.IsInEditMode = v;
-        });
+        this.WhenValueChanged(vm => vm.IsInAnchorEditMode)
+            .Subscribe(v =>
+            {
+                foreach (var marker in _markers)
+                    if (marker.IsEditable)
+                        marker.IsInEditMode = v;
+            });
         this.WhenValueChanged(vm => vm.IsRulerEnabled).Subscribe(SetUpRuler);
         this.WhenValueChanged(vm => vm.IsAltimeterEnabled).Subscribe(SetUpAltimeter);
-        this.WhenValueChanged(vm => vm.CurrentHeightProvider).Subscribe(x =>
-        {
-            AltimeterAnchor.HeightProvider = x.HeightProvider;
-        });
+        this.WhenValueChanged(vm => vm.CurrentHeightProvider)
+            .Subscribe(x =>
+            {
+                AltimeterAnchor.HeightProvider = x.HeightProvider;
+            });
     }
 
     #region Anchors Actions
 
     private Ruler Ruler = new();
-    [Reactive] public bool IsInAnchorEditMode { get; set; }
-    [Reactive] public bool IsRulerEnabled { get; set; }
-    [Reactive] public bool IsAltimeterEnabled { get; set; }
-    [Reactive] public ReactiveCommand<Unit, Unit> AddAnchorCommand { get; set; }
-    [Reactive] public ReactiveCommand<Unit, Unit> RemoveAllAnchorsCommand { get; set; }
-    [Reactive] public MapAnchorViewModel SelectedAnchorVariant { get; set; }
+
+    [Reactive]
+    public bool IsInAnchorEditMode { get; set; }
+
+    [Reactive]
+    public bool IsRulerEnabled { get; set; }
+
+    [Reactive]
+    public bool IsAltimeterEnabled { get; set; }
+
+    [Reactive]
+    public ReactiveCommand<Unit, Unit> AddAnchorCommand { get; set; }
+
+    [Reactive]
+    public ReactiveCommand<Unit, Unit> RemoveAllAnchorsCommand { get; set; }
+
+    [Reactive]
+    public MapAnchorViewModel SelectedAnchorVariant { get; set; }
 
     private void RemoveAllAnchors()
     {
@@ -105,16 +121,20 @@ public class MainWindowViewModel : ReactiveObject
         if (isEnabled)
             try
             {
-                var start = await ShowTargetDialog("Select ruler starting point",
-                    _rulerTokenSource.Token);
+                var start = await ShowTargetDialog(
+                    "Select ruler starting point",
+                    _rulerTokenSource.Token
+                );
                 if (start.Equals(GeoPoint.NaN))
                 {
                     IsRulerEnabled = false;
                     return;
                 }
 
-                var stop = await ShowTargetDialog("Select ruler stopping point",
-                    _rulerTokenSource.Token);
+                var stop = await ShowTargetDialog(
+                    "Select ruler stopping point",
+                    _rulerTokenSource.Token
+                );
                 if (stop.Equals(GeoPoint.NaN))
                 {
                     IsRulerEnabled = false;
@@ -141,7 +161,10 @@ public class MainWindowViewModel : ReactiveObject
             try
             {
                 var altimeter = _markers.FirstOrDefault(x => x.Equals(AltimeterAnchor));
-                var point = await ShowTargetDialog("Select an altimeter location", _altimeterTokenSource.Token);
+                var point = await ShowTargetDialog(
+                    "Select an altimeter location",
+                    _altimeterTokenSource.Token
+                );
                 if (point.Equals(GeoPoint.NaN))
                 {
                     IsAltimeterEnabled = false;
@@ -171,16 +194,17 @@ public class MainWindowViewModel : ReactiveObject
         _rulerTokenSource = new CancellationTokenSource();
         try
         {
-            var userPoint = await ShowTargetDialog("Set a point",
-                _rulerTokenSource.Token);
+            var userPoint = await ShowTargetDialog("Set a point", _rulerTokenSource.Token);
             if (SelectedAnchorVariant is VehicleAnchorViewModel)
             {
-                _markers.Add(new VehicleAnchorViewModel
-                {
-                    Location = userPoint,
-                    Description =
-                        $@"{userPoint.Latitude}, {userPoint.Longitude}, {userPoint.Altitude}"
-                });
+                _markers.Add(
+                    new VehicleAnchorViewModel
+                    {
+                        Location = userPoint,
+                        Description =
+                            $@"{userPoint.Latitude}, {userPoint.Longitude}, {userPoint.Altitude}",
+                    }
+                );
             }
             else
             {
@@ -198,36 +222,34 @@ public class MainWindowViewModel : ReactiveObject
                     Title = SelectedAnchorVariant.Title,
                     Location = userPoint,
                     Description =
-                        $@"{userPoint.Latitude:0.000000}, {userPoint.Longitude:0.000000}, {userPoint.Altitude}"
+                        $@"{userPoint.Latitude:0.000000}, {userPoint.Longitude:0.000000}, {userPoint.Altitude}",
                 };
                 _markers.Add(newAnchor);
             }
         }
-        catch (TaskCanceledException)
-        {
-        }
+        catch (TaskCanceledException) { }
     }
 
     public List<MapAnchorViewModel> AnchorViewModels =>
-    [
-        new MapAnchorViewModel
-        {
-            Stroke = Brushes.Aqua,
-            StrokeThickness = 2,
-            IsEditable = true,
-            ZOrder = 0,
-            OffsetX = OffsetXEnum.Center,
-            OffsetY = OffsetYEnum.Bottom,
-            IsSelected = false,
-            IsVisible = true,
-            Icon = MaterialIconKind.MapMarker,
-            Size = 34,
-            BaseSize = 34,
-            IconBrush = Brushes.Crimson,
-            Title = "Map Marker"
-        },
-        new VehicleAnchorViewModel()
-    ];
+        [
+            new MapAnchorViewModel
+            {
+                Stroke = Brushes.Aqua,
+                StrokeThickness = 2,
+                IsEditable = true,
+                ZOrder = 0,
+                OffsetX = OffsetXEnum.Center,
+                OffsetY = OffsetYEnum.Bottom,
+                IsSelected = false,
+                IsVisible = true,
+                Icon = MaterialIconKind.MapMarker,
+                Size = 34,
+                BaseSize = 34,
+                IconBrush = Brushes.Crimson,
+                Title = "Map Marker",
+            },
+            new VehicleAnchorViewModel(),
+        ];
 
     #endregion
 
@@ -235,12 +257,24 @@ public class MainWindowViewModel : ReactiveObject
 
     public IEnumerable<GMapProvider> AvailableMapProviders => GMapProviders.List;
     public ObservableCollection<MapAnchorViewModel> Markers => _markers;
-    [Reactive] public GMapProvider CurrentMapProvider { get; set; }
-    [Reactive] public MapAnchorViewModel SelectedItem { get; set; }
-    [Reactive] public GeoPoint Center { get; set; }
-    [Reactive] public GeoPoint DialogTarget { get; set; }
-    [Reactive] public bool IsInDialogMode { get; set; }
-    [Reactive] public string DialogText { get; set; }
+
+    [Reactive]
+    public GMapProvider CurrentMapProvider { get; set; }
+
+    [Reactive]
+    public MapAnchorViewModel SelectedItem { get; set; }
+
+    [Reactive]
+    public GeoPoint Center { get; set; }
+
+    [Reactive]
+    public GeoPoint DialogTarget { get; set; }
+
+    [Reactive]
+    public bool IsInDialogMode { get; set; }
+
+    [Reactive]
+    public string DialogText { get; set; }
 
     private async Task<GeoPoint> ShowTargetDialog(string text, CancellationToken cancel)
     {
@@ -248,7 +282,8 @@ public class MainWindowViewModel : ReactiveObject
         IsInDialogMode = true;
         var tcs = new TaskCompletionSource();
         await using var c1 = cancel.Register(() => tcs.TrySetCanceled());
-        this.WhenAnyValue(_ => _.IsInDialogMode).Where(_ => IsInDialogMode == false)
+        this.WhenAnyValue(_ => _.IsInDialogMode)
+            .Where(_ => IsInDialogMode == false)
             .Subscribe(_ => tcs.TrySetResult(), cancel);
         await tcs.Task;
         return DialogTarget;
@@ -258,9 +293,14 @@ public class MainWindowViewModel : ReactiveObject
 
     #region Height Providers props
 
-    [Reactive] private AltimeterAnchor AltimeterAnchor { get; set; }
-    [Reactive] public HeightProvidersPair CurrentHeightProvider { get; set; }
-    [Reactive] public ObservableCollection<HeightProvidersPair> AvailableHeightProviders { get; set; }
+    [Reactive]
+    private AltimeterAnchor AltimeterAnchor { get; set; }
+
+    [Reactive]
+    public HeightProvidersPair CurrentHeightProvider { get; set; }
+
+    [Reactive]
+    public ObservableCollection<HeightProvidersPair> AvailableHeightProviders { get; set; }
 
     #endregion
 }

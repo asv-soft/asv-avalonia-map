@@ -9,9 +9,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly NearHybridMapProvider Instance;
 
-        NearHybridMapProvider()
-        {
-        }
+        NearHybridMapProvider() { }
 
         static NearHybridMapProvider()
         {
@@ -20,15 +18,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("4BF8819A-635D-4A94-8DC7-94C0E0F04BFD");
+        public override Guid Id { get; } = new Guid("4BF8819A-635D-4A94-8DC7-94C0E0F04BFD");
 
-        public override string Name
-        {
-            get;
-        } = "NearHybridMap";
+        public override string Name { get; } = "NearHybridMap";
 
         GMapProvider[] _overlays;
 
@@ -38,7 +30,7 @@ namespace Asv.Avalonia.Map
             {
                 if (_overlays == null)
                 {
-                    _overlays = new GMapProvider[] {NearSatelliteMapProvider.Instance, this};
+                    _overlays = new GMapProvider[] { NearSatelliteMapProvider.Instance, this };
                 }
 
                 return _overlays;
@@ -56,12 +48,13 @@ namespace Asv.Avalonia.Map
 
         string MakeTileImageUrl(GPoint pos, int zoom, string language)
         {
-            // http://web1.nearmap.com/maps/hl=en&x=37&y=19&z=6&nml=MapT&nmg=1&s=2KbhmZZ             
+            // http://web1.nearmap.com/maps/hl=en&x=37&y=19&z=6&nml=MapT&nmg=1&s=2KbhmZZ
             // http://web1.nearmap.com/maps/hl=en&x=36&y=19&z=6&nml=MapT&nmg=1&s=2YKWhQi
 
             return string.Format(UrlFormat, GetServerNum(pos, 3), pos.X, pos.Y, zoom);
         }
 
-        static readonly string UrlFormat = "http://web{0}.nearmap.com/maps/hl=en&x={1}&y={2}&z={3}&nml=MapT&nmg=1";
+        static readonly string UrlFormat =
+            "http://web{0}.nearmap.com/maps/hl=en&x={1}&y={2}&z={3}&nml=MapT&nmg=1";
     }
 }

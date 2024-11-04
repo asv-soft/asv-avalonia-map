@@ -7,33 +7,29 @@ namespace Asv.Avalonia.Map
         public CzechMapProviderBase()
         {
             RefererUrl = "http://www.mapy.cz/";
-            Area = new RectLatLng(51.2024819920053, 11.8401353319027, 7.22833716731277, 2.78312271922872);
+            Area = new RectLatLng(
+                51.2024819920053,
+                11.8401353319027,
+                7.22833716731277,
+                2.78312271922872
+            );
         }
 
         #region GMapProvider Members
 
         public override Guid Id
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
         }
 
         public override string Name
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
         }
 
         public override PureProjection Projection
         {
-            get
-            {
-                return MercatorProjection.Instance;
-            }
+            get { return MercatorProjection.Instance; }
         }
 
         GMapProvider[] _overlays;
@@ -44,7 +40,7 @@ namespace Asv.Avalonia.Map
             {
                 if (_overlays == null)
                 {
-                    _overlays = new GMapProvider[] {this};
+                    _overlays = new GMapProvider[] { this };
                 }
 
                 return _overlays;
@@ -66,9 +62,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly CzechMapProvider Instance;
 
-        CzechMapProvider()
-        {
-        }
+        CzechMapProvider() { }
 
         static CzechMapProvider()
         {
@@ -77,15 +71,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("13AB92EF-8C3B-4FAC-B2CD-2594C05F8BFC");
+        public override Guid Id { get; } = new Guid("13AB92EF-8C3B-4FAC-B2CD-2594C05F8BFC");
 
-        public override string Name
-        {
-            get;
-        } = "CzechMap";
+        public override string Name { get; } = "CzechMap";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {

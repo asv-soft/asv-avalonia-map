@@ -5,7 +5,6 @@ using Avalonia.Media.Imaging;
 
 namespace Asv.Avalonia.Map
 {
-
     public enum ScaleModes
     {
         /// <summary>
@@ -27,14 +26,14 @@ namespace Asv.Avalonia.Map
         ///     scales to fractional level using a combination both stretched and narrowed tiles, any issues ->
         ///     http://greatmaps.codeplex.com/workitem/16046
         /// </summary>
-        Dynamic
+        Dynamic,
     }
+
     /// <summary>
     ///     image abstraction
     /// </summary>
     public class MapImage : PureImage
     {
-        
         public IImage Img;
 
         public override void Dispose()
@@ -57,10 +56,7 @@ namespace Asv.Avalonia.Map
     /// </summary>
     public class MapImageProxy : PureImageProxy
     {
-        
-        private MapImageProxy()
-        {
-        }
+        private MapImageProxy() { }
 
         public static void Enable()
         {
@@ -76,14 +72,14 @@ namespace Asv.Avalonia.Map
                 try
                 {
                     var m = new Bitmap(stream);
-                   
-                    var ret = new MapImage { Img = m};
+
+                    var ret = new MapImage { Img = m };
                     return ret;
                 }
                 catch
                 {
                     stream.Position = 0;
-                    
+
                     int type = stream.Length > 0 ? stream.ReadByte() : 0;
                     Debug.WriteLine("WindowsPresentationImageProxy: unknown image format: " + type);
                 }
@@ -111,5 +107,4 @@ namespace Asv.Avalonia.Map
             return false;
         }
     }
-
 }

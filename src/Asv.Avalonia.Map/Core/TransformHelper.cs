@@ -10,6 +10,7 @@ namespace Asv.Avalonia.Map
             var matrix = transform.Value;
             return new Point(matrix.M11 * point.X, matrix.M22 * point.Y);
         }
+
         public static Point Transform(this RotateTransform transform, Point point)
         {
             var matrix = transform.Value;
@@ -21,6 +22,7 @@ namespace Asv.Avalonia.Map
             y += yadd;
             return new Point(matrix.M11 * x, matrix.M22 * y);
         }
+
         public static Point Transform(this MatrixTransform transform, Point point)
         {
             var matrix = transform.Value;
@@ -32,6 +34,7 @@ namespace Asv.Avalonia.Map
             y += yadd;
             return new Point(matrix.M11 * x, matrix.M22 * y);
         }
+
         public static MatrixTransform Inverse(this Transform transform)
         {
             var matrix = transform.Value.Invert();

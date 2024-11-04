@@ -16,7 +16,13 @@ namespace Asv.Avalonia.Map
         /// <param name="walkingMode">A boolean value indicating whether to use walking mode.</param>
         /// <param name="zoom">The zoom level of the map.</param>
         /// <returns>The MapRoute object representing the route between the two points.</returns>
-        MapRoute GetRoute(GeoPoint start, GeoPoint end, bool avoidHighways, bool walkingMode, int zoom);
+        MapRoute GetRoute(
+            GeoPoint start,
+            GeoPoint end,
+            bool avoidHighways,
+            bool walkingMode,
+            int zoom
+        );
 
         /// <summary>
         /// Gets the route between two points on the map.

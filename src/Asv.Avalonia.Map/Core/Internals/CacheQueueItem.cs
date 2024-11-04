@@ -31,6 +31,6 @@
     {
         First = 2,
         Second = 4,
-        Both = First | Second
+        Both = First | Second,
     }
 }

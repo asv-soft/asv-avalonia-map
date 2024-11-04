@@ -10,11 +10,7 @@ namespace Asv.Avalonia.Map
         /// <summary>
         /// Gets or sets the geographical position.
         /// </summary>
-        GeoPoint Position
-        {
-            get;
-            set;
-        }
+        GeoPoint Position { get; set; }
 
         /// <summary>
         /// Gets the position of the object in pixels.
@@ -22,10 +18,7 @@ namespace Asv.Avalonia.Map
         /// <value>
         /// A <see cref="GPoint"/> representing the position in pixels.
         /// </value>
-        GPoint PositionPixel
-        {
-            get;
-        }
+        GPoint PositionPixel { get; }
 
         /// <summary>
         /// Gets or sets the location of the cache.
@@ -33,11 +26,7 @@ namespace Asv.Avalonia.Map
         /// <value>
         /// A string representing the location of the cache.
         /// </value>
-        string CacheLocation
-        {
-            get;
-            set;
-        }
+        string CacheLocation { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether the object is currently being dragged.
@@ -45,10 +34,7 @@ namespace Asv.Avalonia.Map
         /// <value>
         /// <c>true</c> if the object is currently being dragged; otherwise, <c>false</c>.
         /// </value>
-        bool IsDragging
-        {
-            get;
-        }
+        bool IsDragging { get; }
 
         /// <summary>
         /// Gets the rectangular latitude and longitude coordinates that make up the view area.
@@ -61,10 +47,7 @@ namespace Asv.Avalonia.Map
         /// <returns>
         /// The RectLatLng object representing the view area coordinates.
         /// </returns>
-        RectLatLng ViewArea
-        {
-            get;
-        }
+        RectLatLng ViewArea { get; }
 
         /// <summary>
         /// Gets or sets the map provider for the map.
@@ -72,21 +55,13 @@ namespace Asv.Avalonia.Map
         /// <value>
         /// The map provider.
         /// </value>
-        GMapProvider MapProvider
-        {
-            get;
-            set;
-        }
+        GMapProvider MapProvider { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the map can be dragged or not.
         /// </summary>
         /// <value><c>true</c> if the map can be dragged; otherwise, <c>false</c>.</value>
-        bool CanDragMap
-        {
-            get;
-            set;
-        }
+        bool CanDragMap { get; set; }
 
         /// <summary>
         /// Gets the render mode of the property.
@@ -94,10 +69,7 @@ namespace Asv.Avalonia.Map
         /// <returns>
         /// The render mode of the property.
         /// </returns>
-        RenderMode RenderMode
-        {
-            get;
-        }
+        RenderMode RenderMode { get; }
 
         // events
         /// <summary>

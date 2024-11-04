@@ -48,23 +48,12 @@ namespace Asv.Avalonia.Map
 
         public bool IsEmpty
         {
-            get
-            {
-                return Width == 0 && Height == 0;
-            }
+            get { return Width == 0 && Height == 0; }
         }
 
-        public long Width
-        {
-            get;
-            set;
-        }
+        public long Width { get; set; }
 
-        public long Height
-        {
-            get;
-            set;
-        }
+        public long Height { get; set; }
 
         public static GSize Add(GSize sz1, GSize sz2)
         {
@@ -84,8 +73,7 @@ namespace Asv.Avalonia.Map
             GSize comp = (GSize)obj;
             // Note value types can't have derived classes, so we don't need to
             //
-            return comp.Width == Width &&
-                   comp.Height == Height;
+            return comp.Width == Width && comp.Height == Height;
         }
 
         public override int GetHashCode()
@@ -100,8 +88,11 @@ namespace Asv.Avalonia.Map
 
         public override string ToString()
         {
-            return "{Width=" + Width.ToString(CultureInfo.CurrentCulture) + ", Height=" +
-                   Height.ToString(CultureInfo.CurrentCulture) + "}";
+            return "{Width="
+                + Width.ToString(CultureInfo.CurrentCulture)
+                + ", Height="
+                + Height.ToString(CultureInfo.CurrentCulture)
+                + "}";
         }
     }
 }

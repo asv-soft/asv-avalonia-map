@@ -9,9 +9,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly BingSatelliteMapProvider Instance;
 
-        BingSatelliteMapProvider()
-        {
-        }
+        BingSatelliteMapProvider() { }
 
         static BingSatelliteMapProvider()
         {
@@ -20,15 +18,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("3AC742DD-966B-4CFB-B67D-33E7F82F2D37");
+        public override Guid Id { get; } = new Guid("3AC742DD-966B-4CFB-B67D-33E7F82F2D37");
 
-        public override string Name
-        {
-            get;
-        } = "BingSatelliteMap";
+        public override string Name { get; } = "BingSatelliteMap";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {
@@ -48,7 +40,9 @@ namespace Asv.Avalonia.Map
                 _urlDynamicFormat = GetTileUrl("Aerial");
                 if (!string.IsNullOrEmpty(_urlDynamicFormat))
                 {
-                    _urlDynamicFormat = _urlDynamicFormat.Replace("{subdomain}", "t{0}").Replace("{quadkey}", "{1}");
+                    _urlDynamicFormat = _urlDynamicFormat
+                        .Replace("{subdomain}", "t{0}")
+                        .Replace("{quadkey}", "{1}");
                 }
             }
         }
@@ -64,12 +58,14 @@ namespace Asv.Avalonia.Map
                 return string.Format(_urlDynamicFormat, GetServerNum(pos, 4), key);
             }
 
-            return string.Format(UrlFormat,
+            return string.Format(
+                UrlFormat,
                 GetServerNum(pos, 4),
                 key,
                 Version,
                 language,
-                ForceSessionIdOnTileAccess ? "&key=" + SessionId : string.Empty);
+                ForceSessionIdOnTileAccess ? "&key=" + SessionId : string.Empty
+            );
         }
 
         string _urlDynamicFormat = string.Empty;

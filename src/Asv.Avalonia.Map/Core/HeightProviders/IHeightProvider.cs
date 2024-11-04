@@ -8,7 +8,7 @@ public enum Interpolation
 {
     Cubic,
     Nearest,
-    Bilinear
+    Bilinear,
 }
 
 public enum DataSet
@@ -33,5 +33,7 @@ public interface IHeightProvider
     /// </summary>
     /// <returns>A Task that represents the asynchronous operation.
     /// The Task.Result property returns an ObservableCollection of GeoPoint objects.</returns>
-    public Task<ObservableCollection<GeoPoint>> GetPointAltitudeCollection(ObservableCollection<GeoPoint> pointsCollection);
+    public Task<ObservableCollection<GeoPoint>> GetPointAltitudeCollection(
+        ObservableCollection<GeoPoint> pointsCollection
+    );
 }

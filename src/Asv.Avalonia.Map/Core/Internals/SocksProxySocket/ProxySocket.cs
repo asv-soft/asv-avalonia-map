@@ -8,11 +8,11 @@
   are met:
 
     - Redistributions of source code must retain the above copyright
-       notice, this list of conditions and the following disclaimer. 
+       notice, this list of conditions and the following disclaimer.
 
     - Neither the name of the KPD-Team, nor the names of its contributors
        may be used to endorse or promote products derived from this
-       software without specific prior written permission. 
+       software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -47,7 +47,7 @@ namespace Asv.Avalonia.Map
         Socks4,
 
         /// <summary>A SOCKS5 proxy server.</summary>
-        Socks5
+        Socks5,
     }
 
     /// <summary>
@@ -69,13 +69,12 @@ namespace Asv.Avalonia.Map
         ///     The combination of addressFamily, socketType, and protocolType results in an invalid
         ///     socket.
         /// </exception>
-        public ProxySocket(AddressFamily addressFamily, SocketType socketType, ProtocolType protocolType) : this(
-            addressFamily,
-            socketType,
-            protocolType,
-            "")
-        {
-        }
+        public ProxySocket(
+            AddressFamily addressFamily,
+            SocketType socketType,
+            ProtocolType protocolType
+        )
+            : this(addressFamily, socketType, protocolType, "") { }
 
         /// <summary>
         ///     Initializes a new instance of the ProxySocket class.
@@ -89,10 +88,13 @@ namespace Asv.Avalonia.Map
         ///     socket.
         /// </exception>
         /// <exception cref="ArgumentNullException"><c>proxyUsername</c> is null.</exception>
-        public ProxySocket(AddressFamily addressFamily, SocketType socketType, ProtocolType protocolType,
-            string proxyUsername) : this(addressFamily, socketType, protocolType, proxyUsername, "")
-        {
-        }
+        public ProxySocket(
+            AddressFamily addressFamily,
+            SocketType socketType,
+            ProtocolType protocolType,
+            string proxyUsername
+        )
+            : this(addressFamily, socketType, protocolType, proxyUsername, "") { }
 
         /// <summary>
         ///     Initializes a new instance of the ProxySocket class.
@@ -107,8 +109,13 @@ namespace Asv.Avalonia.Map
         ///     socket.
         /// </exception>
         /// <exception cref="ArgumentNullException"><c>proxyUsername</c> -or- <c>proxyPassword</c> is null.</exception>
-        public ProxySocket(AddressFamily addressFamily, SocketType socketType, ProtocolType protocolType,
-            string proxyUsername, string proxyPassword)
+        public ProxySocket(
+            AddressFamily addressFamily,
+            SocketType socketType,
+            ProtocolType protocolType,
+            string proxyUsername,
+            string proxyPassword
+        )
             : base(addressFamily, socketType, protocolType)
         {
             ProxyUser = proxyUsername;
@@ -128,7 +135,11 @@ namespace Asv.Avalonia.Map
         {
             if (remoteEP == null)
                 throw new ArgumentNullException("<remoteEP> cannot be null.");
-            if (ProtocolType != ProtocolType.Tcp || ProxyType == ProxyTypes.None || ProxyEndPoint == null)
+            if (
+                ProtocolType != ProtocolType.Tcp
+                || ProxyType == ProxyTypes.None
+                || ProxyEndPoint == null
+            )
                 base.Connect(remoteEP);
             else
             {
@@ -160,7 +171,11 @@ namespace Asv.Avalonia.Map
                 throw new ArgumentNullException("<host> cannot be null.");
             if (port <= 0 || port > 65535)
                 throw new ArgumentException("Invalid port.");
-            if (ProtocolType != ProtocolType.Tcp || ProxyType == ProxyTypes.None || ProxyEndPoint == null)
+            if (
+                ProtocolType != ProtocolType.Tcp
+                || ProxyType == ProxyTypes.None
+                || ProxyEndPoint == null
+            )
                 base.Connect(new IPEndPoint(Dns.GetHostEntry(host).AddressList[0], port));
             else
             {
@@ -182,11 +197,19 @@ namespace Asv.Avalonia.Map
         /// <exception cref="ArgumentNullException">The remoteEP parameter is a null reference (Nothing in Visual Basic).</exception>
         /// <exception cref="SocketException">An operating system error occurs while creating the Socket.</exception>
         /// <exception cref="ObjectDisposedException">The Socket has been closed.</exception>
-        public new IAsyncResult BeginConnect(EndPoint remoteEP, AsyncCallback callback, object state)
+        public new IAsyncResult BeginConnect(
+            EndPoint remoteEP,
+            AsyncCallback callback,
+            object state
+        )
         {
             if (remoteEP == null || callback == null)
                 throw new ArgumentNullException();
-            if (ProtocolType != ProtocolType.Tcp || ProxyType == ProxyTypes.None || ProxyEndPoint == null)
+            if (
+                ProtocolType != ProtocolType.Tcp
+                || ProxyType == ProxyTypes.None
+                || ProxyEndPoint == null
+            )
             {
                 return base.BeginConnect(remoteEP, callback, state);
             }
@@ -195,16 +218,20 @@ namespace Asv.Avalonia.Map
                 _callBack = callback;
                 if (ProxyType == ProxyTypes.Socks4)
                 {
-                    AsyncResult = new Socks4Handler(this, ProxyUser).BeginNegotiate((IPEndPoint)remoteEP,
+                    AsyncResult = new Socks4Handler(this, ProxyUser).BeginNegotiate(
+                        (IPEndPoint)remoteEP,
                         OnHandShakeComplete,
-                        ProxyEndPoint);
+                        ProxyEndPoint
+                    );
                     return AsyncResult;
                 }
                 else if (ProxyType == ProxyTypes.Socks5)
                 {
-                    AsyncResult = new Socks5Handler(this, ProxyUser, ProxyPass).BeginNegotiate((IPEndPoint)remoteEP,
+                    AsyncResult = new Socks5Handler(this, ProxyUser, ProxyPass).BeginNegotiate(
+                        (IPEndPoint)remoteEP,
                         OnHandShakeComplete,
-                        ProxyEndPoint);
+                        ProxyEndPoint
+                    );
                     return AsyncResult;
                 }
 
@@ -224,14 +251,23 @@ namespace Asv.Avalonia.Map
         /// <exception cref="ArgumentException">The port parameter is invalid.</exception>
         /// <exception cref="SocketException">An operating system error occurs while creating the Socket.</exception>
         /// <exception cref="ObjectDisposedException">The Socket has been closed.</exception>
-        public IAsyncResult BeginConnect(string host, int port, AsyncCallback callback, object state)
+        public IAsyncResult BeginConnect(
+            string host,
+            int port,
+            AsyncCallback callback,
+            object state
+        )
         {
             if (host == null || callback == null)
                 throw new ArgumentNullException();
             if (port <= 0 || port > 65535)
                 throw new ArgumentException();
             _callBack = callback;
-            if (ProtocolType != ProtocolType.Tcp || ProxyType == ProxyTypes.None || ProxyEndPoint == null)
+            if (
+                ProtocolType != ProtocolType.Tcp
+                || ProxyType == ProxyTypes.None
+                || ProxyEndPoint == null
+            )
             {
                 RemotePort = port;
                 AsyncResult = BeginDns(host, OnHandShakeComplete);
@@ -241,18 +277,22 @@ namespace Asv.Avalonia.Map
             {
                 if (ProxyType == ProxyTypes.Socks4)
                 {
-                    AsyncResult = new Socks4Handler(this, ProxyUser).BeginNegotiate(host,
+                    AsyncResult = new Socks4Handler(this, ProxyUser).BeginNegotiate(
+                        host,
                         port,
                         OnHandShakeComplete,
-                        ProxyEndPoint);
+                        ProxyEndPoint
+                    );
                     return AsyncResult;
                 }
                 else if (ProxyType == ProxyTypes.Socks5)
                 {
-                    AsyncResult = new Socks5Handler(this, ProxyUser, ProxyPass).BeginNegotiate(host,
+                    AsyncResult = new Socks5Handler(this, ProxyUser, ProxyPass).BeginNegotiate(
+                        host,
                         port,
                         OnHandShakeComplete,
-                        ProxyEndPoint);
+                        ProxyEndPoint
+                    );
                     return AsyncResult;
                 }
 
@@ -311,9 +351,7 @@ namespace Asv.Avalonia.Map
             try
             {
                 var dns = Dns.EndGetHostEntry(asyncResult);
-                base.BeginConnect(new IPEndPoint(dns.AddressList[0], RemotePort),
-                    OnConnect,
-                    State);
+                base.BeginConnect(new IPEndPoint(dns.AddressList[0], RemotePort), OnConnect, State);
             }
             catch (Exception e)
             {
@@ -377,10 +415,7 @@ namespace Asv.Avalonia.Map
         /// <exception cref="ArgumentNullException">The specified value is null.</exception>
         public string ProxyUser
         {
-            get
-            {
-                return _proxyUser;
-            }
+            get { return _proxyUser; }
             set
             {
                 if (value == null)
@@ -396,10 +431,7 @@ namespace Asv.Avalonia.Map
         /// <exception cref="ArgumentNullException">The specified value is null.</exception>
         public string ProxyPass
         {
-            get
-            {
-                return _proxyPass;
-            }
+            get { return _proxyPass; }
             set
             {
                 if (value == null)

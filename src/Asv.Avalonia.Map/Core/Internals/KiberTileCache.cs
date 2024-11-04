@@ -9,10 +9,8 @@ namespace Asv.Avalonia.Map
     /// </summary>
     internal class KiberTileCache : Dictionary<RawTile, byte[]>
     {
-        
-        public KiberTileCache() : base(new RawTileComparer())
-        {
-        }
+        public KiberTileCache()
+            : base(new RawTileComparer()) { }
 
         readonly Queue<RawTile> _queue = new Queue<RawTile>();
 
@@ -28,10 +26,7 @@ namespace Asv.Avalonia.Map
         /// </summary>
         public double MemoryCacheSize
         {
-            get
-            {
-                return _memoryCacheSize / 1048576.0;
-            }
+            get { return _memoryCacheSize / 1048576.0; }
         }
 
         public new void Add(RawTile key, byte[] value)
@@ -43,9 +38,7 @@ namespace Asv.Avalonia.Map
         }
 
         // do not allow directly removal of elements
-        private new void Remove(RawTile key)
-        {
-        }
+        private new void Remove(RawTile key) { }
 
         public new void Clear()
         {

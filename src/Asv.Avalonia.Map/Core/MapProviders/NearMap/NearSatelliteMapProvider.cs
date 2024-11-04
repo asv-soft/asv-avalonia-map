@@ -9,9 +9,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly NearSatelliteMapProvider Instance;
 
-        NearSatelliteMapProvider()
-        {
-        }
+        NearSatelliteMapProvider() { }
 
         static NearSatelliteMapProvider()
         {
@@ -20,15 +18,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("56D00148-05B7-408D-8F7A-8D7250FF8121");
+        public override Guid Id { get; } = new Guid("56D00148-05B7-408D-8F7A-8D7250FF8121");
 
-        public override string Name
-        {
-            get;
-        } = "NearSatelliteMap";
+        public override string Name { get; } = "NearSatelliteMap";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {
@@ -46,9 +38,17 @@ namespace Asv.Avalonia.Map
             // http://web2.nearmap.com/maps/hl=en&x=3&y=1&z=3&nml=Vert&s=2edd
             // http://web0.nearmap.com/maps/hl=en&x=69&y=39&z=7&nml=Vert&s=z80wiTM
 
-            return string.Format(UrlFormat, GetServerNum(pos, 4), pos.X, pos.Y, zoom, GetSafeString(pos));
+            return string.Format(
+                UrlFormat,
+                GetServerNum(pos, 4),
+                pos.X,
+                pos.Y,
+                zoom,
+                GetSafeString(pos)
+            );
         }
 
-        static readonly string UrlFormat = "http://web{0}.nearmap.com/maps/hl=en&x={1}&y={2}&z={3}&nml=Vert{4}";
+        static readonly string UrlFormat =
+            "http://web{0}.nearmap.com/maps/hl=en&x={1}&y={2}&z={3}&nml=Vert{4}";
     }
 }

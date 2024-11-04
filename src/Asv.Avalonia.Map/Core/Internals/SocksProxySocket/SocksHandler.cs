@@ -8,11 +8,11 @@
   are met:
 
     - Redistributions of source code must retain the above copyright
-       notice, this list of conditions and the following disclaimer. 
+       notice, this list of conditions and the following disclaimer.
 
     - Neither the name of the KPD-Team, nor the names of its contributors
        may be used to endorse or promote products derived from this
-       software without specific prior written permission. 
+       software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -98,10 +98,7 @@ namespace Asv.Avalonia.Map
         /// <exception cref="ArgumentNullException">The specified value is null.</exception>
         protected Socket Server
         {
-            get
-            {
-                return _server;
-            }
+            get { return _server; }
             set
             {
                 if (value == null)
@@ -117,14 +114,8 @@ namespace Asv.Avalonia.Map
         /// <exception cref="ArgumentNullException">The specified value is null.</exception>
         protected string Username
         {
-            get
-            {
-                return _username;
-            }
-            set
-            {
-                _username = value ?? throw new ArgumentNullException();
-            }
+            get { return _username; }
+            set { _username = value ?? throw new ArgumentNullException(); }
         }
 
         /// <summary>
@@ -175,8 +166,11 @@ namespace Asv.Avalonia.Map
         /// <param name="callback">The method to call when the connection has been established.</param>
         /// <param name="proxyEndPoint">The IPEndPoint of the SOCKS proxy server.</param>
         /// <returns>An IAsyncProxyResult that references the asynchronous connection.</returns>
-        public abstract IAsyncProxyResult BeginNegotiate(IPEndPoint remoteEP, HandShakeComplete callback,
-            IPEndPoint proxyEndPoint);
+        public abstract IAsyncProxyResult BeginNegotiate(
+            IPEndPoint remoteEP,
+            HandShakeComplete callback,
+            IPEndPoint proxyEndPoint
+        );
 
         /// <summary>
         ///     Starts negotiating asynchronously with a SOCKS proxy server.
@@ -186,7 +180,11 @@ namespace Asv.Avalonia.Map
         /// <param name="callback">The method to call when the connection has been established.</param>
         /// <param name="proxyEndPoint">The IPEndPoint of the SOCKS proxy server.</param>
         /// <returns>An IAsyncProxyResult that references the asynchronous connection.</returns>
-        public abstract IAsyncProxyResult BeginNegotiate(string host, int port, HandShakeComplete callback,
-            IPEndPoint proxyEndPoint);
+        public abstract IAsyncProxyResult BeginNegotiate(
+            string host,
+            int port,
+            HandShakeComplete callback,
+            IPEndPoint proxyEndPoint
+        );
     }
 }

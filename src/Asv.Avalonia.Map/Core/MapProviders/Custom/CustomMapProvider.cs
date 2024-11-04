@@ -18,15 +18,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("BEAB409B-6ED0-443F-B8E3-E6CC6F019F66");
+        public override Guid Id { get; } = new Guid("BEAB409B-6ED0-443F-B8E3-E6CC6F019F66");
 
-        public override string Name
-        {
-            get;
-        } = "CustomMapProvider";
+        public override string Name { get; } = "CustomMapProvider";
 
         GMapProvider[] _overlays;
 
@@ -36,7 +30,7 @@ namespace Asv.Avalonia.Map
             {
                 if (_overlays == null)
                 {
-                    _overlays = new GMapProvider[] {this};
+                    _overlays = new GMapProvider[] { this };
                 }
 
                 return _overlays;
@@ -52,10 +46,7 @@ namespace Asv.Avalonia.Map
 
         public override PureProjection Projection
         {
-            get
-            {
-                return MercatorProjection.Instance;
-            }
+            get { return MercatorProjection.Instance; }
         }
 
         public string CustomServerUrl = string.Empty;

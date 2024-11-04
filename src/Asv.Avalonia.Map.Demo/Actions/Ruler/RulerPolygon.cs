@@ -34,9 +34,7 @@ public class RulerPolygon : MapAnchorViewModel
         ruler.Start.Where(_ => _.HasValue).Subscribe(_ => cache.ReplaceAt(0, _.Value));
         ruler.Stop.Where(_ => _.HasValue).Subscribe(_ => cache.ReplaceAt(1, _.Value));
 
-        cache.Connect()
-            .Bind(out _path)
-            .Subscribe();
+        cache.Connect().Bind(out _path).Subscribe();
 
         Ruler.OnNext(ruler);
     }

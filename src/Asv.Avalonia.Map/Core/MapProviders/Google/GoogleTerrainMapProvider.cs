@@ -9,9 +9,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly GoogleTerrainMapProvider Instance;
 
-        GoogleTerrainMapProvider()
-        {
-        }
+        GoogleTerrainMapProvider() { }
 
         static GoogleTerrainMapProvider()
         {
@@ -22,15 +20,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("A42EDF2E-63C5-4967-9DBF-4EFB3AF7BC11");
+        public override Guid Id { get; } = new Guid("A42EDF2E-63C5-4967-9DBF-4EFB3AF7BC11");
 
-        public override string Name
-        {
-            get;
-        } = "GoogleTerrainMap";
+        public override string Name { get; } = "GoogleTerrainMap";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {
@@ -47,7 +39,8 @@ namespace Asv.Avalonia.Map
             // sec2: after &zoom=...
             GetSecureWords(pos, out string sec1, out string sec2);
 
-            return string.Format(UrlFormat,
+            return string.Format(
+                UrlFormat,
                 UrlFormatServer,
                 GetServerNum(pos, 4),
                 UrlFormatRequest,
@@ -58,11 +51,13 @@ namespace Asv.Avalonia.Map
                 pos.Y,
                 zoom,
                 sec2,
-                Server);
+                Server
+            );
         }
 
         static readonly string UrlFormatServer = "mt";
         static readonly string UrlFormatRequest = "vt";
-        static readonly string UrlFormat = "https://{0}{1}.{10}/maps/{2}/lyrs={3}&hl={4}&x={5}{6}&y={7}&z={8}&s={9}";
+        static readonly string UrlFormat =
+            "https://{0}{1}.{10}/maps/{2}/lyrs={3}&hl={4}&x={5}{6}&y={7}&z={8}&s={9}";
     }
 }

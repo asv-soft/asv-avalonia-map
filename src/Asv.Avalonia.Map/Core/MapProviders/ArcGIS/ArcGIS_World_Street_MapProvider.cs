@@ -9,9 +9,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly ArcGIS_World_Street_MapProvider Instance;
 
-        ArcGIS_World_Street_MapProvider()
-        {
-        }
+        ArcGIS_World_Street_MapProvider() { }
 
         static ArcGIS_World_Street_MapProvider()
         {
@@ -20,15 +18,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("E1FACDF6-E535-4D69-A49F-12B623A467A9");
+        public override Guid Id { get; } = new Guid("E1FACDF6-E535-4D69-A49F-12B623A467A9");
 
-        public override string Name
-        {
-            get;
-        } = "ArcGIS_World_Street_Map";
+        public override string Name { get; } = "ArcGIS_World_Street_Map";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {

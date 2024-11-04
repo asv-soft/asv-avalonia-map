@@ -9,9 +9,7 @@ namespace Asv.Avalonia.Map.Korea
     {
         public static readonly GoogleKoreaSatelliteMapProvider Instance;
 
-        GoogleKoreaSatelliteMapProvider()
-        {
-        }
+        GoogleKoreaSatelliteMapProvider() { }
 
         static GoogleKoreaSatelliteMapProvider()
         {
@@ -22,15 +20,9 @@ namespace Asv.Avalonia.Map.Korea
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("70370941-D70C-4123-BE4A-AEE6754047F5");
+        public override Guid Id { get; } = new Guid("70370941-D70C-4123-BE4A-AEE6754047F5");
 
-        public override string Name
-        {
-            get;
-        } = "GoogleKoreaSatelliteMap";
+        public override string Name { get; } = "GoogleKoreaSatelliteMap";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {
@@ -45,7 +37,8 @@ namespace Asv.Avalonia.Map.Korea
         {
             GetSecureWords(pos, out string sec1, out string sec2);
 
-            return string.Format(UrlFormat,
+            return string.Format(
+                UrlFormat,
                 UrlFormatServer,
                 GetServerNum(pos, 4),
                 UrlFormatRequest,
@@ -56,11 +49,13 @@ namespace Asv.Avalonia.Map.Korea
                 pos.Y,
                 zoom,
                 sec2,
-                ServerKoreaKr);
+                ServerKoreaKr
+            );
         }
 
         static readonly string UrlFormatServer = "khm";
         static readonly string UrlFormatRequest = "kh";
-        static readonly string UrlFormat = "https://{0}{1}.{10}/{2}/v={3}&hl={4}&x={5}{6}&y={7}&z={8}&s={9}";
+        static readonly string UrlFormat =
+            "https://{0}{1}.{10}/{2}/v={3}&hl={4}&x={5}{6}&y={7}&z={8}&s={9}";
     }
 }

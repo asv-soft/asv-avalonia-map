@@ -8,11 +8,11 @@
   are met:
 
     - Redistributions of source code must retain the above copyright
-       notice, this list of conditions and the following disclaimer. 
+       notice, this list of conditions and the following disclaimer.
 
     - Neither the name of the KPD-Team, nor the names of its contributors
        may be used to endorse or promote products derived from this
-       software without specific prior written permission. 
+       software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -46,7 +46,8 @@ namespace Asv.Avalonia.Map
         /// <param name="user">The username to use.</param>
         /// <param name="pass">The password to use.</param>
         /// <exception cref="ArgumentNullException"><c>user</c> -or- <c>pass</c> is null.</exception>
-        public AuthUserPass(Socket server, string user, string pass) : base(server)
+        public AuthUserPass(Socket server, string user, string pass)
+            : base(server)
         {
             Username = user;
             Password = pass;
@@ -67,7 +68,13 @@ namespace Asv.Avalonia.Map
             buffer[1] = (byte)Username.Length;
             Array.Copy(Encoding.ASCII.GetBytes(Username), 0, buffer, 2, Username.Length);
             buffer[Username.Length + 2] = (byte)Password.Length;
-            Array.Copy(Encoding.ASCII.GetBytes(Password), 0, buffer, Username.Length + 3, Password.Length);
+            Array.Copy(
+                Encoding.ASCII.GetBytes(Password),
+                0,
+                buffer,
+                Username.Length + 3,
+                Password.Length
+            );
             return buffer;
         }
 
@@ -100,12 +107,14 @@ namespace Asv.Avalonia.Map
         public override void BeginAuthenticate(HandShakeComplete callback)
         {
             CallBack = callback;
-            Server.BeginSend(GetAuthenticationBytes(),
+            Server.BeginSend(
+                GetAuthenticationBytes(),
                 0,
                 3 + Username.Length + Password.Length,
                 SocketFlags.None,
                 OnSent,
-                Server);
+                Server
+            );
             return;
         }
 
@@ -142,12 +151,14 @@ namespace Asv.Avalonia.Map
                     else
                         throw new ProxyException("Username/password combination not accepted.");
                 else
-                    Server.BeginReceive(Buffer,
+                    Server.BeginReceive(
+                        Buffer,
                         Received,
                         Buffer.Length - Received,
                         SocketFlags.None,
                         OnReceive,
-                        Server);
+                        Server
+                    );
             }
             catch (Exception e)
             {
@@ -162,10 +173,7 @@ namespace Asv.Avalonia.Map
         /// <exception cref="ArgumentNullException">The specified value is null.</exception>
         private string Username
         {
-            get
-            {
-                return _username;
-            }
+            get { return _username; }
             set
             {
                 if (value == null)
@@ -181,10 +189,7 @@ namespace Asv.Avalonia.Map
         /// <exception cref="ArgumentNullException">The specified value is null.</exception>
         private string Password
         {
-            get
-            {
-                return _password;
-            }
+            get { return _password; }
             set
             {
                 if (value == null)

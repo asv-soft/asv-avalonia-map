@@ -6,8 +6,6 @@ using System.Text;
 
 namespace Asv.Avalonia.Map
 {
-    
-
     /// <summary>
     ///     cache system for tiles, geocoding, etc...
     /// </summary>
@@ -37,7 +35,6 @@ namespace Asv.Avalonia.Map
         #region -- etc cache --
 
         static readonly SHA1 HashProvider = SHA1.Create();
-        
 
         void ConvertToHash(ref string s)
         {
@@ -50,7 +47,8 @@ namespace Asv.Avalonia.Map
             {
                 ConvertToHash(ref url);
 
-                string dir = Path.Combine(CacheFolder, type.ToString()) + Path.DirectorySeparatorChar;
+                string dir =
+                    Path.Combine(CacheFolder, type.ToString()) + Path.DirectorySeparatorChar;
 
                 // precrete dir
                 if (!Directory.Exists(dir))
@@ -79,7 +77,8 @@ namespace Asv.Avalonia.Map
             {
                 ConvertToHash(ref url);
 
-                string dir = Path.Combine(CacheFolder, type.ToString()) + Path.DirectorySeparatorChar;
+                string dir =
+                    Path.Combine(CacheFolder, type.ToString()) + Path.DirectorySeparatorChar;
                 string file = dir + url + ".txt";
 
                 if (File.Exists(file))

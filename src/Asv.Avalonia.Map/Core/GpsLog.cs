@@ -31,20 +31,20 @@ namespace Asv.Avalonia.Map
     {
         Unknown = 0,
         Gps,
-        DGps
+        DGps,
     }
 
     public enum FixType : int
     {
         Unknown = 0,
         XyD,
-        XyzD
+        XyzD,
     }
 
     public enum FixSelection : int
     {
         Unknown = 0,
         Auto,
-        Manual
+        Manual,
     }
 }

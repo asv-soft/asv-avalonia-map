@@ -50,22 +50,14 @@ namespace Asv.Avalonia.Map
 
         public static explicit operator GeoPoint(SizeLatLng size)
         {
-            return new GeoPoint(size.HeightLat, size.WidthLng,0);
+            return new GeoPoint(size.HeightLat, size.WidthLng, 0);
         }
 
         public bool IsEmpty => WidthLng == 0d && HeightLat == 0d;
 
-        public double WidthLng
-        {
-            get;
-            set;
-        }
+        public double WidthLng { get; set; }
 
-        public double HeightLat
-        {
-            get;
-            set;
-        }
+        public double HeightLat { get; set; }
 
         public static SizeLatLng Add(SizeLatLng sz1, SizeLatLng sz2)
         {
@@ -85,8 +77,9 @@ namespace Asv.Avalonia.Map
             }
 
             SizeLatLng ef = (SizeLatLng)obj;
-            return ef.WidthLng == WidthLng && ef.HeightLat == HeightLat &&
-                   ef.GetType().Equals(GetType());
+            return ef.WidthLng == WidthLng
+                && ef.HeightLat == HeightLat
+                && ef.GetType().Equals(GetType());
         }
 
         public override int GetHashCode()
@@ -106,8 +99,11 @@ namespace Asv.Avalonia.Map
 
         public override string ToString()
         {
-            return "{WidthLng=" + WidthLng.ToString(CultureInfo.CurrentCulture) + ", HeightLng=" +
-                   HeightLat.ToString(CultureInfo.CurrentCulture) + "}";
+            return "{WidthLng="
+                + WidthLng.ToString(CultureInfo.CurrentCulture)
+                + ", HeightLng="
+                + HeightLat.ToString(CultureInfo.CurrentCulture)
+                + "}";
         }
 
         static SizeLatLng()

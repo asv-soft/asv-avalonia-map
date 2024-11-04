@@ -11,7 +11,10 @@ namespace Asv.Avalonia.Map
 
         OpenStreetMapQuestHybridProvider()
         {
-            Copyright = string.Format("© MapQuest - Map data ©{0} MapQuest, OpenStreetMap", DateTime.Today.Year);
+            Copyright = string.Format(
+                "© MapQuest - Map data ©{0} MapQuest, OpenStreetMap",
+                DateTime.Today.Year
+            );
         }
 
         static OpenStreetMapQuestHybridProvider()
@@ -21,15 +24,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("95E05027-F846-4429-AB7A-9445ABEEFA2A");
+        public override Guid Id { get; } = new Guid("95E05027-F846-4429-AB7A-9445ABEEFA2A");
 
-        public override string Name
-        {
-            get;
-        } = "OpenStreetMapQuestHybrid";
+        public override string Name { get; } = "OpenStreetMapQuestHybrid";
 
         GMapProvider[] _overlays;
 
@@ -39,7 +36,11 @@ namespace Asv.Avalonia.Map
             {
                 if (_overlays == null)
                 {
-                    _overlays = new GMapProvider[] {OpenStreetMapQuestSatelliteProvider.Instance, this};
+                    _overlays = new GMapProvider[]
+                    {
+                        OpenStreetMapQuestSatelliteProvider.Instance,
+                        this,
+                    };
                 }
 
                 return _overlays;
@@ -60,6 +61,7 @@ namespace Asv.Avalonia.Map
             return string.Format(UrlFormat, GetServerNum(pos, 3) + 1, zoom, pos.X, pos.Y);
         }
 
-        static readonly string UrlFormat = "http://otile{0}.mqcdn.com/tiles/1.0.0/hyb/{1}/{2}/{3}.png";
+        static readonly string UrlFormat =
+            "http://otile{0}.mqcdn.com/tiles/1.0.0/hyb/{1}/{2}/{3}.png";
     }
 }

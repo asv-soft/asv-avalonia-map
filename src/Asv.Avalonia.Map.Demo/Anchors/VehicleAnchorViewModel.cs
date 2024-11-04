@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System;
 using System.Reactive;
 using DynamicData;
 using Material.Icons;
@@ -30,27 +30,29 @@ public class VehicleAnchorViewModel : MapAnchorViewModel
         IconBrush = Brushes.Crimson;
         Title = "Vehicle";
         Description = "Something:";
-        
+
         _actionSource = new SourceCache<MapAnchorActionViewModel, int>(_ => _.Order);
-        _actionSource.Connect()
-            .Bind(out _actions)
-            .Subscribe();
+        _actionSource.Connect().Bind(out _actions).Subscribe();
 
-        _actionSource.AddOrUpdate(new MapAnchorActionViewModel
-        {
-            Order = 0,
-            Icon = MaterialIconKind.About,
-            Title = "About",
-            Command = ReactiveCommand.Create(() => { })
-        });
+        _actionSource.AddOrUpdate(
+            new MapAnchorActionViewModel
+            {
+                Order = 0,
+                Icon = MaterialIconKind.About,
+                Title = "About",
+                Command = ReactiveCommand.Create(() => { }),
+            }
+        );
 
-        _actionSource.AddOrUpdate(new MapAnchorActionViewModel
-        {
-            Order = 1,
-            Icon = MaterialIconKind.Dog,
-            Title = "Dog",
-            Command = ReactiveCommand.Create(() => { })
-        });
+        _actionSource.AddOrUpdate(
+            new MapAnchorActionViewModel
+            {
+                Order = 1,
+                Icon = MaterialIconKind.Dog,
+                Title = "Dog",
+                Command = ReactiveCommand.Create(() => { }),
+            }
+        );
     }
 
     public override ReadOnlyObservableCollection<MapAnchorActionViewModel> Actions => _actions;

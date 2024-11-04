@@ -15,10 +15,8 @@ namespace Asv.Avalonia.Map
         public static string EnumToString(Enum value)
         {
             var fi = value.GetType().GetField(value.ToString());
-            var attributes =
-                (DescriptionAttribute[])fi.GetCustomAttributes(
-                    typeof(DescriptionAttribute),
-                    false);
+            var attributes = (DescriptionAttribute[])
+                fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
 
             return attributes.Length > 0 ? attributes[0].Description : value.ToString();
         }
@@ -119,7 +117,11 @@ namespace Asv.Avalonia.Map
                     {
                         using (var encryptor = tdesAlgorithm.CreateEncryptor())
                         {
-                            results = encryptor.TransformFinalBlock(dataToEncrypt, 0, dataToEncrypt.Length);
+                            results = encryptor.TransformFinalBlock(
+                                dataToEncrypt,
+                                0,
+                                dataToEncrypt.Length
+                            );
                         }
                     }
                     finally
@@ -160,7 +162,11 @@ namespace Asv.Avalonia.Map
                     {
                         using (var decryptor = tdesAlgorithm.CreateDecryptor())
                         {
-                            results = decryptor.TransformFinalBlock(dataToDecrypt, 0, dataToDecrypt.Length);
+                            results = decryptor.TransformFinalBlock(
+                                dataToDecrypt,
+                                0,
+                                dataToDecrypt.Length
+                            );
                         }
                     }
                     finally

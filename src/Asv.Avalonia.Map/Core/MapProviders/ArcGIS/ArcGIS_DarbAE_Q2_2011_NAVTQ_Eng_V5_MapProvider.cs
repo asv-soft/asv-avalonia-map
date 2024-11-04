@@ -13,7 +13,12 @@ namespace Asv.Avalonia.Map
         ArcGIS_DarbAE_Q2_2011_NAVTQ_Eng_V5_MapProvider()
         {
             MaxZoom = 12;
-            Area = RectLatLng.FromLTRB(49.8846923723311, 28.0188609585523, 58.2247031977662, 21.154115956732);
+            Area = RectLatLng.FromLTRB(
+                49.8846923723311,
+                28.0188609585523,
+                58.2247031977662,
+                21.154115956732
+            );
             Copyright = string.Format("©{0} ESRI - Map data ©{0} ArcGIS", DateTime.Today.Year);
         }
 
@@ -26,17 +31,11 @@ namespace Asv.Avalonia.Map
 
         public override Guid Id { get; } = new Guid("E03CFEDF-9277-49B3-9912-D805347F934B");
 
-        public override string Name
-        {
-            get;
-        } = "ArcGIS_DarbAE_Q2_2011_NAVTQ_Eng_V5_MapProvider";
+        public override string Name { get; } = "ArcGIS_DarbAE_Q2_2011_NAVTQ_Eng_V5_MapProvider";
 
         public override PureProjection Projection
         {
-            get
-            {
-                return PlateCarreeProjectionDarbAe.Instance;
-            }
+            get { return PlateCarreeProjectionDarbAe.Instance; }
         }
 
         GMapProvider[] _overlays;
@@ -47,7 +46,7 @@ namespace Asv.Avalonia.Map
             {
                 if (_overlays == null)
                 {
-                    _overlays = new GMapProvider[] {this};
+                    _overlays = new GMapProvider[] { this };
                 }
 
                 return _overlays;

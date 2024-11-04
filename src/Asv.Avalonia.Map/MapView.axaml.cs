@@ -113,26 +113,20 @@ namespace Asv.Avalonia.Map
 
             _core.OnMapZoomChanged += ForceUpdateOverlays;
             _core.OnCurrentPositionChanged += point => Position = point;
-            this.WhenAnyValue(_ => _.Bounds).Subscribe(_ =>
-            {
-                _core.OnMapSizeChanged((int)_.Width, (int)_.Height);
-                UpdateZoom();
-            }).DisposeWith(Disposable);
+            this.WhenAnyValue(_ => _.Bounds)
+                .Subscribe(_ =>
+                {
+                    _core.OnMapSizeChanged((int)_.Width, (int)_.Height);
+                    UpdateZoom();
+                })
+                .DisposeWith(Disposable);
         }
 
-        public List<Point> LeftCornerPoints => new()
-        {
-            new Point(0, 0),
-            new Point(10, 0),
-            new Point(10, 10)
-        };
+        public List<Point> LeftCornerPoints =>
+            new() { new Point(0, 0), new Point(10, 0), new Point(10, 10) };
 
-        public List<Point> RightCornerPoints => new()
-        {
-            new Point(0, 0),
-            new Point(0, 10),
-            new Point(10, 0)
-        };
+        public List<Point> RightCornerPoints =>
+            new() { new Point(0, 0), new Point(0, 10), new Point(10, 0) };
 
         protected CompositeDisposable Disposable { get; } = new();
 
@@ -141,24 +135,38 @@ namespace Asv.Avalonia.Map
         public static readonly AttachedProperty<bool> IsFilledProperty =
             AvaloniaProperty.RegisterAttached<MapView, AvaloniaObject, bool>("IsFilled", false);
 
-        public static void SetIsFilled(AvaloniaObject element, bool value) => element.SetValue(IsFilledProperty, value);
-        public static bool GetIsFilled(AvaloniaObject element) => (bool)element.GetValue(IsFilledProperty);
+        public static void SetIsFilled(AvaloniaObject element, bool value) =>
+            element.SetValue(IsFilledProperty, value);
 
+        public static bool GetIsFilled(AvaloniaObject element) =>
+            (bool)element.GetValue(IsFilledProperty);
 
         public static readonly AttachedProperty<IBrush?> StrokeProperty =
-            AvaloniaProperty.RegisterAttached<MapView, AvaloniaObject, IBrush?>("Stroke", Brushes.Blue);
+            AvaloniaProperty.RegisterAttached<MapView, AvaloniaObject, IBrush?>(
+                "Stroke",
+                Brushes.Blue
+            );
 
-        public static void SetStroke(AvaloniaObject element, IBrush? value) => element.SetValue(StrokeProperty, value);
-        public static IBrush? GetStroke(AvaloniaObject element) => (IBrush?)element.GetValue(StrokeProperty);
+        public static void SetStroke(AvaloniaObject element, IBrush? value) =>
+            element.SetValue(StrokeProperty, value);
+
+        public static IBrush? GetStroke(AvaloniaObject element) =>
+            (IBrush?)element.GetValue(StrokeProperty);
 
         public static readonly AttachedProperty<IBrush?> FillProperty =
             AvaloniaProperty.RegisterAttached<MapView, AvaloniaObject, IBrush?>("Fill", null);
 
-        public static void SetFill(AvaloniaObject element, IBrush? value) => element.SetValue(FillProperty, value);
-        public static IBrush? GetFill(AvaloniaObject element) => (IBrush?)element.GetValue(FillProperty);
+        public static void SetFill(AvaloniaObject element, IBrush? value) =>
+            element.SetValue(FillProperty, value);
+
+        public static IBrush? GetFill(AvaloniaObject element) =>
+            (IBrush?)element.GetValue(FillProperty);
 
         public static readonly AttachedProperty<double> StrokeThicknessProperty =
-            AvaloniaProperty.RegisterAttached<MapView, AvaloniaObject, double>("StrokeThickness", 3);
+            AvaloniaProperty.RegisterAttached<MapView, AvaloniaObject, double>(
+                "StrokeThickness",
+                3
+            );
 
         public static void SetStrokeThickness(AvaloniaObject element, double value) =>
             element.SetValue(StrokeThicknessProperty, value);
@@ -167,7 +175,9 @@ namespace Asv.Avalonia.Map
             (double)element.GetValue(StrokeThicknessProperty)!;
 
         public static readonly AttachedProperty<AvaloniaList<double>> StrokeDashArrayProperty =
-            AvaloniaProperty.RegisterAttached<MapView, AvaloniaObject, AvaloniaList<double>>("StrokeDashArray");
+            AvaloniaProperty.RegisterAttached<MapView, AvaloniaObject, AvaloniaList<double>>(
+                "StrokeDashArray"
+            );
 
         public static void SetStrokeDashArray(AvaloniaObject element, AvaloniaList<double> value) =>
             element.SetValue(StrokeDashArrayProperty, value);
@@ -181,8 +191,8 @@ namespace Asv.Avalonia.Map
         public static void SetPathOpacity(AvaloniaObject element, double value) =>
             element.SetValue(PathOpacityProperty, value);
 
-        public static double GetPathOpacity(AvaloniaObject element) => (double)element.GetValue(PathOpacityProperty)!;
-
+        public static double GetPathOpacity(AvaloniaObject element) =>
+            (double)element.GetValue(PathOpacityProperty)!;
 
         public static readonly AttachedProperty<IList<GeoPoint>> PathProperty =
             AvaloniaProperty.RegisterAttached<MapView, AvaloniaObject, IList<GeoPoint>>("Path");
@@ -194,40 +204,58 @@ namespace Asv.Avalonia.Map
             (IList<GeoPoint>)element.GetValue(PathProperty)!;
 
         public static readonly AttachedProperty<GeoPoint> LocationProperty =
-            AvaloniaProperty.RegisterAttached<MapView, AvaloniaObject, GeoPoint>("Location", GeoPoint.ZeroWithAlt);
+            AvaloniaProperty.RegisterAttached<MapView, AvaloniaObject, GeoPoint>(
+                "Location",
+                GeoPoint.ZeroWithAlt
+            );
 
         public static void SetLocation(AvaloniaObject element, GeoPoint value) =>
             element.SetValue(LocationProperty, value);
 
-        public static GeoPoint GetLocation(AvaloniaObject element) => (GeoPoint)element.GetValue(LocationProperty)!;
+        public static GeoPoint GetLocation(AvaloniaObject element) =>
+            (GeoPoint)element.GetValue(LocationProperty)!;
 
         public static readonly AttachedProperty<double> OffsetXProperty =
             AvaloniaProperty.RegisterAttached<MapView, AvaloniaObject, double>("OffsetX", 0);
 
-        public static void SetOffsetX(AvaloniaObject element, double value) => element.SetValue(OffsetXProperty, value);
-        public static double GetOffsetX(AvaloniaObject element) => (double)element.GetValue(OffsetXProperty)!;
+        public static void SetOffsetX(AvaloniaObject element, double value) =>
+            element.SetValue(OffsetXProperty, value);
+
+        public static double GetOffsetX(AvaloniaObject element) =>
+            (double)element.GetValue(OffsetXProperty)!;
 
         public static readonly AttachedProperty<double> OffsetYProperty =
             AvaloniaProperty.RegisterAttached<MapView, AvaloniaObject, double>("OffsetY", 0);
 
-        public static void SetOffsetY(AvaloniaObject element, double value) => element.SetValue(OffsetYProperty, value);
-        public static double GetOffsetY(AvaloniaObject element) => (double)element.GetValue(OffsetYProperty)!;
+        public static void SetOffsetY(AvaloniaObject element, double value) =>
+            element.SetValue(OffsetYProperty, value);
+
+        public static double GetOffsetY(AvaloniaObject element) =>
+            (double)element.GetValue(OffsetYProperty)!;
 
         public static readonly AttachedProperty<int> ZOrderProperty =
-            AvaloniaProperty.RegisterAttached<MapView, AvaloniaObject, int>("ZOrder",
-                defaultBindingMode: BindingMode.OneWay);
+            AvaloniaProperty.RegisterAttached<MapView, AvaloniaObject, int>(
+                "ZOrder",
+                defaultBindingMode: BindingMode.OneWay
+            );
 
-        public static void SetZOrder(AvaloniaObject element, int value) => element.SetValue(ZOrderProperty, value);
-        public static int GetZOrder(AvaloniaObject element) => (int)element.GetValue(ZOrderProperty)!;
+        public static void SetZOrder(AvaloniaObject element, int value) =>
+            element.SetValue(ZOrderProperty, value);
+
+        public static int GetZOrder(AvaloniaObject element) =>
+            (int)element.GetValue(ZOrderProperty)!;
 
         public static readonly AttachedProperty<bool> IsEditableProperty =
-            AvaloniaProperty.RegisterAttached<MapView, AvaloniaObject, bool>("IsEditable",
-                defaultBindingMode: BindingMode.TwoWay);
+            AvaloniaProperty.RegisterAttached<MapView, AvaloniaObject, bool>(
+                "IsEditable",
+                defaultBindingMode: BindingMode.TwoWay
+            );
 
         public static void SetIsEditable(AvaloniaObject element, bool value) =>
             element.SetValue(IsEditableProperty, value);
 
-        public static bool GetIsEditable(AvaloniaObject element) => (bool)element.GetValue(IsEditableProperty)!;
+        public static bool GetIsEditable(AvaloniaObject element) =>
+            (bool)element.GetValue(IsEditableProperty)!;
 
         #endregion
 
@@ -265,10 +293,12 @@ namespace Asv.Avalonia.Map
                                     if (!found)
                                         found = true;
 
-                                    var imgRect = new Rect(_core.TileRect.X + 0.6,
+                                    var imgRect = new Rect(
+                                        _core.TileRect.X + 0.6,
                                         _core.TileRect.Y + 0.6,
                                         _core.TileRect.Width + 0.6,
-                                        _core.TileRect.Height + 0.6);
+                                        _core.TileRect.Height + 0.6
+                                    );
 
                                     if (!img.IsParent)
                                     {
@@ -278,11 +308,16 @@ namespace Asv.Avalonia.Map
                                     {
                                         // TODO: move calculations to loader thread
                                         var geometry = new RectangleGeometry(imgRect);
-                                        var parentImgRect =
-                                            new Rect(_core.TileRect.X - _core.TileRect.Width * img.Xoff + 0.6,
-                                                _core.TileRect.Y - _core.TileRect.Height * img.Yoff + 0.6,
-                                                _core.TileRect.Width * img.Ix + 0.6,
-                                                _core.TileRect.Height * img.Ix + 0.6);
+                                        var parentImgRect = new Rect(
+                                            _core.TileRect.X
+                                                - _core.TileRect.Width * img.Xoff
+                                                + 0.6,
+                                            _core.TileRect.Y
+                                                - _core.TileRect.Height * img.Yoff
+                                                + 0.6,
+                                            _core.TileRect.Width * img.Ix + 0.6,
+                                            _core.TileRect.Height * img.Ix + 0.6
+                                        );
 
                                         using (g.PushClip(geometry.Rect))
                                         {
@@ -308,7 +343,6 @@ namespace Asv.Avalonia.Map
         {
             if (!_core.IsStarted)
                 return;
-
 
             if (MapScaleTransform != null)
             {
@@ -336,7 +370,8 @@ namespace Asv.Avalonia.Map
                 if (obj.IsSelected)
                 {
                     var child = obj.GetLogicalChildren().FirstOrDefault() as Visual;
-                    if (child == null) return;
+                    if (child == null)
+                        return;
                     Position = GetLocation(child);
                 }
             }
@@ -348,10 +383,13 @@ namespace Asv.Avalonia.Map
         {
             get
             {
-                if (_mapCanvas != null) return _mapCanvas;
-                if (VisualChildren.Count <= 0) return _mapCanvas;
+                if (_mapCanvas != null)
+                    return _mapCanvas;
+                if (VisualChildren.Count <= 0)
+                    return _mapCanvas;
                 _mapCanvas = this.GetVisualDescendants().FirstOrDefault(w => w is Canvas) as Canvas;
-                if (_mapCanvas != null) _mapCanvas.RenderTransform = MapTranslateTransform;
+                if (_mapCanvas != null)
+                    _mapCanvas.RenderTransform = MapTranslateTransform;
                 return _mapCanvas;
             }
         }
@@ -391,12 +429,14 @@ namespace Asv.Avalonia.Map
 
         private void UpdateMarkersOffset()
         {
-            if (MapCanvas == null) return;
+            if (MapCanvas == null)
+                return;
 
             if (MapScaleTransform != null)
             {
                 var (x, y) = MapScaleTransform.Transform(
-                    new Point(_core.RenderOffset.X, _core.RenderOffset.Y));
+                    new Point(_core.RenderOffset.X, _core.RenderOffset.Y)
+                );
                 MapOverlayTranslateTransform.X = x;
                 MapOverlayTranslateTransform.Y = y;
 
@@ -419,7 +459,11 @@ namespace Asv.Avalonia.Map
         #region Zoom
 
         public static readonly DirectProperty<MapView, double> ZoomProperty =
-            AvaloniaProperty.RegisterDirect<MapView, double>(nameof(Zoom), o => o.Zoom, (o, v) => o.Zoom = v);
+            AvaloniaProperty.RegisterDirect<MapView, double>(
+                nameof(Zoom),
+                o => o.Zoom,
+                (o, v) => o.Zoom = v
+            );
 
         private double _zoom;
 
@@ -429,7 +473,10 @@ namespace Asv.Avalonia.Map
             get => _zoom;
             set
             {
-                if (value >= MinZoom & value <= MaxZoom && SetAndRaise(ZoomProperty, ref _zoom, value))
+                if (
+                    value >= MinZoom & value <= MaxZoom
+                    && SetAndRaise(ZoomProperty, ref _zoom, value)
+                )
                 {
                     UpdateZoom();
                 }
@@ -437,8 +484,11 @@ namespace Asv.Avalonia.Map
         }
 
         public static readonly DirectProperty<MapView, ScaleModes> ScaleModeProperty =
-            AvaloniaProperty.RegisterDirect<MapView, ScaleModes>(nameof(ScaleMode), o => o.ScaleMode,
-                (o, v) => o.ScaleMode = v);
+            AvaloniaProperty.RegisterDirect<MapView, ScaleModes>(
+                nameof(ScaleMode),
+                o => o.ScaleMode,
+                (o, v) => o.ScaleMode = v
+            );
 
         private ScaleModes _scaleMode = ScaleModes.Dynamic;
 
@@ -455,7 +505,11 @@ namespace Asv.Avalonia.Map
         }
 
         public static readonly DirectProperty<MapView, int> MinZoomProperty =
-            AvaloniaProperty.RegisterDirect<MapView, int>(nameof(MinZoom), o => o.MinZoom, (o, v) => o.MinZoom = v);
+            AvaloniaProperty.RegisterDirect<MapView, int>(
+                nameof(MinZoom),
+                o => o.MinZoom,
+                (o, v) => o.MinZoom = v
+            );
 
         public int MinZoom
         {
@@ -470,7 +524,11 @@ namespace Asv.Avalonia.Map
         }
 
         public static readonly DirectProperty<MapView, int> MaxZoomProperty =
-            AvaloniaProperty.RegisterDirect<MapView, int>(nameof(MaxZoom), o => o.MaxZoom, (o, v) => o.MaxZoom = v);
+            AvaloniaProperty.RegisterDirect<MapView, int>(
+                nameof(MaxZoom),
+                o => o.MaxZoom,
+                (o, v) => o.MaxZoom = v
+            );
 
         public int MaxZoom
         {
@@ -542,7 +600,8 @@ namespace Asv.Avalonia.Map
                     InvalidateVisual();
                 }
 
-                if (ItemsSource == null || ItemsSource.Count() <= 0) return;
+                if (ItemsSource == null || ItemsSource.Count() <= 0)
+                    return;
 
                 foreach (var item in ItemsSource)
                 {
@@ -553,7 +612,7 @@ namespace Asv.Avalonia.Map
                             <= 5 => marker.BaseSize * SmallSizeFactor,
                             var zoom and > 5 and <= 10 => marker.BaseSize * (zoom / 10),
                             <= 12 and > 10 => marker.BaseSize * MediumSizeFactor,
-                            _ => marker.BaseSize * LargeSizeFactor
+                            _ => marker.BaseSize * LargeSizeFactor,
                         };
                     }
                 }
@@ -595,8 +654,11 @@ namespace Asv.Avalonia.Map
         #region Position
 
         public static readonly DirectProperty<MapView, GeoPoint> PositionProperty =
-            AvaloniaProperty.RegisterDirect<MapView, GeoPoint>(nameof(Position), o => o.Position,
-                (o, v) => o.Position = v);
+            AvaloniaProperty.RegisterDirect<MapView, GeoPoint>(
+                nameof(Position),
+                o => o.Position,
+                (o, v) => o.Position = v
+            );
 
         private GeoPoint _position = new GeoPoint(55.1644, 61.4368, 0);
 
@@ -614,7 +676,8 @@ namespace Asv.Avalonia.Map
 
         private void OnPositionChanged()
         {
-            if (Interlocked.CompareExchange(ref _positionUpdateCiclicUpdateFlag, 0, 1) != 0) return;
+            if (Interlocked.CompareExchange(ref _positionUpdateCiclicUpdateFlag, 0, 1) != 0)
+                return;
             try
             {
                 _core.Position = Position;
@@ -635,8 +698,11 @@ namespace Asv.Avalonia.Map
         #region ViewArea \ SelectedArea
 
         public static readonly DirectProperty<MapView, RectLatLng> SelectedAreaProperty =
-            AvaloniaProperty.RegisterDirect<MapView, RectLatLng>(nameof(SelectedArea), o => o.SelectedArea,
-                (o, v) => o.SelectedArea = v);
+            AvaloniaProperty.RegisterDirect<MapView, RectLatLng>(
+                nameof(SelectedArea),
+                o => o.SelectedArea,
+                (o, v) => o.SelectedArea = v
+            );
 
         private RectLatLng _selectedArea;
 
@@ -673,8 +739,11 @@ namespace Asv.Avalonia.Map
         #region MapProvider
 
         public static readonly DirectProperty<MapView, GMapProvider?> MapProviderProperty =
-            AvaloniaProperty.RegisterDirect<MapView, GMapProvider?>(nameof(MapProvider), o => o.MapProvider,
-                (o, v) => o.MapProvider = v);
+            AvaloniaProperty.RegisterDirect<MapView, GMapProvider?>(
+                nameof(MapProvider),
+                o => o.MapProvider,
+                (o, v) => o.MapProvider = v
+            );
 
         private GMapProvider? _mapProvider;
 
@@ -690,15 +759,17 @@ namespace Asv.Avalonia.Map
             }
         }
 
-
         private void UpdateMapProvider()
         {
             var viewarea = SelectedArea;
 
             if (viewarea != RectLatLng.Empty)
             {
-                Position = new GeoPoint(viewarea.Lat - viewarea.HeightLat / 2,
-                    viewarea.Lng + viewarea.WidthLng / 2, 0);
+                Position = new GeoPoint(
+                    viewarea.Lat - viewarea.HeightLat / 2,
+                    viewarea.Lng + viewarea.WidthLng / 2,
+                    0
+                );
             }
             else
             {
@@ -725,21 +796,31 @@ namespace Asv.Avalonia.Map
         #region OnWheelChanged
 
         public static readonly DirectProperty<MapView, bool> InvertedMouseWheelZoomingProperty =
-            AvaloniaProperty.RegisterDirect<MapView, bool>(nameof(InvertedMouseWheelZooming),
-                o => o.InvertedMouseWheelZooming, (o, v) => o.InvertedMouseWheelZooming = v);
+            AvaloniaProperty.RegisterDirect<MapView, bool>(
+                nameof(InvertedMouseWheelZooming),
+                o => o.InvertedMouseWheelZooming,
+                (o, v) => o.InvertedMouseWheelZooming = v
+            );
 
         private bool _invertedMouseWheelZooming = false;
 
         public bool InvertedMouseWheelZooming
         {
             get => _invertedMouseWheelZooming;
-            set => SetAndRaise(InvertedMouseWheelZoomingProperty, ref _invertedMouseWheelZooming, value);
+            set =>
+                SetAndRaise(
+                    InvertedMouseWheelZoomingProperty,
+                    ref _invertedMouseWheelZooming,
+                    value
+                );
         }
 
-
         public static readonly DirectProperty<MapView, bool> MouseWheelZoomEnabledProperty =
-            AvaloniaProperty.RegisterDirect<MapView, bool>(nameof(MouseWheelZoomEnabled), o => o.MouseWheelZoomEnabled,
-                (o, v) => o.MouseWheelZoomEnabled = v);
+            AvaloniaProperty.RegisterDirect<MapView, bool>(
+                nameof(MouseWheelZoomEnabled),
+                o => o.MouseWheelZoomEnabled,
+                (o, v) => o.MouseWheelZoomEnabled = v
+            );
 
         private bool _mouseWheelZoomEnabled = true;
 
@@ -749,10 +830,14 @@ namespace Asv.Avalonia.Map
             set => SetAndRaise(MouseWheelZoomEnabledProperty, ref _mouseWheelZoomEnabled, value);
         }
 
-
-        public static readonly DirectProperty<MapView, MouseWheelZoomType> MouseWheelZoomTypeProperty =
-            AvaloniaProperty.RegisterDirect<MapView, MouseWheelZoomType>(nameof(MouseWheelZoomType),
-                o => o.MouseWheelZoomType, (o, v) => o.MouseWheelZoomType = v);
+        public static readonly DirectProperty<
+            MapView,
+            MouseWheelZoomType
+        > MouseWheelZoomTypeProperty = AvaloniaProperty.RegisterDirect<MapView, MouseWheelZoomType>(
+            nameof(MouseWheelZoomType),
+            o => o.MouseWheelZoomType,
+            (o, v) => o.MouseWheelZoomType = v
+        );
 
         private MouseWheelZoomType _mouseWheelZoomType;
 
@@ -834,13 +919,17 @@ namespace Asv.Avalonia.Map
 
         #region Selection
 
-        public new static readonly DirectProperty<SelectingItemsControl, IList?> SelectedItemsProperty =
-            SelectingItemsControl.SelectedItemsProperty;
+        public new static readonly DirectProperty<
+            SelectingItemsControl,
+            IList?
+        > SelectedItemsProperty = SelectingItemsControl.SelectedItemsProperty;
 
-        public new static readonly DirectProperty<SelectingItemsControl, ISelectionModel> SelectionProperty =
-            SelectingItemsControl.SelectionProperty;
+        public static new readonly DirectProperty<
+            SelectingItemsControl,
+            ISelectionModel
+        > SelectionProperty = SelectingItemsControl.SelectionProperty;
 
-        public new static readonly StyledProperty<SelectionMode> SelectionModeProperty =
+        public static new readonly StyledProperty<SelectionMode> SelectionModeProperty =
             SelectingItemsControl.SelectionModeProperty;
 
         public new IList? SelectedItems
@@ -873,11 +962,13 @@ namespace Asv.Avalonia.Map
                     e.Source,
                     true,
                     e.KeyModifiers.HasAllFlags(KeyModifiers.Shift),
-                    e.KeyModifiers.HasAllFlags(KeyModifiers.Control));
+                    e.KeyModifiers.HasAllFlags(KeyModifiers.Control)
+                );
             }
         }
 
         public void SelectAll() => Selection.SelectAll();
+
         public void UnselectAll() => Selection.Clear();
 
         #endregion
@@ -885,8 +976,11 @@ namespace Asv.Avalonia.Map
         #region Anchor edit mode
 
         public static readonly DirectProperty<MapView, bool> IsInAnchorEditModeProperty =
-            AvaloniaProperty.RegisterDirect<MapView, bool>(nameof(IsInDialogMode), o => o.IsInAnchorEditMode,
-                (o, v) => o.IsInAnchorEditMode = v);
+            AvaloniaProperty.RegisterDirect<MapView, bool>(
+                nameof(IsInDialogMode),
+                o => o.IsInAnchorEditMode,
+                (o, v) => o.IsInAnchorEditMode = v
+            );
 
         private bool _isInAnchorEditMode;
 
@@ -898,12 +992,20 @@ namespace Asv.Avalonia.Map
 
         #endregion
 
-        protected override Control CreateContainerForItemOverride(object? item, int index, object? recycleKey)
+        protected override Control CreateContainerForItemOverride(
+            object? item,
+            int index,
+            object? recycleKey
+        )
         {
             return new MapViewItem();
         }
 
-        protected override bool NeedsContainerOverride(object? item, int index, out object? recycleKey)
+        protected override bool NeedsContainerOverride(
+            object? item,
+            int index,
+            out object? recycleKey
+        )
         {
             return NeedsContainer<MapViewItem>(item, out recycleKey);
         }
@@ -911,23 +1013,25 @@ namespace Asv.Avalonia.Map
         internal bool UpdateSelectionFromPointerEvent(Control source, PointerEventArgs e)
         {
             var hotkeys = Application.Current!.PlatformSettings?.HotkeyConfiguration;
-            var toggle = hotkeys is not null && e.KeyModifiers.HasAllFlags(hotkeys.CommandModifiers);
+            var toggle =
+                hotkeys is not null && e.KeyModifiers.HasAllFlags(hotkeys.CommandModifiers);
 
             return UpdateSelectionFromEventSource(
                 source,
                 true,
                 e.KeyModifiers.HasAllFlags(KeyModifiers.Shift),
                 toggle,
-                e.GetCurrentPoint(source).Properties.IsRightButtonPressed);
+                e.GetCurrentPoint(source).Properties.IsRightButtonPressed
+            );
         }
-
 
         #region Pointer events
 
         protected override void OnPointerMoved(PointerEventArgs e)
         {
             // this is for disable drag on touch screens after dialog clicked
-            if (_disablePointerActions) return;
+            if (_disablePointerActions)
+                return;
             base.OnPointerMoved(e);
 
             if (!_core.IsDragging && !_core.MouseDown.IsEmpty)
@@ -935,7 +1039,8 @@ namespace Asv.Avalonia.Map
                 var p = e.GetPosition(this);
 
                 // disable drag, when click popup
-                if (p.X == 0 && p.Y == 0) return;
+                if (p.X == 0 && p.Y == 0)
+                    return;
 
                 if (MapScaleTransform != null)
                 {
@@ -943,10 +1048,15 @@ namespace Asv.Avalonia.Map
                 }
 
                 // cursor has moved beyond drag tolerance
-                if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed && !_core.MouseDown.IsEmpty)
+                if (
+                    e.GetCurrentPoint(this).Properties.IsLeftButtonPressed
+                    && !_core.MouseDown.IsEmpty
+                )
                 {
-                    if (Math.Abs(p.X - _core.MouseDown.X) * 2 >= MinimumHorizontalDragDistance ||
-                        Math.Abs(p.Y - _core.MouseDown.Y) * 2 >= MinimumVerticalDragDistance)
+                    if (
+                        Math.Abs(p.X - _core.MouseDown.X) * 2 >= MinimumHorizontalDragDistance
+                        || Math.Abs(p.Y - _core.MouseDown.Y) * 2 >= MinimumVerticalDragDistance
+                    )
                     {
                         _core.BeginDrag(_core.MouseDown);
                     }
@@ -1010,7 +1120,8 @@ namespace Asv.Avalonia.Map
         protected override void OnPointerReleased(PointerReleasedEventArgs e)
         {
             // this is for disable drag on touch screens after dialog clicked
-            if (_disablePointerActions) return;
+            if (_disablePointerActions)
+                return;
 
             base.OnPointerReleased(e);
 
@@ -1067,7 +1178,8 @@ namespace Asv.Avalonia.Map
             }
 
             // this is for disable drag on touch screens after dialog clicked
-            if (_disablePointerActions) return;
+            if (_disablePointerActions)
+                return;
 
             base.OnPointerPressed(e);
 
@@ -1083,7 +1195,6 @@ namespace Asv.Avalonia.Map
 
             InvalidateVisual();
 
-
             if (e.Source is Visual source)
             {
                 var point = e.GetCurrentPoint(source);
@@ -1095,7 +1206,8 @@ namespace Asv.Avalonia.Map
                         true,
                         e.KeyModifiers.HasAllFlags(KeyModifiers.Shift),
                         e.KeyModifiers.HasAllFlags(KeyModifiers.Control),
-                        point.Properties.IsRightButtonPressed);
+                        point.Properties.IsRightButtonPressed
+                    );
                     if (e.Handled == false)
                     {
                         UnselectAll();
@@ -1109,8 +1221,11 @@ namespace Asv.Avalonia.Map
         #region DialogMode
 
         public static readonly DirectProperty<MapView, string?> DialogTextProperty =
-            AvaloniaProperty.RegisterDirect<MapView, string?>(nameof(DialogText), o => o.DialogText,
-                (o, v) => o.DialogText = v);
+            AvaloniaProperty.RegisterDirect<MapView, string?>(
+                nameof(DialogText),
+                o => o.DialogText,
+                (o, v) => o.DialogText = v
+            );
 
         private string? _dialogText;
 
@@ -1121,8 +1236,11 @@ namespace Asv.Avalonia.Map
         }
 
         public static readonly DirectProperty<MapView, GeoPoint> DialogTargetProperty =
-            AvaloniaProperty.RegisterDirect<MapView, GeoPoint>(nameof(IsInDialogMode), o => o.DialogTarget,
-                (o, v) => o.DialogTarget = v);
+            AvaloniaProperty.RegisterDirect<MapView, GeoPoint>(
+                nameof(IsInDialogMode),
+                o => o.DialogTarget,
+                (o, v) => o.DialogTarget = v
+            );
 
         private GeoPoint _dialogTarget;
 
@@ -1133,8 +1251,11 @@ namespace Asv.Avalonia.Map
         }
 
         public static readonly DirectProperty<MapView, bool> IsInDialogModeProperty =
-            AvaloniaProperty.RegisterDirect<MapView, bool>(nameof(IsInDialogMode), o => o.IsInDialogMode,
-                (o, v) => o.IsInDialogMode = v);
+            AvaloniaProperty.RegisterDirect<MapView, bool>(
+                nameof(IsInDialogMode),
+                o => o.IsInDialogMode,
+                (o, v) => o.IsInDialogMode = v
+            );
 
         private bool _isInDialogMode;
 
@@ -1170,7 +1291,9 @@ namespace Asv.Avalonia.Map
 
         private void DisableDialogMode()
         {
-            Observable.Timer(TimeSpan.FromSeconds(1)).Subscribe(_ => _disablePointerActions = false)
+            Observable
+                .Timer(TimeSpan.FromSeconds(1))
+                .Subscribe(_ => _disablePointerActions = false)
                 .DisposeWith(Disposable);
             foreach (var item in LogicalChildren)
             {

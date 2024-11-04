@@ -10,7 +10,6 @@ namespace Asv.Avalonia.Map
 {
     internal class TileHttpHost
     {
-        
         volatile bool _listen;
         TcpListener _server;
         int _port;
@@ -116,7 +115,11 @@ namespace Asv.Avalonia.Map
                                 var rq = request.Split(' ');
                                 if (rq.Length >= 2)
                                 {
-                                    var ids = rq[1].Split(new[] {'/'}, StringSplitOptions.RemoveEmptyEntries);
+                                    var ids = rq[1]
+                                        .Split(
+                                            new[] { '/' },
+                                            StringSplitOptions.RemoveEmptyEntries
+                                        );
                                     if (ids.Length == 4)
                                     {
                                         int dbId = int.Parse(ids[0]);
@@ -128,12 +131,21 @@ namespace Asv.Avalonia.Map
                                         if (pr != null)
                                         {
                                             Exception ex;
-                                            var img = GMaps.Instance.GetImageFrom(pr, new GPoint(x, y), zoom, out ex);
+                                            var img = GMaps.Instance.GetImageFrom(
+                                                pr,
+                                                new GPoint(x, y),
+                                                zoom,
+                                                out ex
+                                            );
                                             if (img != null)
                                             {
                                                 using (img)
                                                 {
-                                                    s.Write(_responseHeaderBytes, 0, _responseHeaderBytes.Length);
+                                                    s.Write(
+                                                        _responseHeaderBytes,
+                                                        0,
+                                                        _responseHeaderBytes.Length
+                                                    );
                                                     img.Data.WriteTo(s);
                                                 }
                                             }

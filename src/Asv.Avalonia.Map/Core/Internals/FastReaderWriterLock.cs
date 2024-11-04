@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Threading;
 
-
-
 namespace Asv.Avalonia.Map
 {
-
     public sealed class FastReaderWriterLock : IDisposable
     {
-        private ReaderWriterLockSlim _rwlock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
+        private ReaderWriterLockSlim _rwlock = new ReaderWriterLockSlim(
+            LockRecursionPolicy.SupportsRecursion
+        );
 
-        public FastReaderWriterLock()
-        {
-            
-        }
+        public FastReaderWriterLock() { }
 
         public void Dispose()
         {

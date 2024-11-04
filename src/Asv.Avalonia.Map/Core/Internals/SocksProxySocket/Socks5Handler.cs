@@ -8,11 +8,11 @@
   are met:
 
     - Redistributions of source code must retain the above copyright
-       notice, this list of conditions and the following disclaimer. 
+       notice, this list of conditions and the following disclaimer.
 
     - Neither the name of the KPD-Team, nor the names of its contributors
        may be used to endorse or promote products derived from this
-       software without specific prior written permission. 
+       software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -45,7 +45,8 @@ namespace Asv.Avalonia.Map
         /// </summary>
         /// <param name="server">The socket connection with the proxy server.</param>
         /// <exception cref="ArgumentNullException"><c>server</c>  is null.</exception>
-        public Socks5Handler(Socket server) : this(server, "") { }
+        public Socks5Handler(Socket server)
+            : this(server, "") { }
 
         /// <summary>
         ///     Initiliazes a new Socks5Handler instance.
@@ -53,7 +54,8 @@ namespace Asv.Avalonia.Map
         /// <param name="server">The socket connection with the proxy server.</param>
         /// <param name="user">The username to use.</param>
         /// <exception cref="ArgumentNullException"><c>server</c> -or- <c>user</c> is null.</exception>
-        public Socks5Handler(Socket server, string user) : this(server, user, "") { }
+        public Socks5Handler(Socket server, string user)
+            : this(server, user, "") { }
 
         /// <summary>
         ///     Initiliazes a new Socks5Handler instance.
@@ -62,7 +64,8 @@ namespace Asv.Avalonia.Map
         /// <param name="user">The username to use.</param>
         /// <param name="pass">The password to use.</param>
         /// <exception cref="ArgumentNullException"><c>server</c> -or- <c>user</c> -or- <c>pass</c> is null.</exception>
-        public Socks5Handler(Socket server, string user, string pass) : base(server, user)
+        public Socks5Handler(Socket server, string user, string pass)
+            : base(server, user)
         {
             Password = pass;
         }
@@ -76,7 +79,7 @@ namespace Asv.Avalonia.Map
         /// <exception cref="ObjectDisposedException">The Socket has been closed.</exception>
         private void Authenticate()
         {
-            Server.Send(new byte[] {5, 2, 0, 2});
+            Server.Send(new byte[] { 5, 2, 0, 2 });
             var buffer = ReadBytes(2);
             if (buffer[1] == 255)
                 throw new ProxyException("No authentication method accepted.");
@@ -219,8 +222,12 @@ namespace Asv.Avalonia.Map
         /// <param name="callback">The method to call when the negotiation is complete.</param>
         /// <param name="proxyEndPoint">The IPEndPoint of the SOCKS proxy server.</param>
         /// <returns>An IAsyncProxyResult that references the asynchronous connection.</returns>
-        public override IAsyncProxyResult BeginNegotiate(string host, int port, HandShakeComplete callback,
-            IPEndPoint proxyEndPoint)
+        public override IAsyncProxyResult BeginNegotiate(
+            string host,
+            int port,
+            HandShakeComplete callback,
+            IPEndPoint proxyEndPoint
+        )
         {
             ProtocolComplete = callback;
             HandShake = GetHostPortBytes(host, port);
@@ -236,8 +243,11 @@ namespace Asv.Avalonia.Map
         /// <param name="callback">The method to call when the negotiation is complete.</param>
         /// <param name="proxyEndPoint">The IPEndPoint of the SOCKS proxy server.</param>
         /// <returns>An IAsyncProxyResult that references the asynchronous connection.</returns>
-        public override IAsyncProxyResult BeginNegotiate(IPEndPoint remoteEP, HandShakeComplete callback,
-            IPEndPoint proxyEndPoint)
+        public override IAsyncProxyResult BeginNegotiate(
+            IPEndPoint remoteEP,
+            HandShakeComplete callback,
+            IPEndPoint proxyEndPoint
+        )
         {
             ProtocolComplete = callback;
             HandShake = GetEndPointBytes(remoteEP);
@@ -264,12 +274,14 @@ namespace Asv.Avalonia.Map
 
             try
             {
-                Server.BeginSend(new byte[] {5, 2, 0, 2},
+                Server.BeginSend(
+                    new byte[] { 5, 2, 0, 2 },
                     0,
                     4,
                     SocketFlags.None,
                     OnAuthSent,
-                    Server);
+                    Server
+                );
             }
             catch (Exception e)
             {
@@ -297,12 +309,14 @@ namespace Asv.Avalonia.Map
             {
                 Buffer = new byte[1024];
                 Received = 0;
-                Server.BeginReceive(Buffer,
+                Server.BeginReceive(
+                    Buffer,
                     0,
                     Buffer.Length,
                     SocketFlags.None,
                     OnAuthReceive,
-                    Server);
+                    Server
+                );
             }
             catch (Exception e)
             {
@@ -332,12 +346,14 @@ namespace Asv.Avalonia.Map
             {
                 if (Received < 2)
                 {
-                    Server.BeginReceive(Buffer,
+                    Server.BeginReceive(
+                        Buffer,
                         Received,
                         Buffer.Length - Received,
                         SocketFlags.None,
                         OnAuthReceive,
-                        Server);
+                        Server
+                    );
                 }
                 else
                 {
@@ -378,12 +394,7 @@ namespace Asv.Avalonia.Map
 
             try
             {
-                Server.BeginSend(HandShake,
-                    0,
-                    HandShake.Length,
-                    SocketFlags.None,
-                    OnSent,
-                    Server);
+                Server.BeginSend(HandShake, 0, HandShake.Length, SocketFlags.None, OnSent, Server);
             }
             catch (Exception ex)
             {
@@ -411,12 +422,7 @@ namespace Asv.Avalonia.Map
             {
                 Buffer = new byte[5];
                 Received = 0;
-                Server.BeginReceive(Buffer,
-                    0,
-                    Buffer.Length,
-                    SocketFlags.None,
-                    OnReceive,
-                    Server);
+                Server.BeginReceive(Buffer, 0, Buffer.Length, SocketFlags.None, OnReceive, Server);
             }
             catch (Exception e)
             {
@@ -445,12 +451,14 @@ namespace Asv.Avalonia.Map
                 if (Received == Buffer.Length)
                     ProcessReply(Buffer);
                 else
-                    Server.BeginReceive(Buffer,
+                    Server.BeginReceive(
+                        Buffer,
                         Received,
                         Buffer.Length - Received,
                         SocketFlags.None,
                         OnReceive,
-                        Server);
+                        Server
+                    );
             }
             catch (Exception e)
             {
@@ -505,12 +513,14 @@ namespace Asv.Avalonia.Map
                 if (Received == Buffer.Length)
                     ProtocolComplete(null);
                 else
-                    Server.BeginReceive(Buffer,
+                    Server.BeginReceive(
+                        Buffer,
                         Received,
                         Buffer.Length - Received,
                         SocketFlags.None,
                         OnReadLast,
-                        Server);
+                        Server
+                    );
             }
             catch (Exception e)
             {
@@ -524,10 +534,7 @@ namespace Asv.Avalonia.Map
         /// <value>The password to use when authenticating with the SOCKS5 server.</value>
         private string Password
         {
-            get
-            {
-                return _password;
-            }
+            get { return _password; }
             set
             {
                 if (value == null)

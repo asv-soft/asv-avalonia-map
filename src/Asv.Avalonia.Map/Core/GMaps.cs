@@ -18,7 +18,6 @@ namespace Asv.Avalonia.Map
     /// </summary>
     public class GMaps
     {
-        
         /// <summary>
         ///     tile access mode
         /// </summary>
@@ -59,14 +58,8 @@ namespace Asv.Avalonia.Map
         /// </summary>
         public PureImageCache PrimaryCache
         {
-            get
-            {
-                return Cache.Instance.ImageCache;
-            }
-            set
-            {
-                Cache.Instance.ImageCache = value;
-            }
+            get { return Cache.Instance.ImageCache; }
+            set { Cache.Instance.ImageCache = value; }
         }
 
         /// <summary>
@@ -75,14 +68,8 @@ namespace Asv.Avalonia.Map
         /// </summary>
         public PureImageCache SecondaryCache
         {
-            get
-            {
-                return Cache.Instance.ImageCacheSecond;
-            }
-            set
-            {
-                Cache.Instance.ImageCacheSecond = value;
-            }
+            get { return Cache.Instance.ImageCacheSecond; }
+            set { Cache.Instance.ImageCacheSecond = value; }
         }
 
         /// <summary>
@@ -117,9 +104,7 @@ namespace Asv.Avalonia.Map
                         _isRunningOnMono = Type.GetType("Mono.Runtime") != null;
                         return _isRunningOnMono.Value;
                     }
-                    catch
-                    {
-                    }
+                    catch { }
                 }
                 else
                 {
@@ -150,8 +135,10 @@ namespace Asv.Avalonia.Map
 
                     foreach (var a in assembliesLoaded)
                     {
-                        if (a.FullName.Contains("GMap.NET.WindowsForms") ||
-                            a.FullName.Contains("GMap.NET.WindowsPresentation"))
+                        if (
+                            a.FullName.Contains("GMap.NET.WindowsForms")
+                            || a.FullName.Contains("GMap.NET.WindowsPresentation")
+                        )
                         {
                             l = a;
                             break;
@@ -163,7 +150,8 @@ namespace Asv.Avalonia.Map
                         string jj = Assembly.GetExecutingAssembly().Location;
                         string hh = Path.GetDirectoryName(jj);
                         string f1 = hh + Path.DirectorySeparatorChar + "GMap.NET.WindowsForms.dll";
-                        string f2 = hh + Path.DirectorySeparatorChar + "GMap.NET.WindowsPresentation.dll";
+                        string f2 =
+                            hh + Path.DirectorySeparatorChar + "GMap.NET.WindowsPresentation.dll";
                         if (File.Exists(f1))
                         {
                             l = Assembly.LoadFile(f1);
@@ -189,12 +177,16 @@ namespace Asv.Avalonia.Map
 
                         if (t != null)
                         {
-                            t.InvokeMember("Enable",
-                                BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Static |
-                                BindingFlags.InvokeMethod,
+                            t.InvokeMember(
+                                "Enable",
+                                BindingFlags.DeclaredOnly
+                                    | BindingFlags.Public
+                                    | BindingFlags.Static
+                                    | BindingFlags.InvokeMethod,
                                 null,
                                 null,
-                                null);
+                                null
+                            );
                         }
                     }
                 }
@@ -212,8 +204,6 @@ namespace Asv.Avalonia.Map
             ServicePointManager.DefaultConnectionLimit = 5;
         }
 
-        
-
         #region -- Stuff --
 
         /// <summary>
@@ -225,18 +215,18 @@ namespace Asv.Avalonia.Map
         /// <returns></returns>
         public bool ExportToGMDB(string file)
         {
-// #if SQLite
-//             if (PrimaryCache is LiteDbCache)
-//             {
-//                 var db = new StringBuilder((PrimaryCache as LiteDbCache).GtileCache);
-//                 db.AppendFormat(CultureInfo.InvariantCulture,
-//                     "{0}{1}Data.gmdb",
-//                     GMapProvider.LanguageStr,
-//                     Path.DirectorySeparatorChar);
-//
-//                 return LiteDbCache.Instance.ExportMapDataToDB(db.ToString(), file);
-//             }
-// #endif
+            // #if SQLite
+            //             if (PrimaryCache is LiteDbCache)
+            //             {
+            //                 var db = new StringBuilder((PrimaryCache as LiteDbCache).GtileCache);
+            //                 db.AppendFormat(CultureInfo.InvariantCulture,
+            //                     "{0}{1}Data.gmdb",
+            //                     GMapProvider.LanguageStr,
+            //                     Path.DirectorySeparatorChar);
+            //
+            //                 return LiteDbCache.Instance.ExportMapDataToDB(db.ToString(), file);
+            //             }
+            // #endif
             return false;
         }
 
@@ -248,18 +238,18 @@ namespace Asv.Avalonia.Map
         /// <returns></returns>
         public bool ImportFromGMDB(string file)
         {
-// #if SQLite
-//             if (PrimaryCache is SQLitePureImageCache)
-//             {
-//                 var db = new StringBuilder((PrimaryCache as SQLitePureImageCache).GtileCache);
-//                 db.AppendFormat(CultureInfo.InvariantCulture,
-//                     "{0}{1}Data.gmdb",
-//                     GMapProvider.LanguageStr,
-//                     Path.DirectorySeparatorChar);
-//
-//                 return SQLitePureImageCache.ExportMapDataToDB(file, db.ToString());
-//             }
-// #endif
+            // #if SQLite
+            //             if (PrimaryCache is SQLitePureImageCache)
+            //             {
+            //                 var db = new StringBuilder((PrimaryCache as SQLitePureImageCache).GtileCache);
+            //                 db.AppendFormat(CultureInfo.InvariantCulture,
+            //                     "{0}{1}Data.gmdb",
+            //                     GMapProvider.LanguageStr,
+            //                     Path.DirectorySeparatorChar);
+            //
+            //                 return SQLitePureImageCache.ExportMapDataToDB(file, db.ToString());
+            //             }
+            // #endif
             return false;
         }
 
@@ -312,8 +302,11 @@ namespace Asv.Avalonia.Map
                     {
                         WaitForCache.Set();
                     }
-                    else if (_cacheEngine == null || _cacheEngine.ThreadState == System.Threading.ThreadState.Stopped ||
-                             _cacheEngine.ThreadState == System.Threading.ThreadState.Unstarted)
+                    else if (
+                        _cacheEngine == null
+                        || _cacheEngine.ThreadState == System.Threading.ThreadState.Stopped
+                        || _cacheEngine.ThreadState == System.Threading.ThreadState.Unstarted
+                    )
                     {
                         _cacheEngine = null;
                         _cacheEngine = new Thread(CacheEngineLoop);
@@ -358,14 +351,8 @@ namespace Asv.Avalonia.Map
         /// </summary>
         public bool CacheOnIdleRead
         {
-            get
-            {
-                return _cacheOnIdleRead;
-            }
-            set
-            {
-                _cacheOnIdleRead = value;
-            }
+            get { return _cacheOnIdleRead; }
+            set { _cacheOnIdleRead = value; }
         }
 
         volatile bool _boostCacheEngine;
@@ -375,14 +362,8 @@ namespace Asv.Avalonia.Map
         /// </summary>
         public bool BoostCacheEngine
         {
-            get
-            {
-                return _boostCacheEngine;
-            }
-            set
-            {
-                _boostCacheEngine = value;
-            }
+            get { return _boostCacheEngine; }
+            set { _boostCacheEngine = value; }
         }
 
         /// <summary>
@@ -437,10 +418,20 @@ namespace Asv.Avalonia.Map
                         // check if stream wasn't disposed somehow
                         if (task.Value.Img != null)
                         {
-                            Debug.WriteLine("CacheEngine[" + left + "]: storing tile " + task.Value + ", " +
-                                            task.Value.Img.Length / 1024 + "kB...");
+                            Debug.WriteLine(
+                                "CacheEngine["
+                                    + left
+                                    + "]: storing tile "
+                                    + task.Value
+                                    + ", "
+                                    + task.Value.Img.Length / 1024
+                                    + "kB..."
+                            );
 
-                            if ((task.Value.CacheType & CacheUsage.First) == CacheUsage.First && PrimaryCache != null)
+                            if (
+                                (task.Value.CacheType & CacheUsage.First) == CacheUsage.First
+                                && PrimaryCache != null
+                            )
                             {
                                 if (_cacheOnIdleRead)
                                 {
@@ -450,14 +441,18 @@ namespace Asv.Avalonia.Map
                                     }
                                 }
 
-                                PrimaryCache.PutImageToCache(task.Value.Img,
+                                PrimaryCache.PutImageToCache(
+                                    task.Value.Img,
                                     task.Value.Tile.Type,
                                     task.Value.Tile.Pos,
-                                    task.Value.Tile.Zoom);
+                                    task.Value.Tile.Zoom
+                                );
                             }
 
-                            if ((task.Value.CacheType & CacheUsage.Second) == CacheUsage.Second &&
-                                SecondaryCache != null)
+                            if (
+                                (task.Value.CacheType & CacheUsage.Second) == CacheUsage.Second
+                                && SecondaryCache != null
+                            )
                             {
                                 if (_cacheOnIdleRead)
                                 {
@@ -467,10 +462,12 @@ namespace Asv.Avalonia.Map
                                     }
                                 }
 
-                                SecondaryCache.PutImageToCache(task.Value.Img,
+                                SecondaryCache.PutImageToCache(
+                                    task.Value.Img,
                                     task.Value.Tile.Type,
                                     task.Value.Tile.Pos,
-                                    task.Value.Tile.Zoom);
+                                    task.Value.Tile.Zoom
+                                );
                             }
 
                             task.Value.Clear();
@@ -482,7 +479,9 @@ namespace Asv.Avalonia.Map
                         }
                         else
                         {
-                            Debug.WriteLine("CacheEngineLoop: skip, tile disposed to early -> " + task.Value);
+                            Debug.WriteLine(
+                                "CacheEngineLoop: skip, tile disposed to early -> " + task.Value
+                            );
                         }
 
                         #endregion
@@ -499,7 +498,12 @@ namespace Asv.Avalonia.Map
                             }
                         }
 
-                        if (_abortCacheLoop || NoMapInstances || !WaitForCache.WaitOne(33333, false) || NoMapInstances)
+                        if (
+                            _abortCacheLoop
+                            || NoMapInstances
+                            || !WaitForCache.WaitOne(33333, false)
+                            || NoMapInstances
+                        )
                         {
                             break;
                         }
@@ -529,16 +533,11 @@ namespace Asv.Avalonia.Map
         class StringWriterExt : StringWriter
         {
             public StringWriterExt(IFormatProvider info)
-                : base(info)
-            {
-            }
+                : base(info) { }
 
             public override Encoding Encoding
             {
-                get
-                {
-                    return Encoding.UTF8;
-                }
+                get { return Encoding.UTF8; }
             }
         }
 
@@ -618,7 +617,8 @@ namespace Asv.Avalonia.Map
 
                             if (point.FixType != FixType.Unknown)
                             {
-                                t.fix = point.FixType == FixType.XyD ? fixType.Item2d : fixType.Item3d;
+                                t.fix =
+                                    point.FixType == FixType.XyD ? fixType.Item2d : fixType.Item3d;
                                 t.fixSpecified = true;
                             }
 
@@ -686,7 +686,12 @@ namespace Asv.Avalonia.Map
         /// <param name="zoom"></param>
         /// <param name="result"></param>
         /// <returns></returns>
-        public PureImage GetImageFrom(GMapProvider provider, GPoint pos, int zoom, out Exception result)
+        public PureImage GetImageFrom(
+            GMapProvider provider,
+            GPoint pos,
+            int zoom,
+            out Exception result
+        )
         {
             PureImage ret = null;
             result = null;
@@ -707,8 +712,10 @@ namespace Asv.Avalonia.Map
                             if (ret == null)
                             {
 #if DEBUG
-                                Debug.WriteLine("Image disposed in MemoryCache o.O, should never happen ;} " +
-                                                  new RawTile(provider.DbId, pos, zoom));
+                                Debug.WriteLine(
+                                    "Image disposed in MemoryCache o.O, should never happen ;} "
+                                        + new RawTile(provider.DbId, pos, zoom)
+                                );
                                 if (Debugger.IsAttached)
                                 {
                                     Debugger.Break();
@@ -759,7 +766,13 @@ namespace Asv.Avalonia.Map
                                     MemoryCache.AddTileToMemoryCache(rtile, ret.Data.GetBuffer());
                                 }
 
-                                EnqueueCacheTask(new CacheQueueItem(rtile, ret.Data.GetBuffer(), CacheUsage.First));
+                                EnqueueCacheTask(
+                                    new CacheQueueItem(
+                                        rtile,
+                                        ret.Data.GetBuffer(),
+                                        CacheUsage.First
+                                    )
+                                );
                                 return ret;
                             }
                         }
@@ -779,7 +792,13 @@ namespace Asv.Avalonia.Map
 
                                 if (Mode != AccessMode.ServerOnly && !provider.BypassCache)
                                 {
-                                    EnqueueCacheTask(new CacheQueueItem(rtile, ret.Data.GetBuffer(), CacheUsage.Both));
+                                    EnqueueCacheTask(
+                                        new CacheQueueItem(
+                                            rtile,
+                                            ret.Data.GetBuffer(),
+                                            CacheUsage.Both
+                                        )
+                                    );
                                 }
                             }
                         }
@@ -800,7 +819,9 @@ namespace Asv.Avalonia.Map
             return ret;
         }
 
-        private readonly Exception _noDataException = new Exception("No data in local tile cache...");
+        private readonly Exception _noDataException = new Exception(
+            "No data in local tile cache..."
+        );
 
         private TileHttpHost _host;
 

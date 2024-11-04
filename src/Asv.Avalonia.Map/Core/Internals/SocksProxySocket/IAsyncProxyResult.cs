@@ -8,11 +8,11 @@
   are met:
 
     - Redistributions of source code must retain the above copyright
-       notice, this list of conditions and the following disclaimer. 
+       notice, this list of conditions and the following disclaimer.
 
     - Neither the name of the KPD-Team, nor the names of its contributors
        may be used to endorse or promote products derived from this
-       software without specific prior written permission. 
+       software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -67,10 +67,7 @@ namespace Asv.Avalonia.Map
         /// <value>A boolean that indicates whether the server has completed processing the call.</value>
         public bool IsCompleted
         {
-            get
-            {
-                return Completed;
-            }
+            get { return Completed; }
         }
 
         /// <summary>
@@ -80,20 +77,14 @@ namespace Asv.Avalonia.Map
         /// <value>Returns false.</value>
         public bool CompletedSynchronously
         {
-            get
-            {
-                return false;
-            }
+            get { return false; }
         }
 
         /// <summary>Gets an object that was passed as the state parameter of the BeginXXXX method call.</summary>
         /// <value>The object that was passed as the state parameter of the BeginXXXX method call.</value>
         public object AsyncState
         {
-            get
-            {
-                return _stateObject;
-            }
+            get { return _stateObject; }
         }
 
         /// <summary>

@@ -13,8 +13,7 @@ public abstract class HeightProviderBase : IHeightProvider
 
     protected static string ToWebString(double latitude, double longitude)
     {
-      return 
-          $"{latitude.ToString("0.000000", CultureInfo.InvariantCulture)},{longitude.ToString("0.000000", CultureInfo.InvariantCulture)}";
+        return $"{latitude.ToString("0.000000", CultureInfo.InvariantCulture)},{longitude.ToString("0.000000", CultureInfo.InvariantCulture)}";
     }
 
     /// <summary>
@@ -32,5 +31,6 @@ public abstract class HeightProviderBase : IHeightProvider
     /// <returns>A Task that represents the asynchronous operation.
     /// The Task.Result property returns an ObservableCollection of GeoPoint objects.</returns>
     public abstract Task<ObservableCollection<GeoPoint>> GetPointAltitudeCollection(
-        ObservableCollection<GeoPoint> pointsCollection);
+        ObservableCollection<GeoPoint> pointsCollection
+    );
 }

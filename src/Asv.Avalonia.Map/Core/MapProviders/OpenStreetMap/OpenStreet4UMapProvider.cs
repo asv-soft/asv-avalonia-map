@@ -18,8 +18,10 @@ namespace Asv.Avalonia.Map
         OpenStreet4UMapProvider()
         {
             RefererUrl = "http://www.4umaps.eu/map.htm";
-            Copyright = string.Format("© 4UMaps.eu, © OpenStreetMap - Map data ©{0} OpenStreetMap",
-                DateTime.Today.Year);
+            Copyright = string.Format(
+                "© 4UMaps.eu, © OpenStreetMap - Map data ©{0} OpenStreetMap",
+                DateTime.Today.Year
+            );
         }
 
         static OpenStreet4UMapProvider()
@@ -29,15 +31,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("3E3D919E-9814-4978-B430-6AAB2C1E41B2");
+        public override Guid Id { get; } = new Guid("3E3D919E-9814-4978-B430-6AAB2C1E41B2");
 
-        public override string Name
-        {
-            get;
-        } = "OpenStreet4UMap";
+        public override string Name { get; } = "OpenStreet4UMap";
 
         GMapProvider[] _overlays;
 
@@ -47,7 +43,7 @@ namespace Asv.Avalonia.Map
             {
                 if (_overlays == null)
                 {
-                    _overlays = new GMapProvider[] {this};
+                    _overlays = new GMapProvider[] { this };
                 }
 
                 return _overlays;

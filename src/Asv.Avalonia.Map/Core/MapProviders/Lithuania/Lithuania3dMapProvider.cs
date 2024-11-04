@@ -9,9 +9,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly Lithuania3dMapProvider Instance;
 
-        Lithuania3dMapProvider()
-        {
-        }
+        Lithuania3dMapProvider() { }
 
         static Lithuania3dMapProvider()
         {
@@ -20,15 +18,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("CCC5B65F-C8BC-47CE-B39D-5E262E6BF083");
+        public override Guid Id { get; } = new Guid("CCC5B65F-C8BC-47CE-B39D-5E262E6BF083");
 
-        public override string Name
-        {
-            get;
-        } = "Lithuania 2.5d Map";
+        public override string Name { get; } = "Lithuania 2.5d Map";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {

@@ -21,15 +21,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("AF66DF88-AD25-43A9-8F82-56FCA49A748A");
+        public override Guid Id { get; } = new Guid("AF66DF88-AD25-43A9-8F82-56FCA49A748A");
 
-        public override string Name
-        {
-            get;
-        } = "OpenCycleTransportMap";
+        public override string Name { get; } = "OpenCycleTransportMap";
 
         GMapProvider[] _overlays;
 
@@ -39,7 +33,7 @@ namespace Asv.Avalonia.Map
             {
                 if (_overlays == null)
                 {
-                    _overlays = new GMapProvider[] {this};
+                    _overlays = new GMapProvider[] { this };
                 }
 
                 return _overlays;
@@ -61,6 +55,7 @@ namespace Asv.Avalonia.Map
             return string.Format(UrlFormat, letter, zoom, pos.X, pos.Y);
         }
 
-        static readonly string UrlFormat = "http://{0}.tile2.opencyclemap.org/transport/{1}/{2}/{3}.png";
+        static readonly string UrlFormat =
+            "http://{0}.tile2.opencyclemap.org/transport/{1}/{2}/{3}.png";
     }
 }

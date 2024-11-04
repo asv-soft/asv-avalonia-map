@@ -9,9 +9,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly HereHybridMapProvider Instance;
 
-        HereHybridMapProvider()
-        {
-        }
+        HereHybridMapProvider() { }
 
         static HereHybridMapProvider()
         {
@@ -20,15 +18,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("B85A8FD7-40F4-40EE-9B45-491AA45D86C1");
+        public override Guid Id { get; } = new Guid("B85A8FD7-40F4-40EE-9B45-491AA45D86C1");
 
-        public override string Name
-        {
-            get;
-        } = "HereHybridMap";
+        public override string Name { get; } = "HereHybridMap";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {
@@ -41,7 +33,15 @@ namespace Asv.Avalonia.Map
 
         string MakeTileImageUrl(GPoint pos, int zoom, string language)
         {
-            return string.Format(UrlFormat, UrlServerLetters[GetServerNum(pos, 4)], zoom, pos.X, pos.Y, AppId, AppCode);
+            return string.Format(
+                UrlFormat,
+                UrlServerLetters[GetServerNum(pos, 4)],
+                zoom,
+                pos.X,
+                pos.Y,
+                AppId,
+                AppCode
+            );
         }
 
         static readonly string UrlFormat =

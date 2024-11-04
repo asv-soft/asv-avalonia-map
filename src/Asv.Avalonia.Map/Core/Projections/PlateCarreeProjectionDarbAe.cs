@@ -34,7 +34,8 @@ namespace Asv.Avalonia.Map
     /// </summary>
     public class PlateCarreeProjectionDarbAe : PureProjection
     {
-        public static readonly PlateCarreeProjectionDarbAe Instance = new PlateCarreeProjectionDarbAe();
+        public static readonly PlateCarreeProjectionDarbAe Instance =
+            new PlateCarreeProjectionDarbAe();
 
         public static readonly double MinLatitude = 18.7071563263201;
         public static readonly double MaxLatitude = 29.4052130085331;
@@ -52,25 +53,16 @@ namespace Asv.Avalonia.Map
             }
         }
 
-        public override GSize TileSize
-        {
-            get;
-        } = new GSize(256, 256);
+        public override GSize TileSize { get; } = new GSize(256, 256);
 
         public override double Axis
         {
-            get
-            {
-                return 6378137;
-            }
+            get { return 6378137; }
         }
 
         public override double Flattening
         {
-            get
-            {
-                return 1.0 / 298.257223563;
-            }
+            get { return 1.0 / 298.257223563; }
         }
 
         public override GPoint FromLatLngToPixel(double lat, double lng, int zoom)
@@ -103,7 +95,7 @@ namespace Asv.Avalonia.Map
         public override GeoPoint FromPixelToLatLng(long x, long y, int zoom)
         {
             double res = GetTileMatrixResolution(zoom);
-            return new GeoPoint(orignY - y * res, x * res + orignX,0);
+            return new GeoPoint(orignY - y * res, x * res + orignX, 0);
         }
 
         public static double GetTileMatrixResolution(int zoom)
@@ -115,81 +107,81 @@ namespace Asv.Avalonia.Map
                 #region -- sizes --
 
                 case 0:
-                {
-                    ret = 0.0118973050291514;
-                }
+                    {
+                        ret = 0.0118973050291514;
+                    }
                     break;
 
                 case 1:
-                {
-                    ret = 0.0059486525145757;
-                }
+                    {
+                        ret = 0.0059486525145757;
+                    }
                     break;
 
                 case 2:
-                {
-                    ret = 0.00297432625728785;
-                }
+                    {
+                        ret = 0.00297432625728785;
+                    }
                     break;
 
                 case 3:
-                {
-                    ret = 0.00118973050291514;
-                }
+                    {
+                        ret = 0.00118973050291514;
+                    }
                     break;
 
                 case 4:
-                {
-                    ret = 0.00059486525145757;
-                }
+                    {
+                        ret = 0.00059486525145757;
+                    }
                     break;
 
                 case 5:
-                {
-                    ret = 0.000356919150874542;
-                }
+                    {
+                        ret = 0.000356919150874542;
+                    }
                     break;
 
                 case 6:
-                {
-                    ret = 0.000178459575437271;
-                }
+                    {
+                        ret = 0.000178459575437271;
+                    }
                     break;
 
                 case 7:
-                {
-                    ret = 0.000118973050291514;
-                }
+                    {
+                        ret = 0.000118973050291514;
+                    }
                     break;
 
                 case 8:
-                {
-                    ret = 5.9486525145757E-05;
-                }
+                    {
+                        ret = 5.9486525145757E-05;
+                    }
                     break;
 
                 case 9:
-                {
-                    ret = 3.56919150874542E-05;
-                }
+                    {
+                        ret = 3.56919150874542E-05;
+                    }
                     break;
 
                 case 10:
-                {
-                    ret = 1.90356880466422E-05;
-                }
+                    {
+                        ret = 1.90356880466422E-05;
+                    }
                     break;
 
                 case 11:
-                {
-                    ret = 9.51784402332112E-06;
-                }
+                    {
+                        ret = 9.51784402332112E-06;
+                    }
                     break;
 
                 case 12:
-                {
-                    ret = 4.75892201166056E-06;
-                }
+                    {
+                        ret = 4.75892201166056E-06;
+                    }
                     break;
 
                 #endregion

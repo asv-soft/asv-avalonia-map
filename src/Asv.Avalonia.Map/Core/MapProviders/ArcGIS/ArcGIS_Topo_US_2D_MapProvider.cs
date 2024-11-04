@@ -9,9 +9,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly ArcGIS_Topo_US_2D_MapProvider Instance;
 
-        ArcGIS_Topo_US_2D_MapProvider()
-        {
-        }
+        ArcGIS_Topo_US_2D_MapProvider() { }
 
         static ArcGIS_Topo_US_2D_MapProvider()
         {
@@ -20,15 +18,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("7652CC72-5C92-40F5-B572-B8FEAA728F6D");
+        public override Guid Id { get; } = new Guid("7652CC72-5C92-40F5-B572-B8FEAA728F6D");
 
-        public override string Name
-        {
-            get;
-        } = "ArcGIS_Topo_US_2D_Map";
+        public override string Name { get; } = "ArcGIS_Topo_US_2D_Map";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {

@@ -5,20 +5,20 @@ using Avalonia.Media.Imaging;
 
 namespace Asv.Avalonia.Map
 {
-    
-
     public class FolderDbCache : PureImageCache
     {
         private readonly string _rootFolder;
+
         public FolderDbCache(string rootFolder)
         {
             _rootFolder = rootFolder;
-            if (Directory.Exists(_rootFolder) == false) Directory.CreateDirectory(_rootFolder);
+            if (Directory.Exists(_rootFolder) == false)
+                Directory.CreateDirectory(_rootFolder);
         }
 
         public bool PutImageToCache(byte[] tile, int type, GPoint pos, int zoom)
         {
-            var fileName = GetFileName(type, zoom, pos.X,pos.Y, out var dir);
+            var fileName = GetFileName(type, zoom, pos.X, pos.Y, out var dir);
             if (Directory.Exists(dir) == false)
             {
                 Directory.CreateDirectory(dir);
@@ -26,11 +26,11 @@ namespace Asv.Avalonia.Map
             }
             else
             {
-                if (File.Exists(fileName)) File.Delete(fileName);
+                if (File.Exists(fileName))
+                    File.Delete(fileName);
             }
-            
-            
-            File.WriteAllBytes(fileName,tile);
+
+            File.WriteAllBytes(fileName, tile);
             return true;
         }
 
@@ -43,7 +43,8 @@ namespace Asv.Avalonia.Map
         public PureImage GetImageFromCache(int type, GPoint pos, int zoom)
         {
             var fileName = GetFileName(type, zoom, pos.X, pos.Y, out var dir);
-            if (File.Exists(fileName) == false) return null;
+            if (File.Exists(fileName) == false)
+                return null;
             using var file = File.OpenRead(fileName);
             var m = new MemoryStream();
             file.CopyTo(m);
@@ -51,7 +52,7 @@ namespace Asv.Avalonia.Map
             try
             {
                 var b = new Bitmap(m);
-                var ret = new MapImage { Img = b,Data = m};
+                var ret = new MapImage { Img = b, Data = m };
                 return ret;
             }
             catch
@@ -67,5 +68,4 @@ namespace Asv.Avalonia.Map
             return 0;
         }
     }
-
 }

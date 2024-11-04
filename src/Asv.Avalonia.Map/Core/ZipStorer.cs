@@ -24,7 +24,7 @@ namespace Asv.Avalonia.Map
             Store = 0,
 
             /// <summary>Deflate compression method</summary>
-            Deflate = 8
+            Deflate = 8,
         }
 
         /// <summary>
@@ -177,9 +177,12 @@ namespace Asv.Avalonia.Map
         /// <returns>A valid ZipStorer object</returns>
         public static ZipStorer Open(string filename, FileAccess access)
         {
-            var stream = (Stream)new FileStream(filename,
-                FileMode.Open,
-                access == FileAccess.Read ? FileAccess.Read : FileAccess.ReadWrite);
+            var stream = (Stream)
+                new FileStream(
+                    filename,
+                    FileMode.Open,
+                    access == FileAccess.Read ? FileAccess.Read : FileAccess.ReadWrite
+                );
 
             var zip = Open(stream, access);
             zip._fileName = filename;
@@ -216,7 +219,12 @@ namespace Asv.Avalonia.Map
         /// <param name="pathname">Full path of file to add to Zip storage</param>
         /// <param name="filenameInZip">Filename and path as desired in Zip directory</param>
         /// <param name="comment">Comment for stored file</param>
-        public void AddFile(Compression method, string pathname, string filenameInZip, string comment)
+        public void AddFile(
+            Compression method,
+            string pathname,
+            string filenameInZip,
+            string comment
+        )
         {
             if (_access == FileAccess.Read)
                 throw new InvalidOperationException("Writing is not alowed");
@@ -234,8 +242,13 @@ namespace Asv.Avalonia.Map
         /// <param name="source">Stream object containing the data to store in Zip</param>
         /// <param name="modTime">Modification time of the data to store</param>
         /// <param name="comment">Comment for stored file</param>
-        public void AddStream(Compression method, string filenameInZip, Stream source, DateTime modTime,
-            string comment)
+        public void AddStream(
+            Compression method,
+            string filenameInZip,
+            Stream source,
+            DateTime modTime,
+            string comment
+        )
         {
             if (_access == FileAccess.Read)
                 throw new InvalidOperationException("Writing is not alowed");
@@ -258,8 +271,7 @@ namespace Asv.Avalonia.Map
 
             // Even though we write the header now, it will have to be rewritten, since we don't know compressed size or crc.
             zfe.Crc32 = 0; // to be updated later
-            zfe.HeaderOffset =
-                (uint)_zipFileStream.Position; // offset within file of the start of this local record
+            zfe.HeaderOffset = (uint)_zipFileStream.Position; // offset within file of the start of this local record
             zfe.ModifyTime = modTime;
 
             // Write local header
@@ -324,13 +336,14 @@ namespace Asv.Avalonia.Map
 
             var result = new List<ZipFileEntry>();
 
-            for (int pointer = 0; pointer < _centralDirImage.Length;)
+            for (int pointer = 0; pointer < _centralDirImage.Length; )
             {
                 uint signature = BitConverter.ToUInt32(_centralDirImage, pointer);
                 if (signature != 0x02014b50)
                     break;
 
-                bool encodeUTF8 = (BitConverter.ToUInt16(_centralDirImage, pointer + 8) & 0x0800) != 0;
+                bool encodeUTF8 =
+                    (BitConverter.ToUInt16(_centralDirImage, pointer + 8) & 0x0800) != 0;
                 ushort method = BitConverter.ToUInt16(_centralDirImage, pointer + 10);
                 uint modifyTime = BitConverter.ToUInt32(_centralDirImage, pointer + 12);
                 uint crc32 = BitConverter.ToUInt32(_centralDirImage, pointer + 16);
@@ -355,9 +368,11 @@ namespace Asv.Avalonia.Map
                 zfe.Crc32 = crc32;
                 zfe.ModifyTime = DosTimeToDateTime(modifyTime);
                 if (commentSize > 0)
-                    zfe.Comment = encoder.GetString(_centralDirImage,
+                    zfe.Comment = encoder.GetString(
+                        _centralDirImage,
                         pointer + 46 + filenameSize + extraSize,
-                        commentSize);
+                        commentSize
+                    );
 
                 result.Add(zfe);
                 pointer += 46 + filenameSize + extraSize + commentSize;
@@ -429,7 +444,11 @@ namespace Asv.Avalonia.Map
             uint bytesPending = zfe.FileSize;
             while (bytesPending > 0)
             {
-                int bytesRead = inStream.Read(buffer, 0, (int)Math.Min(bytesPending, buffer.Length));
+                int bytesRead = inStream.Read(
+                    buffer,
+                    0,
+                    (int)Math.Min(bytesPending, buffer.Length)
+                );
                 stream.Write(buffer, 0, bytesRead);
                 bytesPending -= (uint)bytesRead;
             }
@@ -451,8 +470,9 @@ namespace Asv.Avalonia.Map
         public static bool RemoveEntries(ref ZipStorer zip, List<ZipFileEntry> zfes)
         {
             if (!(zip._zipFileStream is FileStream))
-                throw new InvalidOperationException("RemoveEntries is allowed just over streams of type FileStream");
-
+                throw new InvalidOperationException(
+                    "RemoveEntries is allowed just over streams of type FileStream"
+                );
 
             //Get full list of entries
             var fullList = zip.ReadCentralDir();
@@ -471,7 +491,12 @@ namespace Asv.Avalonia.Map
                     {
                         if (zip.ExtractFile(zfe, tempEntryName))
                         {
-                            tempZip.AddFile(zfe.Method, tempEntryName, zfe.FilenameInZip, zfe.Comment);
+                            tempZip.AddFile(
+                                zfe.Method,
+                                tempEntryName,
+                                zfe.FilenameInZip,
+                                zfe.Comment
+                            );
                         }
                     }
                 }
@@ -539,17 +564,15 @@ namespace Asv.Avalonia.Map
             var encoder = zfe.EncodeUTF8 ? Encoding.UTF8 : DefaultEncoding;
             var encodedFilename = encoder.GetBytes(zfe.FilenameInZip);
 
-            _zipFileStream.Write(new byte[] {80, 75, 3, 4, 20, 0}, 0, 6); // No extra header
-            _zipFileStream.Write(BitConverter.GetBytes((ushort)(zfe.EncodeUTF8 ? 0x0800 : 0)),
+            _zipFileStream.Write(new byte[] { 80, 75, 3, 4, 20, 0 }, 0, 6); // No extra header
+            _zipFileStream.Write(
+                BitConverter.GetBytes((ushort)(zfe.EncodeUTF8 ? 0x0800 : 0)),
                 0,
-                2); // filename and comment encoding 
+                2
+            ); // filename and comment encoding
             _zipFileStream.Write(BitConverter.GetBytes((ushort)zfe.Method), 0, 2); // zipping method
-            _zipFileStream.Write(BitConverter.GetBytes(DateTimeToDosTime(zfe.ModifyTime)),
-                0,
-                4); // zipping date and time
-            _zipFileStream.Write(new byte[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                0,
-                12); // unused CRC, un/compressed size, updated later
+            _zipFileStream.Write(BitConverter.GetBytes(DateTimeToDosTime(zfe.ModifyTime)), 0, 4); // zipping date and time
+            _zipFileStream.Write(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 0, 12); // unused CRC, un/compressed size, updated later
             _zipFileStream.Write(BitConverter.GetBytes((ushort)encodedFilename.Length), 0, 2); // filename length
             _zipFileStream.Write(BitConverter.GetBytes((ushort)0), 0, 2); // extra length
 
@@ -586,14 +609,14 @@ namespace Asv.Avalonia.Map
             var encodedFilename = encoder.GetBytes(zfe.FilenameInZip);
             var encodedComment = encoder.GetBytes(zfe.Comment);
 
-            _zipFileStream.Write(new byte[] {80, 75, 1, 2, 23, 0xB, 20, 0}, 0, 8);
-            _zipFileStream.Write(BitConverter.GetBytes((ushort)(zfe.EncodeUTF8 ? 0x0800 : 0)),
+            _zipFileStream.Write(new byte[] { 80, 75, 1, 2, 23, 0xB, 20, 0 }, 0, 8);
+            _zipFileStream.Write(
+                BitConverter.GetBytes((ushort)(zfe.EncodeUTF8 ? 0x0800 : 0)),
                 0,
-                2); // filename and comment encoding 
+                2
+            ); // filename and comment encoding
             _zipFileStream.Write(BitConverter.GetBytes((ushort)zfe.Method), 0, 2); // zipping method
-            _zipFileStream.Write(BitConverter.GetBytes(DateTimeToDosTime(zfe.ModifyTime)),
-                0,
-                4); // zipping date and time
+            _zipFileStream.Write(BitConverter.GetBytes(DateTimeToDosTime(zfe.ModifyTime)), 0, 4); // zipping date and time
             _zipFileStream.Write(BitConverter.GetBytes(zfe.Crc32), 0, 4); // file CRC
             _zipFileStream.Write(BitConverter.GetBytes(zfe.CompressedSize), 0, 4); // compressed file size
             _zipFileStream.Write(BitConverter.GetBytes(zfe.FileSize), 0, 4); // uncompressed file size
@@ -604,9 +627,7 @@ namespace Asv.Avalonia.Map
             _zipFileStream.Write(BitConverter.GetBytes((ushort)0), 0, 2); // disk=0
             _zipFileStream.Write(BitConverter.GetBytes((ushort)0), 0, 2); // file type: binary
             _zipFileStream.Write(BitConverter.GetBytes((ushort)0), 0, 2); // Internal file attributes
-            _zipFileStream.Write(BitConverter.GetBytes((ushort)0x8100),
-                0,
-                2); // External file attributes (normal/readable)
+            _zipFileStream.Write(BitConverter.GetBytes((ushort)0x8100), 0, 2); // External file attributes (normal/readable)
             _zipFileStream.Write(BitConverter.GetBytes(zfe.HeaderOffset), 0, 4); // Offset of header
 
             _zipFileStream.Write(encodedFilename, 0, encodedFilename.Length);
@@ -634,7 +655,7 @@ namespace Asv.Avalonia.Map
             var encoder = EncodeUTF8 ? Encoding.UTF8 : DefaultEncoding;
             var encodedComment = encoder.GetBytes(_comment);
 
-            _zipFileStream.Write(new byte[] {80, 75, 5, 6, 0, 0, 0, 0}, 0, 8);
+            _zipFileStream.Write(new byte[] { 80, 75, 5, 6, 0, 0, 0, 0 }, 0, 8);
             _zipFileStream.Write(BitConverter.GetBytes((ushort)Files.Count + _existingFiles), 0, 2);
             _zipFileStream.Write(BitConverter.GetBytes((ushort)Files.Count + _existingFiles), 0, 2);
             _zipFileStream.Write(BitConverter.GetBytes(size), 0, 4);
@@ -686,8 +707,12 @@ namespace Asv.Avalonia.Map
             zfe.CompressedSize = (uint)(_zipFileStream.Position - posStart);
 
             // Verify for real compression
-            if (zfe.Method == Compression.Deflate && !ForceDeflating && source.CanSeek &&
-                zfe.CompressedSize > zfe.FileSize)
+            if (
+                zfe.Method == Compression.Deflate
+                && !ForceDeflating
+                && source.CanSeek
+                && zfe.CompressedSize > zfe.FileSize
+            )
             {
                 // Start operation again with Store algorithm
                 zfe.Method = Compression.Store;
@@ -699,20 +724,25 @@ namespace Asv.Avalonia.Map
         }
 
         /* DOS Date and time:
-            MS-DOS date. The date is a packed value with the following format. Bits Description 
-                0-4 Day of the month (1–31) 
-                5-8 Month (1 = January, 2 = February, and so on) 
-                9-15 Year offset from 1980 (add 1980 to get actual year) 
-            MS-DOS time. The time is a packed value with the following format. Bits Description 
-                0-4 Second divided by 2 
-                5-10 Minute (0–59) 
-                11-15 Hour (0–23 on a 24-hour clock) 
+            MS-DOS date. The date is a packed value with the following format. Bits Description
+                0-4 Day of the month (1–31)
+                5-8 Month (1 = January, 2 = February, and so on)
+                9-15 Year offset from 1980 (add 1980 to get actual year)
+            MS-DOS time. The time is a packed value with the following format. Bits Description
+                0-4 Second divided by 2
+                5-10 Minute (0–59)
+                11-15 Hour (0–23 on a 24-hour clock)
         */
         private uint DateTimeToDosTime(DateTime dt)
         {
             return (uint)(
-                (dt.Second / 2) | (dt.Minute << 5) | (dt.Hour << 11) |
-                (dt.Day << 16) | (dt.Month << 21) | ((dt.Year - 1980) << 25));
+                (dt.Second / 2)
+                | (dt.Minute << 5)
+                | (dt.Hour << 11)
+                | (dt.Day << 16)
+                | (dt.Month << 21)
+                | ((dt.Year - 1980) << 25)
+            );
         }
 
         private DateTime DosTimeToDateTime(uint dt)
@@ -723,11 +753,12 @@ namespace Asv.Avalonia.Map
                 (int)(dt >> 16) & 31,
                 (int)(dt >> 11) & 31,
                 (int)(dt >> 5) & 63,
-                (int)(dt & 31) * 2);
+                (int)(dt & 31) * 2
+            );
         }
 
         /* CRC32 algorithm
-          The 'magic number' for the CRC is 0xdebb20e3.  
+          The 'magic number' for the CRC is 0xdebb20e3.
           The proper CRC pre and post conditioning
           is used, meaning that the CRC register is
           pre-conditioned with all ones (a starting value

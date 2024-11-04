@@ -17,7 +17,6 @@ namespace Asv.Avalonia.Map
     /// </summary>
     internal sealed class Core : IDisposable
     {
-        
         internal GeoPoint _position;
         private GPoint _positionPixel;
 
@@ -76,7 +75,7 @@ namespace Asv.Avalonia.Map
         internal int Height;
 
         internal int PxRes100M; // 100 meters
-        internal int PxRes1000M; // 1km  
+        internal int PxRes1000M; // 1km
         internal int PxRes10Km; // 10km
         internal int PxRes100Km; // 100km
         internal int PxRes1000Km; // 1000km
@@ -97,10 +96,7 @@ namespace Asv.Avalonia.Map
         /// </summary>
         public int Zoom
         {
-            get
-            {
-                return _zoom;
-            }
+            get { return _zoom; }
             set
             {
                 if (_zoom != value && !IsDragging)
@@ -142,10 +138,7 @@ namespace Asv.Avalonia.Map
         /// </summary>
         public GPoint PositionPixel
         {
-            get
-            {
-                return _positionPixel;
-            }
+            get { return _positionPixel; }
         }
 
         /// <summary>
@@ -153,10 +146,7 @@ namespace Asv.Avalonia.Map
         /// </summary>
         public GeoPoint Position
         {
-            get
-            {
-                return _position;
-            }
+            get { return _position; }
             set
             {
                 _position = value;
@@ -185,7 +175,8 @@ namespace Asv.Avalonia.Map
                 value ??= EmptyProvider.Instance;
                 if (_provider == null || !_provider.Equals(value))
                 {
-                    bool diffProjection = _provider == null || _provider.Projection != value.Projection;
+                    bool diffProjection =
+                        _provider == null || _provider.Projection != value.Projection;
 
                     _provider = value;
 
@@ -258,7 +249,11 @@ namespace Asv.Avalonia.Map
             int mmaxZoom = GetMaxZoomToFitRect(rect);
             if (mmaxZoom > 0)
             {
-                var center = new GeoPoint(rect.Lat- rect.HeightLat / 2, rect.Lng + rect.WidthLng / 2,0);
+                var center = new GeoPoint(
+                    rect.Lat - rect.HeightLat / 2,
+                    rect.Lng + rect.WidthLng / 2,
+                    0
+                );
                 Position = center;
 
                 if (mmaxZoom > MaxZoom)
@@ -348,6 +343,7 @@ namespace Asv.Avalonia.Map
         public event MapTypeChanged OnMapTypeChanged;
 
         readonly List<Thread> _gThreadPool = new List<Thread>();
+
         // ^
         // should be only one pool for multiply controls, any ideas how to fix?
         //static readonly List<Thread> GThreadPool = new List<Thread>();
@@ -408,7 +404,10 @@ namespace Asv.Avalonia.Map
             TimeSpan delta;
             DateTime now;
 
-            while (Refresh != null && (!skiped && Refresh.WaitOne() || Refresh.WaitOne(spanMs, false) || true))
+            while (
+                Refresh != null
+                && (!skiped && Refresh.WaitOne() || Refresh.WaitOne(spanMs, false) || true)
+            )
             {
                 if (w.CancellationPending)
                     break;
@@ -455,9 +454,12 @@ namespace Asv.Avalonia.Map
 
             if (IsRotated)
             {
-                int diag = (int)Math.Round(
-                    Math.Sqrt(Width * Width + Height * Height) / Provider.Projection.TileSize.Width,
-                    MidpointRounding.AwayFromZero);
+                int diag = (int)
+                    Math.Round(
+                        Math.Sqrt(Width * Width + Height * Height)
+                            / Provider.Projection.TileSize.Width,
+                        MidpointRounding.AwayFromZero
+                    );
                 _sizeOfMapArea.Width = 1 + diag / 2;
                 _sizeOfMapArea.Height = 1 + diag / 2;
             }
@@ -467,7 +469,9 @@ namespace Asv.Avalonia.Map
                 _sizeOfMapArea.Height = 1 + Height / Provider.Projection.TileSize.Height / 2;
             }
 
-            Debug.WriteLine("OnMapSizeChanged, w: " + width + ", h: " + height + ", size: " + _sizeOfMapArea);
+            Debug.WriteLine(
+                "OnMapSizeChanged, w: " + width + ", h: " + height + ", size: " + _sizeOfMapArea
+            );
 
             if (IsStarted)
             {
@@ -608,7 +612,9 @@ namespace Asv.Avalonia.Map
             }
             else
             {
-                throw new Exception("Please, do not call ReloadMap before form is loaded, it's useless");
+                throw new Exception(
+                    "Please, do not call ReloadMap before form is loaded, it's useless"
+                );
             }
         }
 
@@ -673,7 +679,10 @@ namespace Asv.Avalonia.Map
             {
                 if (MouseWheelZoomType != MouseWheelZoomType.MousePositionWithoutCenter)
                 {
-                    var pt = new GPoint(-(_positionPixel.X - Width / 2), -(_positionPixel.Y - Height / 2));
+                    var pt = new GPoint(
+                        -(_positionPixel.X - Width / 2),
+                        -(_positionPixel.Y - Height / 2)
+                    );
                     pt.Offset(CompensationOffset);
                     RenderOffset.X = pt.X - _dragPoint.X;
                     RenderOffset.Y = pt.Y - _dragPoint.Y;
@@ -690,7 +699,10 @@ namespace Asv.Avalonia.Map
             {
                 MouseLastZoom = GPoint.Empty;
 
-                var pt = new GPoint(-(_positionPixel.X - Width / 2), -(_positionPixel.Y - Height / 2));
+                var pt = new GPoint(
+                    -(_positionPixel.X - Width / 2),
+                    -(_positionPixel.Y - Height / 2)
+                );
                 pt.Offset(CompensationOffset);
                 RenderOffset.X = pt.X - _dragPoint.X;
                 RenderOffset.Y = pt.Y - _dragPoint.Y;
@@ -783,8 +795,9 @@ namespace Asv.Avalonia.Map
 
         bool _raiseEmptyTileError;
 
-        internal Dictionary<LoadTask, Exception> FailedLoads =
-            new Dictionary<LoadTask, Exception>(new LoadTaskComparer());
+        internal Dictionary<LoadTask, Exception> FailedLoads = new Dictionary<LoadTask, Exception>(
+            new LoadTaskComparer()
+        );
 
         internal static readonly int WaitForTileLoadThreadTimeout = 5 * 1000 * 60; // 5 min.
 
@@ -797,6 +810,7 @@ namespace Asv.Avalonia.Map
 
         static List<Task> _tileLoadQueue4Tasks;
         static int _loadWaitCount;
+
         void AddLoadTask(LoadTask t)
         {
             if (_tileLoadQueue4Tasks == null)
@@ -809,33 +823,46 @@ namespace Asv.Avalonia.Map
 
                         while (_tileLoadQueue4Tasks.Count < GThreadPoolSize)
                         {
-                            Debug.WriteLine("creating ProcessLoadTask: " + _tileLoadQueue4Tasks.Count);
+                            Debug.WriteLine(
+                                "creating ProcessLoadTask: " + _tileLoadQueue4Tasks.Count
+                            );
 
-                            _tileLoadQueue4Tasks.Add(Task.Factory.StartNew(delegate()
-                                {
-                                    string ctid = "ProcessLoadTask[" + Thread.CurrentThread.ManagedThreadId + "]";
-                                    Thread.CurrentThread.Name = ctid;
-
-                                    Debug.WriteLine(ctid + ": started");
-                                    do
+                            _tileLoadQueue4Tasks.Add(
+                                Task.Factory.StartNew(
+                                    delegate()
                                     {
-                                        if (TileLoadQueue4.Count == 0)
+                                        string ctid =
+                                            "ProcessLoadTask["
+                                            + Thread.CurrentThread.ManagedThreadId
+                                            + "]";
+                                        Thread.CurrentThread.Name = ctid;
+
+                                        Debug.WriteLine(ctid + ": started");
+                                        do
                                         {
-                                            Debug.WriteLine(ctid + ": ready");
-
-                                            if (Interlocked.Increment(ref _loadWaitCount) >= GThreadPoolSize)
+                                            if (TileLoadQueue4.Count == 0)
                                             {
-                                                Interlocked.Exchange(ref _loadWaitCount, 0);
-                                                OnLoadComplete(ctid);
+                                                Debug.WriteLine(ctid + ": ready");
+
+                                                if (
+                                                    Interlocked.Increment(ref _loadWaitCount)
+                                                    >= GThreadPoolSize
+                                                )
+                                                {
+                                                    Interlocked.Exchange(ref _loadWaitCount, 0);
+                                                    OnLoadComplete(ctid);
+                                                }
                                             }
-                                        }
 
-                                        ProcessLoadTask(TileLoadQueue4.Take(), ctid);
-                                    } while (!TileLoadQueue4.IsAddingCompleted);
+                                            ProcessLoadTask(TileLoadQueue4.Take(), ctid);
+                                        } while (!TileLoadQueue4.IsAddingCompleted);
 
-                                    Debug.WriteLine(ctid + ": exit");
-                                },
-                                TaskCreationOptions.LongRunning | TaskCreationOptions.DenyChildAttach ));
+                                        Debug.WriteLine(ctid + ": exit");
+                                    },
+                                    TaskCreationOptions.LongRunning
+                                        | TaskCreationOptions.DenyChildAttach
+                                )
+                            );
                         }
                     }
                 }
@@ -862,7 +889,9 @@ namespace Asv.Avalonia.Map
                 {
                     while (TileLoadQueue.Count == 0)
                     {
-                        Debug.WriteLine(ctid + " - Wait " + _loadWaitCount + " - " + DateTime.Now.TimeOfDay);
+                        Debug.WriteLine(
+                            ctid + " - Wait " + _loadWaitCount + " - " + DateTime.Now.TimeOfDay
+                        );
 
                         if (++_loadWaitCount >= GThreadPoolSize)
                         {
@@ -870,7 +899,12 @@ namespace Asv.Avalonia.Map
                             OnLoadComplete(ctid);
                         }
 
-                        if (!IsStarted || false == Monitor.Wait(TileLoadQueue, WaitForTileLoadThreadTimeout, false) || !IsStarted)
+                        if (
+                            !IsStarted
+                            || false
+                                == Monitor.Wait(TileLoadQueue, WaitForTileLoadThreadTimeout, false)
+                            || !IsStarted
+                        )
                         {
                             stop = true;
                             break;
@@ -936,22 +970,40 @@ namespace Asv.Avalonia.Map
                             PureImage img = null;
                             Exception ex = null;
 
-                            if (task.Zoom >= task.Core._provider.MinZoom &&
-                                (!task.Core._provider.MaxZoom.HasValue || task.Zoom <= task.Core._provider.MaxZoom))
+                            if (
+                                task.Zoom >= task.Core._provider.MinZoom
+                                && (
+                                    !task.Core._provider.MaxZoom.HasValue
+                                    || task.Zoom <= task.Core._provider.MaxZoom
+                                )
+                            )
                             {
-                                if (task.Core._skipOverZoom == 0 || task.Zoom <= task.Core._skipOverZoom)
+                                if (
+                                    task.Core._skipOverZoom == 0
+                                    || task.Zoom <= task.Core._skipOverZoom
+                                )
                                 {
                                     // tile number inversion(BottomLeft -> TopLeft)
                                     if (tl.InvertedAxisY)
                                     {
-                                        img = GMaps.Instance.GetImageFrom(tl,
-                                            new GPoint(task.Pos.X, task.Core._maxOfTiles.Height - task.Pos.Y),
+                                        img = GMaps.Instance.GetImageFrom(
+                                            tl,
+                                            new GPoint(
+                                                task.Pos.X,
+                                                task.Core._maxOfTiles.Height - task.Pos.Y
+                                            ),
                                             task.Zoom,
-                                            out ex);
+                                            out ex
+                                        );
                                     }
                                     else // ok
                                     {
-                                        img = GMaps.Instance.GetImageFrom(tl, task.Pos, task.Zoom, out ex);
+                                        img = GMaps.Instance.GetImageFrom(
+                                            tl,
+                                            task.Pos,
+                                            task.Zoom,
+                                            out ex
+                                        );
                                     }
                                 }
                             }
@@ -962,26 +1014,40 @@ namespace Asv.Avalonia.Map
                                 {
                                     task.Core._okZoom = task.Zoom;
                                     task.Core._skipOverZoom = 0;
-                                    Debug.WriteLine("skipOverZoom disabled, okZoom: " + task.Core._okZoom);
+                                    Debug.WriteLine(
+                                        "skipOverZoom disabled, okZoom: " + task.Core._okZoom
+                                    );
                                 }
                             }
                             else if (ex != null)
                             {
-                                if (task.Core._skipOverZoom != task.Core._okZoom && task.Zoom > task.Core._okZoom)
+                                if (
+                                    task.Core._skipOverZoom != task.Core._okZoom
+                                    && task.Zoom > task.Core._okZoom
+                                )
                                 {
                                     if (ex.Message.Contains("(404) Not Found"))
                                     {
                                         task.Core._skipOverZoom = task.Core._okZoom;
-                                        Debug.WriteLine("skipOverZoom enabled: " + task.Core._skipOverZoom);
+                                        Debug.WriteLine(
+                                            "skipOverZoom enabled: " + task.Core._skipOverZoom
+                                        );
                                     }
                                 }
                             }
 
                             // check for parent tiles if not found
-                            if (img == null && task.Core._okZoom > 0 && task.Core.FillEmptyTiles &&
-                                task.Core.Provider.Projection is MercatorProjection)
+                            if (
+                                img == null
+                                && task.Core._okZoom > 0
+                                && task.Core.FillEmptyTiles
+                                && task.Core.Provider.Projection is MercatorProjection
+                            )
                             {
-                                int zoomOffset = task.Zoom > task.Core._okZoom ? task.Zoom - task.Core._okZoom : 1;
+                                int zoomOffset =
+                                    task.Zoom > task.Core._okZoom
+                                        ? task.Zoom - task.Core._okZoom
+                                        : 1;
                                 long ix = 0;
                                 var parentTile = GPoint.Empty;
 
@@ -989,7 +1055,12 @@ namespace Asv.Avalonia.Map
                                 {
                                     ix = (long)Math.Pow(2, zoomOffset);
                                     parentTile = new GPoint(task.Pos.X / ix, task.Pos.Y / ix);
-                                    img = GMaps.Instance.GetImageFrom(tl, parentTile, task.Zoom - zoomOffset++, out ex);
+                                    img = GMaps.Instance.GetImageFrom(
+                                        tl,
+                                        parentTile,
+                                        task.Zoom - zoomOffset++,
+                                        out ex
+                                    );
                                 }
 
                                 if (img != null)
@@ -1015,7 +1086,13 @@ namespace Asv.Avalonia.Map
 
                             if (img != null)
                             {
-                                Debug.WriteLine(ctid + " - tile loaded: " + img.Data.Length / 1024 + "KB, " + task);
+                                Debug.WriteLine(
+                                    ctid
+                                        + " - tile loaded: "
+                                        + img.Data.Length / 1024
+                                        + "KB, "
+                                        + task
+                                );
                                 {
                                     t.AddOverlay(img);
                                 }
@@ -1045,8 +1122,13 @@ namespace Asv.Avalonia.Map
 
                                 if (task.Core.RetryLoadTile > 0)
                                 {
-                                    Debug.WriteLine(ctid + " - ProcessLoadTask: " + task + " -> empty tile, retry " +
-                                                    retry);
+                                    Debug.WriteLine(
+                                        ctid
+                                            + " - ProcessLoadTask: "
+                                            + task
+                                            + " -> empty tile, retry "
+                                            + retry
+                                    );
                                     {
                                         Thread.Sleep(1111);
                                     }
@@ -1083,7 +1165,8 @@ namespace Asv.Avalonia.Map
         void OnLoadComplete(string ctid)
         {
             _lastTileLoadEnd = DateTime.Now;
-            long lastTileLoadTimeMs = (long)(_lastTileLoadEnd - _lastTileLoadStart).TotalMilliseconds;
+            long lastTileLoadTimeMs = (long)
+                (_lastTileLoadEnd - _lastTileLoadStart).TotalMilliseconds;
 
             #region -- clear stuff--
 
@@ -1094,7 +1177,6 @@ namespace Asv.Avalonia.Map
                 TileDrawingListLock.AcquireReaderLock();
                 try
                 {
-
                     Matrix.ClearLevelAndPointsNotIn(Zoom, TileDrawingList);
                 }
                 finally
@@ -1111,8 +1193,14 @@ namespace Asv.Avalonia.Map
             GC.WaitForPendingFinalizers();
             GC.Collect();
 #endif
-            Debug.WriteLine(ctid + " - OnTileLoadComplete: " + lastTileLoadTimeMs + "ms, MemoryCacheSize: " +
-                            GMaps.Instance.MemoryCache.Size + "MB");
+            Debug.WriteLine(
+                ctid
+                    + " - OnTileLoadComplete: "
+                    + lastTileLoadTimeMs
+                    + "ms, MemoryCacheSize: "
+                    + GMaps.Instance.MemoryCache.Size
+                    + "MB"
+            );
 
             if (OnTileLoadComplete != null)
             {
@@ -1143,43 +1231,53 @@ namespace Asv.Avalonia.Map
 
                 TileDrawingList.Clear();
 
-                for (long i = (int)Math.Floor(-_sizeOfMapArea.Width * ScaleX),
-                    countI = (int)Math.Ceiling(_sizeOfMapArea.Width * ScaleX);
+                for (
+                    long i = (int)Math.Floor(-_sizeOfMapArea.Width * ScaleX),
+                        countI = (int)Math.Ceiling(_sizeOfMapArea.Width * ScaleX);
                     i <= countI;
-                    i++)
+                    i++
+                )
                 {
-                    for (long j = (int)Math.Floor(-_sizeOfMapArea.Height * ScaleY),
-                        countJ = (int)Math.Ceiling(_sizeOfMapArea.Height * ScaleY);
+                    for (
+                        long j = (int)Math.Floor(-_sizeOfMapArea.Height * ScaleY),
+                            countJ = (int)Math.Ceiling(_sizeOfMapArea.Height * ScaleY);
                         j <= countJ;
-                        j++)
+                        j++
+                    )
                     {
                         var p = CenterTileXYLocation;
                         p.X += i;
                         p.Y += j;
 
 #if ContinuesMap
-               // ----------------------------
-               if(p.X < minOfTiles.Width)
-               {
-                  p.X += (maxOfTiles.Width + 1);
-               }
+                        // ----------------------------
+                        if (p.X < minOfTiles.Width)
+                        {
+                            p.X += (maxOfTiles.Width + 1);
+                        }
 
-               if(p.X > maxOfTiles.Width)
-               {
-                  p.X -= (maxOfTiles.Width + 1);
-               }
-               // ----------------------------
+                        if (p.X > maxOfTiles.Width)
+                        {
+                            p.X -= (maxOfTiles.Width + 1);
+                        }
+                        // ----------------------------
 #endif
 
-                        if (p.X >= _minOfTiles.Width && p.Y >= _minOfTiles.Height && p.X <= _maxOfTiles.Width &&
-                            p.Y <= _maxOfTiles.Height)
+                        if (
+                            p.X >= _minOfTiles.Width
+                            && p.Y >= _minOfTiles.Height
+                            && p.X <= _maxOfTiles.Width
+                            && p.Y <= _maxOfTiles.Height
+                        )
                         {
                             var dt = new DrawTile()
                             {
                                 PosXY = p,
                                 PosPixel = new GPoint(p.X * TileRect.Width, p.Y * TileRect.Height),
-                                DistanceSqr = (CenterTileXYLocation.X - p.X) * (CenterTileXYLocation.X - p.X) +
-                                              (CenterTileXYLocation.Y - p.Y) * (CenterTileXYLocation.Y - p.Y)
+                                DistanceSqr =
+                                    (CenterTileXYLocation.X - p.X) * (CenterTileXYLocation.X - p.X)
+                                    + (CenterTileXYLocation.Y - p.Y)
+                                        * (CenterTileXYLocation.Y - p.Y),
                             };
 
                             if (!TileDrawingList.Contains(dt))
@@ -1213,12 +1311,12 @@ namespace Asv.Avalonia.Map
             try
             {
 #endif
-            TileDrawingListLock.AcquireReaderLock();
-            try
-            {
-                foreach (var p in TileDrawingList)
+                TileDrawingListLock.AcquireReaderLock();
+                try
                 {
-                    var task = new LoadTask(p.PosXY, Zoom, this);
+                    foreach (var p in TileDrawingList)
+                    {
+                        var task = new LoadTask(p.PosXY, Zoom, this);
 #if NET46
                     AddLoadTask(task);
 #else
@@ -1229,15 +1327,15 @@ namespace Asv.Avalonia.Map
                             }
                         }
 #endif
+                    }
                 }
-            }
-            finally
-            {
-                TileDrawingListLock.ReleaseReaderLock();
-            }
+                finally
+                {
+                    TileDrawingListLock.ReleaseReaderLock();
+                }
 
 #if !NET46
-            #region -- starts loader threads if needed --
+                #region -- starts loader threads if needed --
 
                 lock (_gThreadPool)
                 {
@@ -1257,12 +1355,17 @@ namespace Asv.Avalonia.Map
                         t.Start();
                     }
                 }
-            #endregion
+                #endregion
 #endif
-            {
-                _lastTileLoadStart = DateTime.Now;
-                Debug.WriteLine("OnTileLoadStart - at zoom " + Zoom + ", time: " + _lastTileLoadStart.TimeOfDay);
-            }
+                {
+                    _lastTileLoadStart = DateTime.Now;
+                    Debug.WriteLine(
+                        "OnTileLoadStart - at zoom "
+                            + Zoom
+                            + ", time: "
+                            + _lastTileLoadStart.TimeOfDay
+                    );
+                }
 #if !NET46
                 _loadWaitCount = 0;
                 Monitor.PulseAll(TileLoadQueue);
@@ -1287,7 +1390,7 @@ namespace Asv.Avalonia.Map
         {
             double rez = Provider.Projection.GetGroundResolution(Zoom, Position.Latitude);
             PxRes100M = (int)(100.0 / rez); // 100 meters
-            PxRes1000M = (int)(1000.0 / rez); // 1km  
+            PxRes1000M = (int)(1000.0 / rez); // 1km
             PxRes10Km = (int)(10000.0 / rez); // 10km
             PxRes100Km = (int)(100000.0 / rez); // 100km
             PxRes1000Km = (int)(1000000.0 / rez); // 1000km

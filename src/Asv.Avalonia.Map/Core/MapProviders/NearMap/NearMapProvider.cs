@@ -21,26 +21,17 @@ namespace Asv.Avalonia.Map
 
         public override Guid Id
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
         }
 
         public override string Name
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
         }
 
         public override PureProjection Projection
         {
-            get
-            {
-                return MercatorProjection.Instance;
-            }
+            get { return MercatorProjection.Instance; }
         }
 
         GMapProvider[] _overlays;
@@ -51,7 +42,7 @@ namespace Asv.Avalonia.Map
             {
                 if (_overlays == null)
                 {
-                    _overlays = new GMapProvider[] {this};
+                    _overlays = new GMapProvider[] { this };
                 }
 
                 return _overlays;
@@ -71,7 +62,8 @@ namespace Asv.Avalonia.Map
             return (int)(pos.X & 2) % max;
         }
 
-        static readonly string SecureStr = "Vk52edzNRYKbGjF8Ur0WhmQlZs4wgipDETyL1oOMXIAvqtxJBuf7H36acCnS9P";
+        static readonly string SecureStr =
+            "Vk52edzNRYKbGjF8Ur0WhmQlZs4wgipDETyL1oOMXIAvqtxJBuf7H36acCnS9P";
 
         public string GetSafeString(GPoint pos)
         {
@@ -89,10 +81,10 @@ namespace Asv.Avalonia.Map
                         offset+=v;
                         p=s.charAt(offset%s.length);
                         result+=p
-                    }             
+                    }
                 }
                 return result
-            };    
+            };
           
             TileLayer.prototype.getSafeString=function(x,y,nmd)
             {
@@ -102,7 +94,7 @@ namespace Asv.Avalonia.Map
                     arg+=nmd
                  }
                  return this.differenceEngine(TileLayer._substring,arg)
-            };  
+            };
            */
 
             #endregion
@@ -140,15 +132,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("E33803DF-22CB-4FFA-B8E3-15383ED9969D");
+        public override Guid Id { get; } = new Guid("E33803DF-22CB-4FFA-B8E3-15383ED9969D");
 
-        public override string Name
-        {
-            get;
-        } = "NearMap";
+        public override string Name { get; } = "NearMap";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {
@@ -170,9 +156,17 @@ namespace Asv.Avalonia.Map
             // http://web1.au.nearmap.com/maps/hl=en&x=1855837&y=1265913&z=21&nml=V&httpauth=false&version=2
             // http://web2.au.nearmap.com/maps/hl=en&x=231977&y=158238&z=18&nml=Dem&httpauth=false&version=2
 
-            return string.Format(UrlFormat, GetServerNum(pos, 3), pos.X, pos.Y, zoom, GetSafeString(pos));
+            return string.Format(
+                UrlFormat,
+                GetServerNum(pos, 3),
+                pos.X,
+                pos.Y,
+                zoom,
+                GetSafeString(pos)
+            );
         }
 
-        static readonly string UrlFormat = "http://web{0}.nearmap.com/kh/v=nm&hl=en&x={1}&y={2}&z={3}&nml=Map_{4}";
+        static readonly string UrlFormat =
+            "http://web{0}.nearmap.com/kh/v=nm&hl=en&x={1}&y={2}&z={3}&nml=Map_{4}";
     }
 }

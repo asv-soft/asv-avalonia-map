@@ -8,11 +8,11 @@
   are met:
 
     - Redistributions of source code must retain the above copyright
-       notice, this list of conditions and the following disclaimer. 
+       notice, this list of conditions and the following disclaimer.
 
     - Neither the name of the KPD-Team, nor the names of its contributors
        may be used to endorse or promote products derived from this
-       software without specific prior written permission. 
+       software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -46,7 +46,8 @@ namespace Asv.Avalonia.Map
         /// <param name="server">The socket connection with the proxy server.</param>
         /// <param name="user">The username to use when authenticating with the server.</param>
         /// <exception cref="ArgumentNullException"><c>server</c> -or- <c>user</c> is null.</exception>
-        public Socks4Handler(Socket server, string user) : base(server, user) { }
+        public Socks4Handler(Socket server, string user)
+            : base(server, user) { }
 
         /// <summary>
         ///     Creates an array of bytes that has to be sent when the user wants to connect to a specific host/port combination.
@@ -159,8 +160,12 @@ namespace Asv.Avalonia.Map
         /// <param name="callback">The method to call when the connection has been established.</param>
         /// <param name="proxyEndPoint">The IPEndPoint of the SOCKS proxy server.</param>
         /// <returns>An IAsyncProxyResult that references the asynchronous connection.</returns>
-        public override IAsyncProxyResult BeginNegotiate(string host, int port, HandShakeComplete callback,
-            IPEndPoint proxyEndPoint)
+        public override IAsyncProxyResult BeginNegotiate(
+            string host,
+            int port,
+            HandShakeComplete callback,
+            IPEndPoint proxyEndPoint
+        )
         {
             ProtocolComplete = callback;
             Buffer = GetHostPortBytes(host, port);
@@ -176,8 +181,11 @@ namespace Asv.Avalonia.Map
         /// <param name="callback">The method to call when the connection has been established.</param>
         /// <param name="proxyEndPoint">The IPEndPoint of the SOCKS proxy server.</param>
         /// <returns>An IAsyncProxyResult that references the asynchronous connection.</returns>
-        public override IAsyncProxyResult BeginNegotiate(IPEndPoint remoteEP, HandShakeComplete callback,
-            IPEndPoint proxyEndPoint)
+        public override IAsyncProxyResult BeginNegotiate(
+            IPEndPoint remoteEP,
+            HandShakeComplete callback,
+            IPEndPoint proxyEndPoint
+        )
         {
             ProtocolComplete = callback;
             Buffer = GetEndPointBytes(remoteEP);
@@ -236,12 +244,7 @@ namespace Asv.Avalonia.Map
             {
                 Buffer = new byte[8];
                 Received = 0;
-                Server.BeginReceive(Buffer,
-                    0,
-                    Buffer.Length,
-                    SocketFlags.None,
-                    OnReceive,
-                    Server);
+                Server.BeginReceive(Buffer, 0, Buffer.Length, SocketFlags.None, OnReceive, Server);
             }
             catch (Exception e)
             {
@@ -277,12 +280,14 @@ namespace Asv.Avalonia.Map
                 }
                 else
                 {
-                    Server.BeginReceive(Buffer,
+                    Server.BeginReceive(
+                        Buffer,
                         Received,
                         Buffer.Length - Received,
                         SocketFlags.None,
                         OnReceive,
-                        Server);
+                        Server
+                    );
                 }
             }
             catch (Exception e)

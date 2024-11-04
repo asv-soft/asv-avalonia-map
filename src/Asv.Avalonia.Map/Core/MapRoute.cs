@@ -92,8 +92,11 @@ namespace Asv.Avalonia.Map
         {
             if (route != null)
             {
-                FieldInfo[] myObjectFields = route.GetType()
-                    .GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+                FieldInfo[] myObjectFields = route
+                    .GetType()
+                    .GetFields(
+                        BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance
+                    );
 
                 foreach (FieldInfo fi in myObjectFields)
                 {
@@ -115,7 +118,10 @@ namespace Asv.Avalonia.Map
                 {
                     for (int i = 1; i < Points.Count; i++)
                     {
-                        distance += GMapProviders.EmptyProvider.Projection.GetDistance(Points[i - 1], Points[i]);
+                        distance += GMapProviders.EmptyProvider.Projection.GetDistance(
+                            Points[i - 1],
+                            Points[i]
+                        );
                     }
                 }
 
@@ -171,14 +177,18 @@ namespace Asv.Avalonia.Map
             // Lat = m*Lngb
             double formulaLat = m * point.Longitude + b;
 
-            // Lat = m*Lngb => (Lat-b)/m=Lng 
+            // Lat = m*Lngb => (Lat-b)/m=Lng
             double formulaLng = (point.Latitude - b) / m;
 
             // Possibles distances: One from the given point.Lat, and other from the point.Lng.
-            double distance1 =
-                GMapProviders.EmptyProvider.Projection.GetDistance(new GeoPoint(point.Latitude, formulaLng,0), point);
-            double distance2 =
-                GMapProviders.EmptyProvider.Projection.GetDistance(new GeoPoint(formulaLat, point.Longitude,0), point);
+            double distance1 = GMapProviders.EmptyProvider.Projection.GetDistance(
+                new GeoPoint(point.Latitude, formulaLng, 0),
+                point
+            );
+            double distance2 = GMapProviders.EmptyProvider.Projection.GetDistance(
+                new GeoPoint(formulaLat, point.Longitude, 0),
+                point
+            );
 
             // Min of the distances.
             double distance = distance1 <= distance2 ? distance1 : distance2;

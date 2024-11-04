@@ -23,15 +23,9 @@ namespace Asv.Avalonia.Map.China
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("B8A2A78D-1C49-45D0-8F03-9B95C83116B7");
+        public override Guid Id { get; } = new Guid("B8A2A78D-1C49-45D0-8F03-9B95C83116B7");
 
-        public override string Name
-        {
-            get;
-        } = "GoogleChinaHybridMap";
+        public override string Name { get; } = "GoogleChinaHybridMap";
 
         GMapProvider[] _overlays;
 
@@ -41,7 +35,11 @@ namespace Asv.Avalonia.Map.China
             {
                 if (_overlays == null)
                 {
-                    _overlays = new GMapProvider[] {GoogleChinaSatelliteMapProvider.Instance, this};
+                    _overlays = new GMapProvider[]
+                    {
+                        GoogleChinaSatelliteMapProvider.Instance,
+                        this,
+                    };
                 }
 
                 return _overlays;
@@ -63,7 +61,8 @@ namespace Asv.Avalonia.Map.China
             // sec2: after &zoom=...
             GetSecureWords(pos, out string sec1, out string sec2);
 
-            return string.Format(UrlFormat,
+            return string.Format(
+                UrlFormat,
                 UrlFormatServer,
                 GetServerNum(pos, 4),
                 UrlFormatRequest,
@@ -74,7 +73,8 @@ namespace Asv.Avalonia.Map.China
                 pos.Y,
                 zoom,
                 sec2,
-                ServerChina);
+                ServerChina
+            );
         }
 
         static readonly string ChinaLanguage = "zh-CN";

@@ -33,10 +33,7 @@ namespace Asv.Avalonia.Map
 
         public GPoint Location
         {
-            get
-            {
-                return new GPoint(X, Y);
-            }
+            get { return new GPoint(X, Y); }
             set
             {
                 X = value.X;
@@ -46,34 +43,22 @@ namespace Asv.Avalonia.Map
 
         public GPoint RightBottom
         {
-            get
-            {
-                return new GPoint(Right, Bottom);
-            }
+            get { return new GPoint(Right, Bottom); }
         }
 
         public GPoint RightTop
         {
-            get
-            {
-                return new GPoint(Right, Top);
-            }
+            get { return new GPoint(Right, Top); }
         }
 
         public GPoint LeftBottom
         {
-            get
-            {
-                return new GPoint(Left, Bottom);
-            }
+            get { return new GPoint(Left, Bottom); }
         }
 
         public GSize Size
         {
-            get
-            {
-                return new GSize(Width, Height);
-            }
+            get { return new GSize(Width, Height); }
             set
             {
                 Width = value.Width;
@@ -81,68 +66,37 @@ namespace Asv.Avalonia.Map
             }
         }
 
-        public long X
-        {
-            get;
-            set;
-        }
+        public long X { get; set; }
 
-        public long Y
-        {
-            get;
-            set;
-        }
+        public long Y { get; set; }
 
-        public long Width
-        {
-            get;
-            set;
-        }
+        public long Width { get; set; }
 
-        public long Height
-        {
-            get;
-            set;
-        }
+        public long Height { get; set; }
 
         public long Left
         {
-            get
-            {
-                return X;
-            }
+            get { return X; }
         }
 
         public long Top
         {
-            get
-            {
-                return Y;
-            }
+            get { return Y; }
         }
 
         public long Right
         {
-            get
-            {
-                return X + Width;
-            }
+            get { return X + Width; }
         }
 
         public long Bottom
         {
-            get
-            {
-                return Y + Height;
-            }
+            get { return Y + Height; }
         }
 
         public bool IsEmpty
         {
-            get
-            {
-                return Height == 0 && Width == 0 && X == 0 && Y == 0;
-            }
+            get { return Height == 0 && Width == 0 && X == 0 && Y == 0; }
         }
 
         public override bool Equals(object obj)
@@ -158,9 +112,9 @@ namespace Asv.Avalonia.Map
         public static bool operator ==(GRect left, GRect right)
         {
             return left.X == right.X
-                   && left.Y == right.Y
-                   && left.Width == right.Width
-                   && left.Height == right.Height;
+                && left.Y == right.Y
+                && left.Width == right.Width
+                && left.Height == right.Height;
         }
 
         public static bool operator !=(GRect left, GRect right)
@@ -180,10 +134,10 @@ namespace Asv.Avalonia.Map
 
         public bool Contains(GRect rect)
         {
-            return X <= rect.X &&
-                   rect.X + rect.Width <= X + Width &&
-                   Y <= rect.Y &&
-                   rect.Y + rect.Height <= Y + Height;
+            return X <= rect.X
+                && rect.X + rect.Width <= X + Width
+                && Y <= rect.Y
+                && rect.Y + rect.Height <= Y + Height;
         }
 
         public override int GetHashCode()
@@ -193,8 +147,12 @@ namespace Asv.Avalonia.Map
                 return 0;
             }
 
-            return (int)(X ^ ((Y << 13) | (Y >> 0x13)) ^ ((Width << 0x1a) | (Width >> 6)) ^
-                         ((Height << 7) | (Height >> 0x19)));
+            return (int)(
+                X
+                ^ ((Y << 13) | (Y >> 0x13))
+                ^ ((Width << 0x1a) | (Width >> 6))
+                ^ ((Height << 7) | (Height >> 0x19))
+            );
         }
 
         public void Inflate(long width, long height)
@@ -234,8 +192,7 @@ namespace Asv.Avalonia.Map
             long y1 = Math.Max(a.Y, b.Y);
             long y2 = Math.Min(a.Y + a.Height, b.Y + b.Height);
 
-            if (x2 >= x1
-                && y2 >= y1)
+            if (x2 >= x1 && y2 >= y1)
             {
                 return new GRect(x1, y1, x2 - x1, y2 - y1);
             }
@@ -245,10 +202,10 @@ namespace Asv.Avalonia.Map
 
         public bool IntersectsWith(GRect rect)
         {
-            return rect.X < X + Width &&
-                   X < rect.X + rect.Width &&
-                   rect.Y < Y + Height &&
-                   Y < rect.Y + rect.Height;
+            return rect.X < X + Width
+                && X < rect.X + rect.Width
+                && rect.Y < Y + Height
+                && Y < rect.Y + rect.Height;
         }
 
         public static GRect Union(GRect a, GRect b)
@@ -279,9 +236,15 @@ namespace Asv.Avalonia.Map
 
         public override string ToString()
         {
-            return "{X=" + X.ToString(CultureInfo.CurrentCulture) + ",Y=" + Y.ToString(CultureInfo.CurrentCulture) +
-                   ",Width=" + Width.ToString(CultureInfo.CurrentCulture) +
-                   ",Height=" + Height.ToString(CultureInfo.CurrentCulture) + "}";
+            return "{X="
+                + X.ToString(CultureInfo.CurrentCulture)
+                + ",Y="
+                + Y.ToString(CultureInfo.CurrentCulture)
+                + ",Width="
+                + Width.ToString(CultureInfo.CurrentCulture)
+                + ",Height="
+                + Height.ToString(CultureInfo.CurrentCulture)
+                + "}";
         }
     }
 }

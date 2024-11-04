@@ -8,11 +8,11 @@
   are met:
 
     - Redistributions of source code must retain the above copyright
-       notice, this list of conditions and the following disclaimer. 
+       notice, this list of conditions and the following disclaimer.
 
     - Neither the name of the KPD-Team, nor the names of its contributors
        may be used to endorse or promote products derived from this
-       software without specific prior written permission. 
+       software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -40,19 +40,22 @@ namespace Asv.Avalonia.Map
         /// <summary>
         ///     Initializes a new instance of the ProxyException class.
         /// </summary>
-        public ProxyException() : this("An error occured while talking to the proxy server.") { }
+        public ProxyException()
+            : this("An error occured while talking to the proxy server.") { }
 
         /// <summary>
         ///     Initializes a new instance of the ProxyException class.
         /// </summary>
         /// <param name="message">The message that describes the error.</param>
-        public ProxyException(string message) : base(message) { }
+        public ProxyException(string message)
+            : base(message) { }
 
         /// <summary>
         ///     Initializes a new instance of the ProxyException class.
         /// </summary>
         /// <param name="socks5Error">The error number returned by a SOCKS5 server.</param>
-        public ProxyException(int socks5Error) : this(Socks5ToString(socks5Error)) { }
+        public ProxyException(int socks5Error)
+            : this(Socks5ToString(socks5Error)) { }
 
         /// <summary>
         ///     Converts a SOCKS5 error number to a human readable string.

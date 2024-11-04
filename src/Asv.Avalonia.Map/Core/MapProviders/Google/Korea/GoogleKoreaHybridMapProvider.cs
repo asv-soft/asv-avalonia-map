@@ -9,9 +9,7 @@ namespace Asv.Avalonia.Map.Korea
     {
         public static readonly GoogleKoreaHybridMapProvider Instance;
 
-        GoogleKoreaHybridMapProvider()
-        {
-        }
+        GoogleKoreaHybridMapProvider() { }
 
         static GoogleKoreaHybridMapProvider()
         {
@@ -22,15 +20,9 @@ namespace Asv.Avalonia.Map.Korea
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("41A91842-04BC-442B-9AC8-042156238A5B");
+        public override Guid Id { get; } = new Guid("41A91842-04BC-442B-9AC8-042156238A5B");
 
-        public override string Name
-        {
-            get;
-        } = "GoogleKoreaHybridMap";
+        public override string Name { get; } = "GoogleKoreaHybridMap";
 
         GMapProvider[] _overlays;
 
@@ -40,7 +32,11 @@ namespace Asv.Avalonia.Map.Korea
             {
                 if (_overlays == null)
                 {
-                    _overlays = new GMapProvider[] {GoogleKoreaSatelliteMapProvider.Instance, this};
+                    _overlays = new GMapProvider[]
+                    {
+                        GoogleKoreaSatelliteMapProvider.Instance,
+                        this,
+                    };
                 }
 
                 return _overlays;
@@ -60,7 +56,8 @@ namespace Asv.Avalonia.Map.Korea
         {
             GetSecureWords(pos, out string sec1, out string sec2);
 
-            return string.Format(UrlFormat,
+            return string.Format(
+                UrlFormat,
                 UrlFormatServer,
                 GetServerNum(pos, 4),
                 UrlFormatRequest,
@@ -71,11 +68,13 @@ namespace Asv.Avalonia.Map.Korea
                 pos.Y,
                 zoom,
                 sec2,
-                ServerKorea);
+                ServerKorea
+            );
         }
 
         static readonly string UrlFormatServer = "mt";
         static readonly string UrlFormatRequest = "mt";
-        static readonly string UrlFormat = "https://{0}{1}.{10}/{2}/v={3}&hl={4}&x={5}{6}&y={7}&z={8}&s={9}";
+        static readonly string UrlFormat =
+            "https://{0}{1}.{10}/{2}/v={3}&hl={4}&x={5}{6}&y={7}&z={8}&s={9}";
     }
 }

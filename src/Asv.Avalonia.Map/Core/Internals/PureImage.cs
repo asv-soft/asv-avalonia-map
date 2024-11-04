@@ -49,9 +49,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly DefaultImageProxy Instance = new DefaultImageProxy();
 
-        private DefaultImageProxy()
-        {
-        }
+        private DefaultImageProxy() { }
 
         public override PureImage FromStream(Stream stream)
         {
@@ -72,9 +70,7 @@ namespace Asv.Avalonia.Map
 
         private class DefaultImage : PureImage
         {
-            public override void Dispose()
-            {
-            }
+            public override void Dispose() { }
         }
     }
 }

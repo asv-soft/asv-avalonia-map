@@ -9,9 +9,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly HereTerrainMapProvider Instance;
 
-        HereTerrainMapProvider()
-        {
-        }
+        HereTerrainMapProvider() { }
 
         static HereTerrainMapProvider()
         {
@@ -20,15 +18,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("7267338C-445E-4E61-B8B8-82D0B7AAACC5");
+        public override Guid Id { get; } = new Guid("7267338C-445E-4E61-B8B8-82D0B7AAACC5");
 
-        public override string Name
-        {
-            get;
-        } = "HereTerrainMap";
+        public override string Name { get; } = "HereTerrainMap";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {
@@ -41,7 +33,15 @@ namespace Asv.Avalonia.Map
 
         string MakeTileImageUrl(GPoint pos, int zoom, string language)
         {
-            return string.Format(UrlFormat, UrlServerLetters[GetServerNum(pos, 4)], zoom, pos.X, pos.Y, AppId, AppCode);
+            return string.Format(
+                UrlFormat,
+                UrlServerLetters[GetServerNum(pos, 4)],
+                zoom,
+                pos.X,
+                pos.Y,
+                AppId,
+                AppCode
+            );
         }
 
         static readonly string UrlFormat =

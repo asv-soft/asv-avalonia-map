@@ -13,26 +13,17 @@ namespace Asv.Avalonia.Map
 
         public override Guid Id
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
         }
 
         public override string Name
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
         }
 
         public override PureProjection Projection
         {
-            get
-            {
-                return PlateCarreeProjection.Instance;
-            }
+            get { return PlateCarreeProjection.Instance; }
         }
 
         GMapProvider[] _overlays;
@@ -43,7 +34,7 @@ namespace Asv.Avalonia.Map
             {
                 if (_overlays == null)
                 {
-                    _overlays = new GMapProvider[] {this};
+                    _overlays = new GMapProvider[] { this };
                 }
 
                 return _overlays;
@@ -70,26 +61,17 @@ namespace Asv.Avalonia.Map
 
         public override Guid Id
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
         }
 
         public override string Name
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
         }
 
         public override PureProjection Projection
         {
-            get
-            {
-                return MercatorProjection.Instance;
-            }
+            get { return MercatorProjection.Instance; }
         }
 
         GMapProvider[] _overlays;
@@ -100,7 +82,7 @@ namespace Asv.Avalonia.Map
             {
                 if (_overlays == null)
                 {
-                    _overlays = new GMapProvider[] {this};
+                    _overlays = new GMapProvider[] { this };
                 }
 
                 return _overlays;
@@ -122,9 +104,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly ArcGIS_StreetMap_World_2D_MapProvider Instance;
 
-        ArcGIS_StreetMap_World_2D_MapProvider()
-        {
-        }
+        ArcGIS_StreetMap_World_2D_MapProvider() { }
 
         static ArcGIS_StreetMap_World_2D_MapProvider()
         {
@@ -133,15 +113,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("00BF56D4-4B48-4939-9B11-575BBBE4A718");
+        public override Guid Id { get; } = new Guid("00BF56D4-4B48-4939-9B11-575BBBE4A718");
 
-        public override string Name
-        {
-            get;
-        } = "ArcGIS_StreetMap_World_2D_Map";
+        public override string Name { get; } = "ArcGIS_StreetMap_World_2D_Map";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {

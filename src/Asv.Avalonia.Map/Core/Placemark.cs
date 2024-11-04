@@ -15,7 +15,7 @@
         /// </summary>
         public int Accuracy;
 
-        // parsed values from address      
+        // parsed values from address
         public string ThoroughfareName;
         public string LocalityName;
         public string PostalCodeNumber;

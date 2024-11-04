@@ -49,28 +49,15 @@ namespace Asv.Avalonia.Map
 
         internal bool HasAnyOverlays
         {
-            get
-            {
-                return Interlocked.Read(ref _overlaysCount) > 0;
-            }
+            get { return Interlocked.Read(ref _overlaysCount) > 0; }
         }
 
-        public int Zoom
-        {
-            get;
-            private set;
-        }
+        public int Zoom { get; private set; }
 
         public GPoint Pos
         {
-            get
-            {
-                return _pos;
-            }
-            private set
-            {
-                _pos = value;
-            }
+            get { return _pos; }
+            private set { _pos = value; }
         }
 
         #region IDisposable Members

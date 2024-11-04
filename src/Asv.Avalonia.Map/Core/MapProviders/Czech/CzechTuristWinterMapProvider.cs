@@ -9,9 +9,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly CzechTuristWinterMapProvider Instance;
 
-        CzechTuristWinterMapProvider()
-        {
-        }
+        CzechTuristWinterMapProvider() { }
 
         static CzechTuristWinterMapProvider()
         {
@@ -20,15 +18,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("F7B7FC9E-BDC2-4A9D-A1D3-A6BEC8FE0EB2");
+        public override Guid Id { get; } = new Guid("F7B7FC9E-BDC2-4A9D-A1D3-A6BEC8FE0EB2");
 
-        public override string Name
-        {
-            get;
-        } = "CzechTuristWinterMap";
+        public override string Name { get; } = "CzechTuristWinterMap";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {
@@ -46,6 +38,7 @@ namespace Asv.Avalonia.Map
             return string.Format(UrlFormat, GetServerNum(pos, 3) + 1, zoom, pos.X, pos.Y);
         }
 
-        static readonly string UrlFormat = "http://m{0}.mapserver.mapy.cz/wturist_winter-m/{1}-{2}-{3}";
+        static readonly string UrlFormat =
+            "http://m{0}.mapserver.mapy.cz/wturist_winter-m/{1}-{2}-{3}";
     }
 }

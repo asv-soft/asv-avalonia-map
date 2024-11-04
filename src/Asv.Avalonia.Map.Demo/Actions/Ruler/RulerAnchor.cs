@@ -11,7 +11,7 @@ namespace Asv.Avalonia.GMap.Demo;
 public enum RulerPosition
 {
     Start,
-    Stop
+    Stop,
 }
 
 public class RulerAnchor : MapAnchorViewModel
@@ -31,12 +31,14 @@ public class RulerAnchor : MapAnchorViewModel
 
         ruler.IsVisible.Where(_ => _.HasValue).Subscribe(_ => IsVisible = _.Value);
 
-        if (rulerPosition == RulerPosition.Stop) ruler.Distance.Subscribe(_ => Title = $"{_:F1} m");
+        if (rulerPosition == RulerPosition.Stop)
+            ruler.Distance.Subscribe(_ => Title = $"{_:F1} m");
 
         var isLocationInternalChanged = false;
         var point = rulerPosition == RulerPosition.Start ? ruler.Start : ruler.Stop;
 
-        point.Where(_ => _.HasValue)
+        point
+            .Where(_ => _.HasValue)
             .Subscribe(_ =>
             {
                 isLocationInternalChanged = true;

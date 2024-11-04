@@ -22,8 +22,16 @@ namespace Asv.Avalonia.Map
         /// <returns>
         /// A DirectionsStatusCode indicating the status of the directions request.
         /// </returns>
-        DirectionsStatusCode GetDirections(out GDirections direction, GeoPoint start, GeoPoint end,
-            bool avoidHighways, bool avoidTolls, bool walkingMode, bool sensor, bool metric);
+        DirectionsStatusCode GetDirections(
+            out GDirections direction,
+            GeoPoint start,
+            GeoPoint end,
+            bool avoidHighways,
+            bool avoidTolls,
+            bool walkingMode,
+            bool sensor,
+            bool metric
+        );
 
         /// <summary>
         /// Retrieves the directions between two locations.
@@ -39,8 +47,16 @@ namespace Asv.Avalonia.Map
         /// <returns>
         /// The status code indicating the result of the directions request.
         /// </returns>
-        DirectionsStatusCode GetDirections(out GDirections direction, string start, string end, bool avoidHighways,
-            bool avoidTolls, bool walkingMode, bool sensor, bool metric);
+        DirectionsStatusCode GetDirections(
+            out GDirections direction,
+            string start,
+            string end,
+            bool avoidHighways,
+            bool avoidTolls,
+            bool walkingMode,
+            bool sensor,
+            bool metric
+        );
 
         /// <summary>
         /// Retrieves directions between two locations.
@@ -54,8 +70,16 @@ namespace Asv.Avalonia.Map
         /// <param name="sensor">Specifies whether the directions service should employ a sensor (such as a GPS receiver) to improve the accuracy of the directions.</param>
         /// <param name="metric">Specifies whether to display distances in metric units.</param>
         /// <returns>An enumerable collection of GDirections objects representing the route alternatives in the response.</returns>
-        IEnumerable<GDirections> GetDirections(out DirectionsStatusCode status, string start, string end,
-            bool avoidHighways, bool avoidTolls, bool walkingMode, bool sensor, bool metric);
+        IEnumerable<GDirections> GetDirections(
+            out DirectionsStatusCode status,
+            string start,
+            string end,
+            bool avoidHighways,
+            bool avoidTolls,
+            bool walkingMode,
+            bool sensor,
+            bool metric
+        );
 
         /// <summary>
         /// Retrieves directions from a start location to an end location.
@@ -73,8 +97,16 @@ namespace Asv.Avalonia.Map
         /// An enumerable collection of GDirections objects representing different route alternatives.
         /// The status code of the directions request is stored in the 'status' parameter.
         /// </returns>
-        IEnumerable<GDirections> GetDirections(out DirectionsStatusCode status, GeoPoint start, GeoPoint end,
-            bool avoidHighways, bool avoidTolls, bool walkingMode, bool sensor, bool metric);
+        IEnumerable<GDirections> GetDirections(
+            out DirectionsStatusCode status,
+            GeoPoint start,
+            GeoPoint end,
+            bool avoidHighways,
+            bool avoidTolls,
+            bool walkingMode,
+            bool sensor,
+            bool metric
+        );
 
         /// <summary>
         /// Retrieves the directions from the start point to the end point using Google Directions API.
@@ -89,9 +121,17 @@ namespace Asv.Avalonia.Map
         /// <param name="sensor">Specifies whether the request is from a sensor or not.</param>
         /// <param name="metric">Specifies whether the directions should be returned in metric units (true) or not (false).</param>
         /// <returns>The status code of the directions request.</returns>
-        DirectionsStatusCode GetDirections(out GDirections direction, GeoPoint start,
-            IEnumerable<GeoPoint> wayPoints, GeoPoint end, bool avoidHighways, bool avoidTolls, bool walkingMode,
-            bool sensor, bool metric);
+        DirectionsStatusCode GetDirections(
+            out GDirections direction,
+            GeoPoint start,
+            IEnumerable<GeoPoint> wayPoints,
+            GeoPoint end,
+            bool avoidHighways,
+            bool avoidTolls,
+            bool walkingMode,
+            bool sensor,
+            bool metric
+        );
 
         /// <summary>
         /// Retrieves the directions for a specified route using the Google Directions API.
@@ -106,7 +146,16 @@ namespace Asv.Avalonia.Map
         /// <param name="sensor">Specifies whether the directions request comes from a device with a sensor or not.</param>
         /// <param name="metric">Specifies whether the distances in the directions response should be returned in metric or imperial units.</param>
         /// <returns>The status code indicating the success or failure of the directions request.</returns>
-        DirectionsStatusCode GetDirections(out GDirections direction, string start, IEnumerable<string> wayPoints,
-            string end, bool avoidHighways, bool avoidTolls, bool walkingMode, bool sensor, bool metric);
+        DirectionsStatusCode GetDirections(
+            out GDirections direction,
+            string start,
+            IEnumerable<string> wayPoints,
+            string end,
+            bool avoidHighways,
+            bool avoidTolls,
+            bool walkingMode,
+            bool sensor,
+            bool metric
+        );
     }
 }

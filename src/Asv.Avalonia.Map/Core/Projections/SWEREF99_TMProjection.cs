@@ -21,11 +21,11 @@ namespace Asv.Avalonia.Map
         static readonly double OrignX = -1200000;
         static readonly double OrignY = 8500000;
 
-        static readonly double ScaleFactor = 0.9996; // scale factor				
-        static readonly double CentralMeridian = DegreesToRadians(15); // Center longitude (projection center) 
-        static readonly double LatOrigin = 0.0; // center latitude			
-        static readonly double FalseNorthing = 0.0; // y offset in meters			
-        static readonly double FalseEasting = 500000.0; // x offset in meters			
+        static readonly double ScaleFactor = 0.9996; // scale factor
+        static readonly double CentralMeridian = DegreesToRadians(15); // Center longitude (projection center)
+        static readonly double LatOrigin = 0.0; // center latitude
+        static readonly double FalseNorthing = 0.0; // y offset in meters
+        static readonly double FalseEasting = 500000.0; // x offset in meters
         static readonly double SemiMajor = 6378137.0; // major axis
         static readonly double SemiMinor = 6356752.3141403561; // minor axis
         static readonly double SemiMinor2 = 6356752.3142451793; // minor axis
@@ -41,25 +41,16 @@ namespace Asv.Avalonia.Map
             }
         }
 
-        public override GSize TileSize
-        {
-            get;
-        } = new GSize(256, 256);
+        public override GSize TileSize { get; } = new GSize(256, 256);
 
         public override double Axis
         {
-            get
-            {
-                return 6378137;
-            }
+            get { return 6378137; }
         }
 
         public override double Flattening
         {
-            get
-            {
-                return 1.0 / 298.257222101;
-            }
+            get { return 1.0 / 298.257222101; }
         }
 
         public override GPoint FromLatLngToPixel(double lat, double lng, int zoom)
@@ -69,7 +60,7 @@ namespace Asv.Avalonia.Map
             lat = Clip(lat, MinLatitude, MaxLatitude);
             lng = Clip(lng, MinLongitude, MaxLongitude);
 
-            var lks = new[] {lng, lat};
+            var lks = new[] { lng, lat };
             lks = DTM10(lks);
             lks = MTD10(lks);
             lks = DTM00(lks);
@@ -80,19 +71,26 @@ namespace Asv.Avalonia.Map
 
         static GPoint LksToPixel(double[] lks, double res)
         {
-            return new GPoint((long)Math.Floor((lks[0] - OrignX) / res), (long)Math.Floor((OrignY - lks[1]) / res));
+            return new GPoint(
+                (long)Math.Floor((lks[0] - OrignX) / res),
+                (long)Math.Floor((OrignY - lks[1]) / res)
+            );
         }
 
         public override GeoPoint FromPixelToLatLng(long x, long y, int zoom)
         {
             double res = GetTileMatrixResolution(zoom);
 
-            var lks = new[] {x * res + OrignX, OrignY - y * res};
+            var lks = new[] { x * res + OrignX, OrignY - y * res };
             lks = MTD11(lks);
             lks = DTM10(lks);
             lks = MTD10(lks);
 
-            return new GeoPoint(Clip(lks[1], MinLatitude, MaxLatitude), Clip(lks[0], MinLongitude, MaxLongitude),0);
+            return new GeoPoint(
+                Clip(lks[1], MinLatitude, MaxLatitude),
+                Clip(lks[0], MinLongitude, MaxLongitude),
+                0
+            );
         }
 
         double[] DTM10(double[] lonlat)
@@ -101,19 +99,23 @@ namespace Asv.Avalonia.Map
             double es = 1.0 - SemiMinor2 * SemiMinor2 / (SemiMajor * SemiMajor); // e^2
 
             // Second eccentricity squared : (a^2 - b^2)/b^2
-            double ses = (Math.Pow(SemiMajor, 2) - Math.Pow(SemiMinor2, 2)) / Math.Pow(SemiMinor2, 2);
+            double ses =
+                (Math.Pow(SemiMajor, 2) - Math.Pow(SemiMinor2, 2)) / Math.Pow(SemiMinor2, 2);
 
             double ba = SemiMinor2 / SemiMajor;
             double ab = SemiMajor / SemiMinor2;
 
             double lon = DegreesToRadians(lonlat[0]);
             double lat = DegreesToRadians(lonlat[1]);
-            double h = lonlat.Length < 3 ? 0 : lonlat[2].Equals(Double.NaN) ? 0 : lonlat[2];
+            double h =
+                lonlat.Length < 3 ? 0
+                : lonlat[2].Equals(Double.NaN) ? 0
+                : lonlat[2];
             double v = SemiMajor / Math.Sqrt(1 - es * Math.Pow(Math.Sin(lat), 2));
             double x = (v + h) * Math.Cos(lat) * Math.Cos(lon);
             double y = (v + h) * Math.Cos(lat) * Math.Sin(lon);
             double z = ((1 - es) * v + h) * Math.Sin(lat);
-            return new[] {x, y, z,};
+            return new[] { x, y, z };
         }
 
         double[] MTD10(double[] pnt)
@@ -128,7 +130,10 @@ namespace Asv.Avalonia.Map
             double ab = SemiMajor / SemiMinor;
 
             bool AtPole = false; // is location in polar region
-            double Z = pnt.Length < 3 ? 0 : pnt[2].Equals(Double.NaN) ? 0 : pnt[2];
+            double Z =
+                pnt.Length < 3 ? 0
+                : pnt[2].Equals(Double.NaN) ? 0
+                : pnt[2];
 
             double lon = 0;
             double lat = 0;
@@ -161,7 +166,12 @@ namespace Asv.Avalonia.Map
                     }
                     else // center of earth
                     {
-                        return new[] {RadiansToDegrees(lon), RadiansToDegrees(Math.PI * 0.5), -SemiMinor,};
+                        return new[]
+                        {
+                            RadiansToDegrees(lon),
+                            RadiansToDegrees(Math.PI * 0.5),
+                            -SemiMinor,
+                        };
                     }
                 }
             }
@@ -197,14 +207,19 @@ namespace Asv.Avalonia.Map
                 lat = Math.Atan(Sin_p1 / Cos_p1);
             }
 
-            return new[] {RadiansToDegrees(lon), RadiansToDegrees(lat), Height,};
+            return new[] { RadiansToDegrees(lon), RadiansToDegrees(lat), Height };
         }
 
         double[] DTM00(double[] lonlat)
         {
-            double e0, e1, e2, e3; // eccentricity constants		
-            double e, es, esp; // eccentricity constants		
-            double ml0; // small value m			
+            double e0,
+                e1,
+                e2,
+                e3; // eccentricity constants
+            double e,
+                es,
+                esp; // eccentricity constants
+            double ml0; // small value m
 
             es = 1.0 - Math.Pow(SemiMinor / SemiMajor, 2);
             e = Math.Sqrt(es);
@@ -215,16 +230,22 @@ namespace Asv.Avalonia.Map
             ml0 = SemiMajor * Mlfn(e0, e1, e2, e3, LatOrigin);
             esp = es / (1.0 - es);
 
-            // ...		
+            // ...
 
             double lon = DegreesToRadians(lonlat[0]);
             double lat = DegreesToRadians(lonlat[1]);
 
             double delta_lon = 0.0; // Delta longitude (Given longitude - center)
-            double sin_phi, cos_phi; // sin and cos value				
-            double al, als; // temporary values				
-            double c, t, tq; // temporary values				
-            double con, n, ml; // cone constant, small m			
+            double sin_phi,
+                cos_phi; // sin and cos value
+            double al,
+                als; // temporary values
+            double c,
+                t,
+                tq; // temporary values
+            double con,
+                n,
+                ml; // cone constant, small m
 
             delta_lon = AdjustLongitude(lon - CentralMeridian);
             SinCos(lat, out sin_phi, out cos_phi);
@@ -238,20 +259,62 @@ namespace Asv.Avalonia.Map
             n = SemiMajor / Math.Sqrt(con);
             ml = SemiMajor * Mlfn(e0, e1, e2, e3, lat);
 
-            double x = ScaleFactor * n * al * (1.0 + als / 6.0 * (1.0 - t + c + als / 20.0 *
-                                                                  (5.0 - 18.0 * t + Math.Pow(t, 2) + 72.0 * c -
-                                                                   58.0 * esp))) + FalseEasting;
+            double x =
+                ScaleFactor
+                    * n
+                    * al
+                    * (
+                        1.0
+                        + als
+                            / 6.0
+                            * (
+                                1.0
+                                - t
+                                + c
+                                + als
+                                    / 20.0
+                                    * (5.0 - 18.0 * t + Math.Pow(t, 2) + 72.0 * c - 58.0 * esp)
+                            )
+                    )
+                + FalseEasting;
 
-            double y = ScaleFactor * (ml - ml0 + n * tq * (als * (0.5 + als / 24.0 *
-                                                                  (5.0 - t + 9.0 * c + 4.0 * Math.Pow(c, 2) + als /
-                                                                   30.0 * (61.0 - 58.0 * t
-                                                                           + Math.Pow(t, 2) + 600.0 * c -
-                                                                           330.0 * esp))))) + FalseNorthing;
+            double y =
+                ScaleFactor
+                    * (
+                        ml
+                        - ml0
+                        + n
+                            * tq
+                            * (
+                                als
+                                * (
+                                    0.5
+                                    + als
+                                        / 24.0
+                                        * (
+                                            5.0
+                                            - t
+                                            + 9.0 * c
+                                            + 4.0 * Math.Pow(c, 2)
+                                            + als
+                                                / 30.0
+                                                * (
+                                                    61.0
+                                                    - 58.0 * t
+                                                    + Math.Pow(t, 2)
+                                                    + 600.0 * c
+                                                    - 330.0 * esp
+                                                )
+                                        )
+                                )
+                            )
+                    )
+                + FalseNorthing;
 
             if (lonlat.Length < 3)
-                return new[] {x / MetersPerUnit, y / MetersPerUnit};
+                return new[] { x / MetersPerUnit, y / MetersPerUnit };
             else
-                return new[] {x / MetersPerUnit, y / MetersPerUnit, lonlat[2]};
+                return new[] { x / MetersPerUnit, y / MetersPerUnit, lonlat[2] };
         }
 
         double[] DTM01(double[] lonlat)
@@ -267,12 +330,15 @@ namespace Asv.Avalonia.Map
 
             double lon = DegreesToRadians(lonlat[0]);
             double lat = DegreesToRadians(lonlat[1]);
-            double h = lonlat.Length < 3 ? 0 : lonlat[2].Equals(Double.NaN) ? 0 : lonlat[2];
+            double h =
+                lonlat.Length < 3 ? 0
+                : lonlat[2].Equals(Double.NaN) ? 0
+                : lonlat[2];
             double v = SemiMajor / Math.Sqrt(1 - es * Math.Pow(Math.Sin(lat), 2));
             double x = (v + h) * Math.Cos(lat) * Math.Cos(lon);
             double y = (v + h) * Math.Cos(lat) * Math.Sin(lon);
             double z = ((1 - es) * v + h) * Math.Sin(lat);
-            return new[] {x, y, z,};
+            return new[] { x, y, z };
         }
 
         double[] MTD01(double[] pnt)
@@ -281,13 +347,17 @@ namespace Asv.Avalonia.Map
             double es = 1.0 - SemiMinor2 * SemiMinor2 / (SemiMajor * SemiMajor);
 
             // Second eccentricity squared : (a^2 - b^2)/b^2
-            double ses = (Math.Pow(SemiMajor, 2) - Math.Pow(SemiMinor2, 2)) / Math.Pow(SemiMinor2, 2);
+            double ses =
+                (Math.Pow(SemiMajor, 2) - Math.Pow(SemiMinor2, 2)) / Math.Pow(SemiMinor2, 2);
 
             double ba = SemiMinor2 / SemiMajor;
             double ab = SemiMajor / SemiMinor2;
 
             bool At_Pole = false; // is location in polar region
-            double Z = pnt.Length < 3 ? 0 : pnt[2].Equals(Double.NaN) ? 0 : pnt[2];
+            double Z =
+                pnt.Length < 3 ? 0
+                : pnt[2].Equals(Double.NaN) ? 0
+                : pnt[2];
 
             double lon = 0;
             double lat = 0;
@@ -320,7 +390,12 @@ namespace Asv.Avalonia.Map
                     }
                     else // center of earth
                     {
-                        return new[] {RadiansToDegrees(lon), RadiansToDegrees(Math.PI * 0.5), -SemiMinor2,};
+                        return new[]
+                        {
+                            RadiansToDegrees(lon),
+                            RadiansToDegrees(Math.PI * 0.5),
+                            -SemiMinor2,
+                        };
                     }
                 }
             }
@@ -357,13 +432,18 @@ namespace Asv.Avalonia.Map
                 lat = Math.Atan(Sin_p1 / Cos_p1);
             }
 
-            return new[] {RadiansToDegrees(lon), RadiansToDegrees(lat), Height,};
+            return new[] { RadiansToDegrees(lon), RadiansToDegrees(lat), Height };
         }
 
         double[] MTD11(double[] p)
         {
-            double e0, e1, e2, e3; // eccentricity constants		
-            double e, es, esp; // eccentricity constants		
+            double e0,
+                e1,
+                e2,
+                e3; // eccentricity constants
+            double e,
+                es,
+                esp; // eccentricity constants
             double ml0; // small value m
 
             es = 1.0 - Math.Pow(SemiMinor / SemiMajor, 2);
@@ -377,11 +457,21 @@ namespace Asv.Avalonia.Map
 
             // ...
 
-            double con, phi;
+            double con,
+                phi;
             double delta_phi;
             long i;
-            double sin_phi, cos_phi, tan_phi;
-            double c, cs, t, ts, n, r, d, ds;
+            double sin_phi,
+                cos_phi,
+                tan_phi;
+            double c,
+                cs,
+                t,
+                ts,
+                n,
+                r,
+                d,
+                ds;
             long max_iter = 6;
 
             double x = p[0] * MetersPerUnit - FalseEasting;
@@ -389,10 +479,16 @@ namespace Asv.Avalonia.Map
 
             con = (ml0 + y / ScaleFactor) / SemiMajor;
             phi = con;
-            for (i = 0;; i++)
+            for (i = 0; ; i++)
             {
                 delta_phi =
-                    (con + e1 * Math.Sin(2.0 * phi) - e2 * Math.Sin(4.0 * phi) + e3 * Math.Sin(6.0 * phi)) / e0 - phi;
+                    (
+                        con
+                        + e1 * Math.Sin(2.0 * phi)
+                        - e2 * Math.Sin(4.0 * phi)
+                        + e3 * Math.Sin(6.0 * phi)
+                    ) / e0
+                    - phi;
                 phi += delta_phi;
 
                 if (Math.Abs(delta_phi) <= Epsilon)
@@ -416,29 +512,81 @@ namespace Asv.Avalonia.Map
                 d = x / (n * ScaleFactor);
                 ds = Math.Pow(d, 2);
 
-                double lat = phi - n * tan_phi * ds / r * (0.5 - ds / 24.0 * (5.0 + 3.0 * t +
-                                                                              10.0 * c - 4.0 * cs - 9.0 * esp - ds /
-                                                                              30.0 * (61.0 + 90.0 * t +
-                                                                                      298.0 * c + 45.0 * ts -
-                                                                                      252.0 * esp - 3.0 * cs)));
+                double lat =
+                    phi
+                    - n
+                        * tan_phi
+                        * ds
+                        / r
+                        * (
+                            0.5
+                            - ds
+                                / 24.0
+                                * (
+                                    5.0
+                                    + 3.0 * t
+                                    + 10.0 * c
+                                    - 4.0 * cs
+                                    - 9.0 * esp
+                                    - ds
+                                        / 30.0
+                                        * (
+                                            61.0
+                                            + 90.0 * t
+                                            + 298.0 * c
+                                            + 45.0 * ts
+                                            - 252.0 * esp
+                                            - 3.0 * cs
+                                        )
+                                )
+                        );
 
-                double lon = AdjustLongitude(CentralMeridian + d * (1.0 - ds / 6.0 * (1.0 + 2.0 * t +
-                                                                                      c - ds / 20.0 *
-                                                                                      (5.0 - 2.0 * c + 28.0 * t -
-                                                                                       3.0 * cs + 8.0 * esp +
-                                                                                       24.0 * ts))) / cos_phi);
+                double lon = AdjustLongitude(
+                    CentralMeridian
+                        + d
+                            * (
+                                1.0
+                                - ds
+                                    / 6.0
+                                    * (
+                                        1.0
+                                        + 2.0 * t
+                                        + c
+                                        - ds
+                                            / 20.0
+                                            * (
+                                                5.0
+                                                - 2.0 * c
+                                                + 28.0 * t
+                                                - 3.0 * cs
+                                                + 8.0 * esp
+                                                + 24.0 * ts
+                                            )
+                                    )
+                            )
+                            / cos_phi
+                );
 
                 if (p.Length < 3)
-                    return new[] {RadiansToDegrees(lon), RadiansToDegrees(lat)};
+                    return new[] { RadiansToDegrees(lon), RadiansToDegrees(lat) };
                 else
-                    return new[] {RadiansToDegrees(lon), RadiansToDegrees(lat), p[2]};
+                    return new[] { RadiansToDegrees(lon), RadiansToDegrees(lat), p[2] };
             }
             else
             {
                 if (p.Length < 3)
-                    return new[] {RadiansToDegrees(HalfPi * Sign(y)), RadiansToDegrees(CentralMeridian)};
+                    return new[]
+                    {
+                        RadiansToDegrees(HalfPi * Sign(y)),
+                        RadiansToDegrees(CentralMeridian),
+                    };
                 else
-                    return new[] {RadiansToDegrees(HalfPi * Sign(y)), RadiansToDegrees(CentralMeridian), p[2]};
+                    return new[]
+                    {
+                        RadiansToDegrees(HalfPi * Sign(y)),
+                        RadiansToDegrees(CentralMeridian),
+                        p[2],
+                    };
             }
         }
 
@@ -465,8 +613,25 @@ namespace Asv.Avalonia.Map
 
         static double[] resolutions = new[]
         {
-            4096.0, 2048.0, 1024.0, 512.0, 256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.5, 0.25, 0.15, 0.1,
-            0.05, 0.01
+            4096.0,
+            2048.0,
+            1024.0,
+            512.0,
+            256.0,
+            128.0,
+            64.0,
+            32.0,
+            16.0,
+            8.0,
+            4.0,
+            2.0,
+            1.0,
+            0.5,
+            0.25,
+            0.15,
+            0.1,
+            0.05,
+            0.01,
         };
 
         public static double GetTileMatrixResolution(int zoom)
@@ -518,8 +683,14 @@ namespace Asv.Avalonia.Map
             {
                 double res = GetTileMatrixResolution(i);
 
-                extentMatrixMin.Add(i, new GSize(FromPixelToTileXY(FromLatLngToPixel(Bounds.LocationTopLeft, i))));
-                extentMatrixMax.Add(i, new GSize(FromPixelToTileXY(FromLatLngToPixel(Bounds.LocationRightBottom, i))));
+                extentMatrixMin.Add(
+                    i,
+                    new GSize(FromPixelToTileXY(FromLatLngToPixel(Bounds.LocationTopLeft, i)))
+                );
+                extentMatrixMax.Add(
+                    i,
+                    new GSize(FromPixelToTileXY(FromLatLngToPixel(Bounds.LocationRightBottom, i)))
+                );
             }
         }
     }

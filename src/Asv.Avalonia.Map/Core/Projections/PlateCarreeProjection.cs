@@ -25,25 +25,16 @@ namespace Asv.Avalonia.Map
             }
         }
 
-        public override GSize TileSize
-        {
-            get;
-        } = new GSize(512, 512);
+        public override GSize TileSize { get; } = new GSize(512, 512);
 
         public override double Axis
         {
-            get
-            {
-                return 6378137;
-            }
+            get { return 6378137; }
         }
 
         public override double Flattening
         {
-            get
-            {
-                return 1.0 / 298.257223563;
-            }
+            get { return 1.0 / 298.257223563; }
         }
 
         public override GPoint FromLatLngToPixel(double lat, double lng, int zoom)
@@ -73,7 +64,7 @@ namespace Asv.Avalonia.Map
 
             double scale = 360.0 / mapSizeX;
 
-            return new GeoPoint(90 - y * scale, x * scale - 180,0);
+            return new GeoPoint(90 - y * scale, x * scale - 180, 0);
         }
 
         public override GSize GetTileMatrixMaxXY(int zoom)

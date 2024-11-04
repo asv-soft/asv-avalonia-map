@@ -9,9 +9,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly GoogleHybridMapProvider Instance;
 
-        GoogleHybridMapProvider()
-        {
-        }
+        GoogleHybridMapProvider() { }
 
         static GoogleHybridMapProvider()
         {
@@ -22,15 +20,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("B076C255-6D12-4466-AAE0-4A73D20A7E6A");
+        public override Guid Id { get; } = new Guid("B076C255-6D12-4466-AAE0-4A73D20A7E6A");
 
-        public override string Name
-        {
-            get;
-        } = "GoogleHybridMap";
+        public override string Name { get; } = "GoogleHybridMap";
 
         GMapProvider[] _overlays;
 
@@ -40,7 +32,7 @@ namespace Asv.Avalonia.Map
             {
                 if (_overlays == null)
                 {
-                    _overlays = new GMapProvider[] {GoogleSatelliteMapProvider.Instance, this};
+                    _overlays = new GMapProvider[] { GoogleSatelliteMapProvider.Instance, this };
                 }
 
                 return _overlays;
@@ -62,7 +54,8 @@ namespace Asv.Avalonia.Map
             // sec2: after &zoom=...
             GetSecureWords(pos, out string sec1, out string sec2);
 
-            return string.Format(UrlFormat,
+            return string.Format(
+                UrlFormat,
                 UrlFormatServer,
                 GetServerNum(pos, 4),
                 UrlFormatRequest,
@@ -73,11 +66,13 @@ namespace Asv.Avalonia.Map
                 pos.Y,
                 zoom,
                 sec2,
-                Server);
+                Server
+            );
         }
 
         static readonly string UrlFormatServer = "mt";
         static readonly string UrlFormatRequest = "vt";
-        static readonly string UrlFormat = "http://{0}{1}.{10}/maps/{2}/lyrs={3}&hl={4}&x={5}{6}&y={7}&z={8}&s={9}";
+        static readonly string UrlFormat =
+            "http://{0}{1}.{10}/maps/{2}/lyrs={3}&hl={4}&x={5}{6}&y={7}&z={8}&s={9}";
     }
 }

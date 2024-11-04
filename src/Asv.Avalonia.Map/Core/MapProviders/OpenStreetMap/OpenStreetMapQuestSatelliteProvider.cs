@@ -11,7 +11,10 @@ namespace Asv.Avalonia.Map
 
         OpenStreetMapQuestSatelliteProvider()
         {
-            Copyright = string.Format("© MapQuest - Map data ©{0} MapQuest, OpenStreetMap", DateTime.Today.Year);
+            Copyright = string.Format(
+                "© MapQuest - Map data ©{0} MapQuest, OpenStreetMap",
+                DateTime.Today.Year
+            );
         }
 
         static OpenStreetMapQuestSatelliteProvider()
@@ -21,15 +24,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("E590D3B1-37F4-442B-9395-ADB035627F67");
+        public override Guid Id { get; } = new Guid("E590D3B1-37F4-442B-9395-ADB035627F67");
 
-        public override string Name
-        {
-            get;
-        } = "OpenStreetMapQuestSatellite";
+        public override string Name { get; } = "OpenStreetMapQuestSatellite";
 
         GMapProvider[] _overlays;
 
@@ -39,7 +36,7 @@ namespace Asv.Avalonia.Map
             {
                 if (_overlays == null)
                 {
-                    _overlays = new GMapProvider[] {this};
+                    _overlays = new GMapProvider[] { this };
                 }
 
                 return _overlays;
@@ -60,6 +57,7 @@ namespace Asv.Avalonia.Map
             return string.Format(UrlFormat, GetServerNum(pos, 3) + 1, zoom, pos.X, pos.Y);
         }
 
-        static readonly string UrlFormat = "http://otile{0}.mqcdn.com/tiles/1.0.0/sat/{1}/{2}/{3}.jpg";
+        static readonly string UrlFormat =
+            "http://otile{0}.mqcdn.com/tiles/1.0.0/sat/{1}/{2}/{3}.jpg";
     }
 }

@@ -26,23 +26,12 @@ namespace Asv.Avalonia.Map
 
         public bool IsEmpty
         {
-            get
-            {
-                return X == 0 && Y == 0;
-            }
+            get { return X == 0 && Y == 0; }
         }
 
-        public long X
-        {
-            get;
-            set;
-        }
+        public long X { get; set; }
 
-        public long Y
-        {
-            get;
-            set;
-        }
+        public long Y { get; set; }
 
         public static explicit operator GSize(GPoint p)
         {
@@ -111,8 +100,11 @@ namespace Asv.Avalonia.Map
 
         public override string ToString()
         {
-            return "{X=" + X.ToString(CultureInfo.CurrentCulture) + ",Y=" + Y.ToString(CultureInfo.CurrentCulture) +
-                   "}";
+            return "{X="
+                + X.ToString(CultureInfo.CurrentCulture)
+                + ",Y="
+                + Y.ToString(CultureInfo.CurrentCulture)
+                + "}";
         }
 
         //private static int HIWORD(int n)

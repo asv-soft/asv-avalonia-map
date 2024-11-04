@@ -8,26 +8,17 @@ namespace Asv.Avalonia.Map
 
         public override Guid Id
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
         }
 
         public override string Name
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
         }
 
         public override PureProjection Projection
         {
-            get
-            {
-                return MercatorProjectionYandex.Instance;
-            }
+            get { return MercatorProjectionYandex.Instance; }
         }
 
         GMapProvider[] _overlays;
@@ -38,7 +29,7 @@ namespace Asv.Avalonia.Map
             {
                 if (_overlays == null)
                 {
-                    _overlays = new GMapProvider[] {this};
+                    _overlays = new GMapProvider[] { this };
                 }
 
                 return _overlays;
@@ -54,14 +45,26 @@ namespace Asv.Avalonia.Map
 
         protected string Version = "4.6.9";
 
-        public readonly string Server /*d{'_'}b*/ = /*{^_^}*/
-            Stuff.GString /*{"_"}*/( /* ;}~ */"MECxW6okUK3Ir7a9ue/vIA==" /* ;}~ */);
+        public readonly string Server /*d{'_'}b*/
+        = /*{^_^}*/
+            Stuff.GString /*{"_"}*/
+            ( /* ;}~ */
+                "MECxW6okUK3Ir7a9ue/vIA==" /* ;}~ */
+            );
 
-        public readonly string ServerRu /*d{'_'}b*/ = /*{^_^}*/
-            Stuff.GString /*{"_"}*/( /* ;}~ */"MECxW6okUK0FRlRPbF0BQg==" /* ;}~ */);
+        public readonly string ServerRu /*d{'_'}b*/
+        = /*{^_^}*/
+            Stuff.GString /*{"_"}*/
+            ( /* ;}~ */
+                "MECxW6okUK0FRlRPbF0BQg==" /* ;}~ */
+            );
 
-        public readonly string ServerCom /*d{'_'}b*/ = /*{^_^}*/
-            Stuff.GString /*{"_"}*/( /* ;}~ */"MECxW6okUK2JNHOW5AuimA==" /* ;}~ */);
+        public readonly string ServerCom /*d{'_'}b*/
+        = /*{^_^}*/
+            Stuff.GString /*{"_"}*/
+            ( /* ;}~ */
+                "MECxW6okUK2JNHOW5AuimA==" /* ;}~ */
+            );
     }
 
     /// <summary>
@@ -83,15 +86,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("82DC969D-0491-40F3-8C21-4D90B67F47EB");
+        public override Guid Id { get; } = new Guid("82DC969D-0491-40F3-8C21-4D90B67F47EB");
 
-        public override string Name
-        {
-            get;
-        } = "YandexMap";
+        public override string Name { get; } = "YandexMap";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {
@@ -104,7 +101,8 @@ namespace Asv.Avalonia.Map
 
         string MakeTileImageUrl(GPoint pos, int zoom, string language)
         {
-            return string.Format(UrlFormat,
+            return string.Format(
+                UrlFormat,
                 UrlServer,
                 GetServerNum(pos, 4) + 1,
                 Version,
@@ -112,10 +110,12 @@ namespace Asv.Avalonia.Map
                 pos.Y,
                 zoom,
                 language,
-                Server);
+                Server
+            );
         }
 
         static readonly string UrlServer = "vec";
-        static readonly string UrlFormat = "http://{0}0{1}.{7}/tiles?l=map&v={2}&x={3}&y={4}&z={5}&lang={6}";
+        static readonly string UrlFormat =
+            "http://{0}0{1}.{7}/tiles?l=map&v={2}&x={3}&y={4}&z={5}&lang={6}";
     }
 }

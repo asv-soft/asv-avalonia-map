@@ -10,9 +10,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly MapBenderWMSProvider Instance;
 
-        MapBenderWMSProvider()
-        {
-        }
+        MapBenderWMSProvider() { }
 
         static MapBenderWMSProvider()
         {
@@ -21,15 +19,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("45742F8D-B552-4CAF-89AE-F20951BBDB2B");
+        public override Guid Id { get; } = new Guid("45742F8D-B552-4CAF-89AE-F20951BBDB2B");
 
-        public override string Name
-        {
-            get;
-        } = "MapBender, WMS demo";
+        public override string Name { get; } = "MapBender, WMS demo";
 
         GMapProvider[] _overlays;
 
@@ -39,7 +31,7 @@ namespace Asv.Avalonia.Map
             {
                 if (_overlays == null)
                 {
-                    _overlays = new GMapProvider[] {this};
+                    _overlays = new GMapProvider[] { this };
                 }
 
                 return _overlays;
@@ -48,10 +40,7 @@ namespace Asv.Avalonia.Map
 
         public override PureProjection Projection
         {
-            get
-            {
-                return MercatorProjection.Instance;
-            }
+            get { return MercatorProjection.Instance; }
         }
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
@@ -74,14 +63,16 @@ namespace Asv.Avalonia.Map
             px2.Offset(Projection.TileSize.Width, 0);
             var p2 = Projection.FromPixelToLatLng(px2, zoom);
 
-            string ret = string.Format(CultureInfo.InvariantCulture,
+            string ret = string.Format(
+                CultureInfo.InvariantCulture,
                 UrlFormat,
                 p1.Longitude,
                 p1.Latitude,
                 p2.Longitude,
                 p2.Latitude,
                 Projection.TileSize.Width,
-                Projection.TileSize.Height);
+                Projection.TileSize.Height
+            );
 
             return ret;
         }

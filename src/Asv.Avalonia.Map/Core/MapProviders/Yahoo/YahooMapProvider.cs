@@ -9,11 +9,13 @@ namespace Asv.Avalonia.Map
 {
     public abstract class YahooMapProviderBase : GMapProvider, GeocodingProvider
     {
-        
         public YahooMapProviderBase()
         {
             RefererUrl = "http://maps.yahoo.com/";
-            Copyright = string.Format("© Yahoo! Inc. - Map data & Imagery ©{0} NAVTEQ", DateTime.Today.Year);
+            Copyright = string.Format(
+                "© Yahoo! Inc. - Map data & Imagery ©{0} NAVTEQ",
+                DateTime.Today.Year
+            );
         }
 
         public string AppId = string.Empty;
@@ -23,26 +25,17 @@ namespace Asv.Avalonia.Map
 
         public override Guid Id
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
         }
 
         public override string Name
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
         }
 
         public override PureProjection Projection
         {
-            get
-            {
-                return MercatorProjection.Instance;
-            }
+            get { return MercatorProjection.Instance; }
         }
 
         GMapProvider[] _overlays;
@@ -53,7 +46,7 @@ namespace Asv.Avalonia.Map
             {
                 if (_overlays == null)
                 {
-                    _overlays = new GMapProvider[] {this};
+                    _overlays = new GMapProvider[] { this };
                 }
 
                 return _overlays;
@@ -109,7 +102,10 @@ namespace Asv.Avalonia.Map
             return pointList != null && pointList.Count > 0 ? pointList[0] : (GeoPoint?)null;
         }
 
-        public GeoCoderStatusCode GetPlacemarks(GeoPoint location, out List<Placemark> placemarkList)
+        public GeoCoderStatusCode GetPlacemarks(
+            GeoPoint location,
+            out List<Placemark> placemarkList
+        )
         {
             // http://where.yahooapis.com/geocode?q=54.689850,25.269260&appid=1234&flags=G&gflags=QRL&locale=LT-lt
 
@@ -119,30 +115,38 @@ namespace Asv.Avalonia.Map
 
             #endregion
 
-            return GetPlacemarksFromReverseGeocoderUrl(MakeReverseGeocoderUrl(location), out placemarkList);
+            return GetPlacemarksFromReverseGeocoderUrl(
+                MakeReverseGeocoderUrl(location),
+                out placemarkList
+            );
         }
 
         public Placemark? GetPlacemark(GeoPoint location, out GeoCoderStatusCode status)
         {
             List<Placemark> placemarkList;
             status = GetPlacemarks(location, out placemarkList);
-            return placemarkList != null && placemarkList.Count > 0 ? placemarkList[0] : (Placemark?)null;
+            return placemarkList != null && placemarkList.Count > 0
+                ? placemarkList[0]
+                : (Placemark?)null;
         }
 
         #region -- internals --
 
         string MakeGeocoderUrl(string keywords)
         {
-            return string.Format(CultureInfo.InvariantCulture,
+            return string.Format(
+                CultureInfo.InvariantCulture,
                 GeocoderUrlFormat,
                 keywords.Replace(' ', '+'),
                 AppId,
-                !string.IsNullOrEmpty(LanguageStr) ? "&locale=" + LanguageStr : "");
+                !string.IsNullOrEmpty(LanguageStr) ? "&locale=" + LanguageStr : ""
+            );
         }
 
         string MakeGeocoderDetailedUrl(Placemark placemark)
         {
-            return string.Format(GeocoderDetailedUrlFormat,
+            return string.Format(
+                GeocoderDetailedUrlFormat,
                 PrepareUrlString(placemark.CountryName),
                 PrepareUrlString(placemark.AdministrativeAreaName),
                 PrepareUrlString(placemark.SubAdministrativeAreaName),
@@ -152,22 +156,26 @@ namespace Asv.Avalonia.Map
                 PrepareUrlString(placemark.ThoroughfareName),
                 PrepareUrlString(placemark.HouseNo),
                 AppId,
-                !string.IsNullOrEmpty(LanguageStr) ? "&locale=" + LanguageStr : string.Empty);
+                !string.IsNullOrEmpty(LanguageStr) ? "&locale=" + LanguageStr : string.Empty
+            );
         }
 
         string MakeReverseGeocoderUrl(GeoPoint pt)
         {
-            return string.Format(CultureInfo.InvariantCulture,
+            return string.Format(
+                CultureInfo.InvariantCulture,
                 ReverseGeocoderUrlFormat,
                 pt.Latitude,
                 pt.Longitude,
                 AppId,
-                !string.IsNullOrEmpty(LanguageStr) ? "&locale=" + LanguageStr : "");
+                !string.IsNullOrEmpty(LanguageStr) ? "&locale=" + LanguageStr : ""
+            );
         }
 
         string PrepareUrlString(string str)
         {
-            if (str == null) return string.Empty;
+            if (str == null)
+                return string.Empty;
             return str.Replace(' ', '+');
         }
 
@@ -179,7 +187,11 @@ namespace Asv.Avalonia.Map
             try
             {
                 string geo = GMaps.Instance.UseGeocoderCache
-                    ? Cache.Instance.GetContent(url, CacheType.GeocoderCache, TimeSpan.FromHours(TTLCache))
+                    ? Cache.Instance.GetContent(
+                        url,
+                        CacheType.GeocoderCache,
+                        TimeSpan.FromHours(TTLCache)
+                    )
                     : string.Empty;
 
                 bool cache = false;
@@ -217,18 +229,25 @@ namespace Asv.Avalonia.Map
                                     if (nn != null)
                                     {
                                         int quality = int.Parse(nn.InnerText);
-                                        if (quality < MinExpectedQuality) continue;
+                                        if (quality < MinExpectedQuality)
+                                            continue;
 
                                         nn = n.SelectSingleNode("latitude");
                                         if (nn != null)
                                         {
-                                            double lat = double.Parse(nn.InnerText, CultureInfo.InvariantCulture);
+                                            double lat = double.Parse(
+                                                nn.InnerText,
+                                                CultureInfo.InvariantCulture
+                                            );
 
                                             nn = n.SelectSingleNode("longitude");
                                             if (nn != null)
                                             {
-                                                double lng = double.Parse(nn.InnerText, CultureInfo.InvariantCulture);
-                                                pointList.Add(new GeoPoint(lat, lng,0));
+                                                double lng = double.Parse(
+                                                    nn.InnerText,
+                                                    CultureInfo.InvariantCulture
+                                                );
+                                                pointList.Add(new GeoPoint(lat, lng, 0));
                                             }
                                         }
                                     }
@@ -249,7 +268,10 @@ namespace Asv.Avalonia.Map
             return status;
         }
 
-        GeoCoderStatusCode GetPlacemarksFromReverseGeocoderUrl(string url, out List<Placemark> placemarkList)
+        GeoCoderStatusCode GetPlacemarksFromReverseGeocoderUrl(
+            string url,
+            out List<Placemark> placemarkList
+        )
         {
             var status = GeoCoderStatusCode.UNKNOWN_ERROR;
             placemarkList = null;
@@ -257,7 +279,11 @@ namespace Asv.Avalonia.Map
             try
             {
                 string geo = GMaps.Instance.UsePlacemarkCache
-                    ? Cache.Instance.GetContent(url, CacheType.PlacemarkCache, TimeSpan.FromHours(TTLCache))
+                    ? Cache.Instance.GetContent(
+                        url,
+                        CacheType.PlacemarkCache,
+                        TimeSpan.FromHours(TTLCache)
+                    )
                     : string.Empty;
 
                 bool cache = false;
@@ -292,7 +318,8 @@ namespace Asv.Avalonia.Map
                                 foreach (XmlNode n in l)
                                 {
                                     var vl = n.SelectSingleNode("name");
-                                    if (vl == null) continue;
+                                    if (vl == null)
+                                        continue;
 
                                     var placemark = new Placemark(vl.InnerText);
 
@@ -395,9 +422,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly YahooMapProvider Instance;
 
-        YahooMapProvider()
-        {
-        }
+        YahooMapProvider() { }
 
         static YahooMapProvider()
         {
@@ -408,15 +433,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("65DB032C-6869-49B0-A7FC-3AE41A26AF4D");
+        public override Guid Id { get; } = new Guid("65DB032C-6869-49B0-A7FC-3AE41A26AF4D");
 
-        public override string Name
-        {
-            get;
-        } = "YahooMap";
+        public override string Name { get; } = "YahooMap";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {
@@ -434,7 +453,8 @@ namespace Asv.Avalonia.Map
             // https://4.aerial.maps.api.here.com/maptile/2.1/maptile/newest/hybrid.day/11/1167/652/256/jpg?lg=ENG&token=TrLJuXVK62IQk0vuXFzaig%3D%3D&requestid=yahoo.prod&app_id=eAdkWGYRoc4RfxVo0Z4B
             // https://4.aerial.maps.api.here.com/maptile/2.1/maptile/newest/satellite.day/13/4671/2604/256/jpg?lg=ENG&token=TrLJuXVK62IQk0vuXFzaig%3D%3D&requestid=yahoo.prod&app_id=eAdkWGYRoc4RfxVo0Z4B
 
-            return string.Format(UrlFormat,
+            return string.Format(
+                UrlFormat,
                 GetServerNum(pos, 2) + 1,
                 Version,
                 zoom,
@@ -442,7 +462,8 @@ namespace Asv.Avalonia.Map
                 pos.Y,
                 language,
                 rnd1,
-                rnd2);
+                rnd2
+            );
         }
 
         string rnd1 = Guid.NewGuid().ToString("N").Substring(0, 28);

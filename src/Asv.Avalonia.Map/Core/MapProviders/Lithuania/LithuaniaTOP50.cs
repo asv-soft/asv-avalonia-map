@@ -18,25 +18,16 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("2920B1AF-6D57-4895-9A21-D5837CBF1049");
+        public override Guid Id { get; } = new Guid("2920B1AF-6D57-4895-9A21-D5837CBF1049");
 
         public override string Name
         {
-            get
-            {
-                return "LithuaniaTOP50";
-            }
+            get { return "LithuaniaTOP50"; }
         }
 
         public override PureProjection Projection
         {
-            get
-            {
-                return MercatorProjection.Instance;
-            }
+            get { return MercatorProjection.Instance; }
         }
 
         GMapProvider[] _overlays;
@@ -47,7 +38,7 @@ namespace Asv.Avalonia.Map
             {
                 if (_overlays == null)
                 {
-                    _overlays = new GMapProvider[] {this};
+                    _overlays = new GMapProvider[] { this };
                 }
 
                 return _overlays;

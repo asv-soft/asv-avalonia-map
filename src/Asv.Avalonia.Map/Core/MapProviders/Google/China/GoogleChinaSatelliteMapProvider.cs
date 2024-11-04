@@ -23,15 +23,9 @@ namespace Asv.Avalonia.Map.China
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("543009AC-3379-4893-B580-DBE6372B1753");
+        public override Guid Id { get; } = new Guid("543009AC-3379-4893-B580-DBE6372B1753");
 
-        public override string Name
-        {
-            get;
-        } = "GoogleChinaSatelliteMap";
+        public override string Name { get; } = "GoogleChinaSatelliteMap";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {
@@ -48,7 +42,8 @@ namespace Asv.Avalonia.Map.China
             // sec2: after &zoom=...
             GetSecureWords(pos, out string sec1, out string sec2);
 
-            return string.Format(UrlFormat,
+            return string.Format(
+                UrlFormat,
                 UrlFormatServer,
                 GetServerNum(pos, 4),
                 UrlFormatRequest,
@@ -58,11 +53,13 @@ namespace Asv.Avalonia.Map.China
                 pos.Y,
                 zoom,
                 sec2,
-                ServerChina);
+                ServerChina
+            );
         }
 
         static readonly string UrlFormatServer = "mt";
         static readonly string UrlFormatRequest = "vt";
-        static readonly string UrlFormat = "http://{0}{1}.{9}/{2}/lyrs={3}&gl=cn&x={4}{5}&y={6}&z={7}&s={8}";
+        static readonly string UrlFormat =
+            "http://{0}{1}.{9}/{2}/lyrs={3}&gl=cn&x={4}{5}&y={6}&z={7}&s={8}";
     }
 }

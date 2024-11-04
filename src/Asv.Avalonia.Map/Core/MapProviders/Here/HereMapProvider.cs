@@ -8,8 +8,10 @@ namespace Asv.Avalonia.Map
         {
             MaxZoom = null;
             RefererUrl = "http://wego.here.com/";
-            Copyright = string.Format("©{0} Here - Map data ©{0} NAVTEQ, Imagery ©{0} DigitalGlobe",
-                DateTime.Today.Year);
+            Copyright = string.Format(
+                "©{0} Here - Map data ©{0} NAVTEQ, Imagery ©{0} DigitalGlobe",
+                DateTime.Today.Year
+            );
         }
 
         public string AppId = string.Empty;
@@ -19,26 +21,17 @@ namespace Asv.Avalonia.Map
 
         public override Guid Id
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
         }
 
         public override string Name
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
         }
 
         public override PureProjection Projection
         {
-            get
-            {
-                return MercatorProjection.Instance;
-            }
+            get { return MercatorProjection.Instance; }
         }
 
         GMapProvider[] _overlays;
@@ -49,7 +42,7 @@ namespace Asv.Avalonia.Map
             {
                 if (_overlays == null)
                 {
-                    _overlays = new GMapProvider[] {this};
+                    _overlays = new GMapProvider[] { this };
                 }
 
                 return _overlays;
@@ -73,9 +66,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly HereMapProvider Instance;
 
-        HereMapProvider()
-        {
-        }
+        HereMapProvider() { }
 
         static HereMapProvider()
         {
@@ -84,15 +75,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("30DC2083-AC4D-4471-A232-D8A67AC9373A");
+        public override Guid Id { get; } = new Guid("30DC2083-AC4D-4471-A232-D8A67AC9373A");
 
-        public override string Name
-        {
-            get;
-        } = "HereMap";
+        public override string Name { get; } = "HereMap";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {
@@ -105,7 +90,15 @@ namespace Asv.Avalonia.Map
 
         string MakeTileImageUrl(GPoint pos, int zoom, string language)
         {
-            return string.Format(UrlFormat, UrlServerLetters[GetServerNum(pos, 4)], zoom, pos.X, pos.Y, AppId, AppCode);
+            return string.Format(
+                UrlFormat,
+                UrlServerLetters[GetServerNum(pos, 4)],
+                zoom,
+                pos.X,
+                pos.Y,
+                AppId,
+                AppCode
+            );
         }
 
         static readonly string UrlFormat =

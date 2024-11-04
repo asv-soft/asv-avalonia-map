@@ -9,9 +9,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly ArcGIS_Imagery_World_2D_MapProvider Instance;
 
-        ArcGIS_Imagery_World_2D_MapProvider()
-        {
-        }
+        ArcGIS_Imagery_World_2D_MapProvider() { }
 
         static ArcGIS_Imagery_World_2D_MapProvider()
         {
@@ -20,15 +18,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("FF7ADDAD-F155-41DB-BC42-CC6FD97C8B9D");
+        public override Guid Id { get; } = new Guid("FF7ADDAD-F155-41DB-BC42-CC6FD97C8B9D");
 
-        public override string Name
-        {
-            get;
-        } = "ArcGIS_Imagery_World_2D_Map";
+        public override string Name { get; } = "ArcGIS_Imagery_World_2D_Map";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {

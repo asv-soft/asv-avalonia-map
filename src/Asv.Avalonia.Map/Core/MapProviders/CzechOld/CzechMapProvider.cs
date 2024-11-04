@@ -7,33 +7,29 @@ namespace Asv.Avalonia.Map
         public CzechMapProviderBaseOld()
         {
             RefererUrl = "http://www.mapy.cz/";
-            Area = new RectLatLng(51.2024819920053, 11.8401353319027, 7.22833716731277, 2.78312271922872);
+            Area = new RectLatLng(
+                51.2024819920053,
+                11.8401353319027,
+                7.22833716731277,
+                2.78312271922872
+            );
         }
 
         #region GMapProvider Members
 
         public override Guid Id
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
         }
 
         public override string Name
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
         }
 
         public override PureProjection Projection
         {
-            get
-            {
-                return MapyCZProjection.Instance;
-            }
+            get { return MapyCZProjection.Instance; }
         }
 
         GMapProvider[] _overlays;
@@ -44,7 +40,7 @@ namespace Asv.Avalonia.Map
             {
                 if (_overlays == null)
                 {
-                    _overlays = new GMapProvider[] {this};
+                    _overlays = new GMapProvider[] { this };
                 }
 
                 return _overlays;
@@ -66,9 +62,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly CzechMapProviderOld Instance;
 
-        CzechMapProviderOld()
-        {
-        }
+        CzechMapProviderOld() { }
 
         static CzechMapProviderOld()
         {
@@ -77,15 +71,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("6A1AF99A-84C6-4EF6-91A5-77B9D03257C2");
+        public override Guid Id { get; } = new Guid("6A1AF99A-84C6-4EF6-91A5-77B9D03257C2");
 
-        public override string Name
-        {
-            get;
-        } = "CzechOldMap";
+        public override string Name { get; } = "CzechOldMap";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {
@@ -98,7 +86,7 @@ namespace Asv.Avalonia.Map
 
         string MakeTileImageUrl(GPoint pos, int zoom, string language)
         {
-            // ['base','ophoto','turist','army2']  
+            // ['base','ophoto','turist','army2']
             // http://m1.mapserver.mapy.cz/base-n/3_8000000_8000000
 
             long xx = pos.X << (28 - zoom);

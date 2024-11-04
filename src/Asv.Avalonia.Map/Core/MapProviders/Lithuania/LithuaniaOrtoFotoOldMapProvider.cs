@@ -9,9 +9,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly LithuaniaOrtoFotoOldMapProvider Instance;
 
-        LithuaniaOrtoFotoOldMapProvider()
-        {
-        }
+        LithuaniaOrtoFotoOldMapProvider() { }
 
         static LithuaniaOrtoFotoOldMapProvider()
         {
@@ -20,15 +18,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("C37A148E-0A7D-4123-BE4E-D0D3603BE46B");
+        public override Guid Id { get; } = new Guid("C37A148E-0A7D-4123-BE4E-D0D3603BE46B");
 
-        public override string Name
-        {
-            get;
-        } = "LithuaniaOrtoFotoMapOld";
+        public override string Name { get; } = "LithuaniaOrtoFotoMapOld";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {

@@ -9,114 +9,172 @@ namespace Asv.Avalonia.Map
     /// </summary>
     public enum LanguageType
     {
-        [Description("ar")] Arabic,
+        [Description("ar")]
+        Arabic,
 
-        [Description("bg")] Bulgarian,
+        [Description("bg")]
+        Bulgarian,
 
-        [Description("bn")] Bengali,
+        [Description("bn")]
+        Bengali,
 
-        [Description("ca")] Catalan,
+        [Description("ca")]
+        Catalan,
 
-        [Description("cs")] Czech,
+        [Description("cs")]
+        Czech,
 
-        [Description("da")] Danish,
+        [Description("da")]
+        Danish,
 
-        [Description("de")] German,
+        [Description("de")]
+        German,
 
-        [Description("el")] Greek,
+        [Description("el")]
+        Greek,
 
-        [Description("en")] English,
+        [Description("en")]
+        English,
 
-        [Description("en-AU")] EnglishAustralian,
+        [Description("en-AU")]
+        EnglishAustralian,
 
-        [Description("en-GB")] EnglishGreatBritain,
+        [Description("en-GB")]
+        EnglishGreatBritain,
 
-        [Description("es")] Spanish,
+        [Description("es")]
+        Spanish,
 
-        [Description("eu")] Basque,
+        [Description("eu")]
+        Basque,
 
-        [Description("fa")] FARSI,
+        [Description("fa")]
+        FARSI,
 
-        [Description("fi")] Finnish,
+        [Description("fi")]
+        Finnish,
 
-        [Description("fil")] Filipino,
+        [Description("fil")]
+        Filipino,
 
-        [Description("fr")] French,
+        [Description("fr")]
+        French,
 
-        [Description("gl")] Galician,
+        [Description("gl")]
+        Galician,
 
-        [Description("gu")] Gujarati,
-        [Description("hi")] Hindi,
+        [Description("gu")]
+        Gujarati,
 
-        [Description("hr")] Croatian,
+        [Description("hi")]
+        Hindi,
 
-        [Description("hu")] Hungarian,
+        [Description("hr")]
+        Croatian,
 
-        [Description("id")] Indonesian,
+        [Description("hu")]
+        Hungarian,
 
-        [Description("it")] Italian,
+        [Description("id")]
+        Indonesian,
 
-        [Description("iw")] Hebrew,
+        [Description("it")]
+        Italian,
 
-        [Description("ja")] Japanese,
+        [Description("iw")]
+        Hebrew,
 
-        [Description("kn")] Kannada,
+        [Description("ja")]
+        Japanese,
 
-        [Description("ko")] Korean,
+        [Description("kn")]
+        Kannada,
 
-        [Description("lt")] Lithuanian,
+        [Description("ko")]
+        Korean,
 
-        [Description("lv")] Latvian,
+        [Description("lt")]
+        Lithuanian,
 
-        [Description("ml")] Malayalam,
+        [Description("lv")]
+        Latvian,
 
-        [Description("mr")] Marathi,
+        [Description("ml")]
+        Malayalam,
 
-        [Description("nl")] Dutch,
+        [Description("mr")]
+        Marathi,
 
-        [Description("nn")] NorwegianNynorsk,
+        [Description("nl")]
+        Dutch,
 
-        [Description("no")] Norwegian,
+        [Description("nn")]
+        NorwegianNynorsk,
 
-        [Description("or")] Oriya,
+        [Description("no")]
+        Norwegian,
 
-        [Description("pl")] Polish,
+        [Description("or")]
+        Oriya,
 
-        [Description("pt")] Portuguese,
+        [Description("pl")]
+        Polish,
 
-        [Description("pt-BR")] PortugueseBrazil,
+        [Description("pt")]
+        Portuguese,
 
-        [Description("pt-PT")] PortuguesePortugal,
+        [Description("pt-BR")]
+        PortugueseBrazil,
 
-        [Description("rm")] Romansch,
-        [Description("ro")] Romanian,
+        [Description("pt-PT")]
+        PortuguesePortugal,
 
-        [Description("ru")] Russian,
+        [Description("rm")]
+        Romansch,
 
-        [Description("sk")] Slovak,
+        [Description("ro")]
+        Romanian,
 
-        [Description("sl")] Slovenian,
+        [Description("ru")]
+        Russian,
 
-        [Description("sr")] Serbian,
+        [Description("sk")]
+        Slovak,
 
-        [Description("sv")] Swedish,
+        [Description("sl")]
+        Slovenian,
 
-        [Description("tl")] TAGALOG,
+        [Description("sr")]
+        Serbian,
 
-        [Description("ta")] Tamil,
+        [Description("sv")]
+        Swedish,
 
-        [Description("te")] Telugu,
+        [Description("tl")]
+        TAGALOG,
 
-        [Description("th")] Thai,
+        [Description("ta")]
+        Tamil,
 
-        [Description("tr")] Turkish,
+        [Description("te")]
+        Telugu,
 
-        [Description("uk")] Ukrainian,
+        [Description("th")]
+        Thai,
 
-        [Description("vi")] Vietnamese,
+        [Description("tr")]
+        Turkish,
 
-        [Description("zh-CN")] ChineseSimplified,
+        [Description("uk")]
+        Ukrainian,
 
-        [Description("zh-TW")] ChineseTraditional,
+        [Description("vi")]
+        Vietnamese,
+
+        [Description("zh-CN")]
+        ChineseSimplified,
+
+        [Description("zh-TW")]
+        ChineseTraditional,
     }
 }

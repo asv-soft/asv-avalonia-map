@@ -28,7 +28,7 @@ namespace Asv.Avalonia.Map
         /// <summary>
         /// Enumeration for X-axis offset values.
         /// </summary>
-        Right
+        Right,
     }
 
     /// <summary>
@@ -48,9 +48,8 @@ namespace Asv.Avalonia.Map
         /// <summary>
         /// Represents the vertical alignment of an element relative to its parent or container.
         /// </summary>
-        Bottom
+        Bottom,
     }
-
 
     /// <summary>
     /// Represents a view model for a map anchor on the map.
@@ -110,7 +109,7 @@ namespace Asv.Avalonia.Map
         /// <c>true</c> if the item is visible; otherwise, <c>false</c>.
         /// </value>
         bool IsVisible { get; set; }
-        
+
         /// <summary>
         ///  Indicate whether an item is dragging on map
         /// </summary>
@@ -288,8 +287,9 @@ namespace Asv.Avalonia.Map
                     new ObservableCollection<MapAnchorActionViewModel>
                     {
                         new() { Title = "Action1", Icon = MaterialIconKind.Run },
-                        new() { Title = "Action2", Icon = MaterialIconKind.Run }
-                    });
+                        new() { Title = "Action2", Icon = MaterialIconKind.Run },
+                    }
+                );
             }
         }
 
@@ -346,7 +346,8 @@ namespace Asv.Avalonia.Map
         /// <remarks>
         /// The visibility status determines
         /// </remarks>
-        [Reactive] public bool IsVisible { get; set; }
+        [Reactive]
+        public bool IsVisible { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the object is in edit mode.
@@ -360,6 +361,7 @@ namespace Asv.Avalonia.Map
         /// </value>
         [Reactive]
         public bool IsInEditMode { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether the object is dragged.
         /// </summary>
@@ -471,7 +473,6 @@ namespace Asv.Avalonia.Map
         [Reactive]
         public double BaseSize { get; set; } = 32;
 
-
         /// <summary>
         /// Gets or sets a value indicating whether the property is filled.
         /// </summary>
@@ -482,7 +483,8 @@ namespace Asv.Avalonia.Map
         /// <value>
         /// <c>true</c> if the object is filled; otherwise, <c>false</c>.
         /// </value>
-        [Reactive] public bool IsFilled { get; set; }
+        [Reactive]
+        public bool IsFilled { get; set; }
 
         /// <summary>
         /// Gets the read-only collection of MapAnchorActionViewModel actions.
@@ -531,7 +533,7 @@ namespace Asv.Avalonia.Map
         /// This property is reactive, meaning that changes to this property will automatically
         [Reactive]
         public double StrokeThickness { get; set; } = 3;
-        
+
         /// <summary>
         /// Gets or sets the collection of values that specify the pattern of dashes and gaps used to stroke lines.
         /// </summary>
@@ -543,7 +545,5 @@ namespace Asv.Avalonia.Map
         /// </summary>
         [Reactive]
         public double PathOpacity { get; set; } = 0.6;
-        
-        
     }
 }

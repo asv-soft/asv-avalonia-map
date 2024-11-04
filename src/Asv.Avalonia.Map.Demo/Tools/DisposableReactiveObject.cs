@@ -21,18 +21,21 @@ public class DisposableReactiveObject : ReactiveObject, IDisposable
 
     protected void ThrowIfDisposed()
     {
-        if (IsDisposed) throw new ObjectDisposedException(GetType().Name);
+        if (IsDisposed)
+            throw new ObjectDisposedException(GetType().Name);
     }
 
     protected CancellationToken DisposeCancel
     {
         get
         {
-            if (_cancel != null) return IsDisposed ? CancellationToken.None : _cancel.Token;
+            if (_cancel != null)
+                return IsDisposed ? CancellationToken.None : _cancel.Token;
 
             lock (_sync2)
             {
-                if (_cancel != null) return IsDisposed ? CancellationToken.None : _cancel.Token;
+                if (_cancel != null)
+                    return IsDisposed ? CancellationToken.None : _cancel.Token;
                 _cancel = new CancellationTokenSource();
                 return _cancel.Token;
             }
@@ -43,7 +46,8 @@ public class DisposableReactiveObject : ReactiveObject, IDisposable
     {
         get
         {
-            if (_dispose != null) return _dispose;
+            if (_dispose != null)
+                return _dispose;
             lock (_sync1)
             {
                 return _dispose ??= new CompositeDisposable();
@@ -63,7 +67,8 @@ public class DisposableReactiveObject : ReactiveObject, IDisposable
 
     public void Dispose()
     {
-        if (Interlocked.CompareExchange(ref _disposeFlag, Disposed, NotDisposed) != NotDisposed) return;
+        if (Interlocked.CompareExchange(ref _disposeFlag, Disposed, NotDisposed) != NotDisposed)
+            return;
         InternalDisposeOnce();
         GC.SuppressFinalize(this);
     }

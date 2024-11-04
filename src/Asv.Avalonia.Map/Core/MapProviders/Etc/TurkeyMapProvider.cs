@@ -11,7 +11,10 @@ namespace Asv.Avalonia.Map
 
         TurkeyMapProvider()
         {
-            Copyright = string.Format("©{0} Pergo - Map data ©{0} Fideltus Advanced Technology", DateTime.Today.Year);
+            Copyright = string.Format(
+                "©{0} Pergo - Map data ©{0} Fideltus Advanced Technology",
+                DateTime.Today.Year
+            );
             Area = new RectLatLng(42.5830078125, 25.48828125, 19.05029296875, 6.83349609375);
             InvertedAxisY = true;
         }
@@ -23,15 +26,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("EDE895BD-756D-4BE4-8D03-D54DD8856F1D");
+        public override Guid Id { get; } = new Guid("EDE895BD-756D-4BE4-8D03-D54DD8856F1D");
 
-        public override string Name
-        {
-            get;
-        } = "TurkeyMap";
+        public override string Name { get; } = "TurkeyMap";
 
         GMapProvider[] _overlays;
 
@@ -41,7 +38,7 @@ namespace Asv.Avalonia.Map
             {
                 if (_overlays == null)
                 {
-                    _overlays = new GMapProvider[] {this};
+                    _overlays = new GMapProvider[] { this };
                 }
 
                 return _overlays;
@@ -50,10 +47,7 @@ namespace Asv.Avalonia.Map
 
         public override PureProjection Projection
         {
-            get
-            {
-                return MercatorProjection.Instance;
-            }
+            get { return MercatorProjection.Instance; }
         }
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
@@ -69,7 +63,7 @@ namespace Asv.Avalonia.Map
         {
             // http://{domain}/{layerName}/{zoomLevel}/{first3LetterOfTileX}/{second3LetterOfTileX}/{third3LetterOfTileX}/{first3LetterOfTileY}/{second3LetterOfTileY}/{third3LetterOfTileXY}.png
 
-            // http://map3.pergo.com.tr/tile/00/000/000/001/000/000/000.png   
+            // http://map3.pergo.com.tr/tile/00/000/000/001/000/000/000.png
             // That means: Zoom Level: 0 TileX: 1 TileY: 0
 
             // http://domain/tile/14/000/019/371/000/011/825.png
@@ -86,6 +80,7 @@ namespace Asv.Avalonia.Map
 
         static readonly string Zeros = "000000000";
         static readonly string Slash = "/";
-        static readonly string UrlFormat = "http://map{0}.pergo.com.tr/publish/tile/tile9913/{1:00}/{2}/{3}.png";
+        static readonly string UrlFormat =
+            "http://map{0}.pergo.com.tr/publish/tile/tile9913/{1:00}/{2}/{3}.png";
     }
 }

@@ -9,9 +9,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly ArcGIS_World_Terrain_Base_MapProvider Instance;
 
-        ArcGIS_World_Terrain_Base_MapProvider()
-        {
-        }
+        ArcGIS_World_Terrain_Base_MapProvider() { }
 
         static ArcGIS_World_Terrain_Base_MapProvider()
         {
@@ -20,15 +18,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("927F175B-5200-4D95-A99B-1C87C93099DA");
+        public override Guid Id { get; } = new Guid("927F175B-5200-4D95-A99B-1C87C93099DA");
 
-        public override string Name
-        {
-            get;
-        } = "ArcGIS_World_Terrain_Base_Map";
+        public override string Name { get; } = "ArcGIS_World_Terrain_Base_Map";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {

@@ -12,13 +12,13 @@ namespace Asv.Avalonia.Map
     /// </summary>
     public abstract class PureProjection
     {
-        
+        private readonly List<Dictionary<GeoPoint, GPoint>> _fromLatLngToPixelCache = new List<
+            Dictionary<GeoPoint, GPoint>
+        >(33);
 
-        private readonly List<Dictionary<GeoPoint, GPoint>> _fromLatLngToPixelCache =
-            new List<Dictionary<GeoPoint, GPoint>>(33);
-
-        private readonly List<Dictionary<GPoint, GeoPoint>> _fromPixelToLatLngCache =
-            new List<Dictionary<GPoint, GeoPoint>>(33);
+        private readonly List<Dictionary<GPoint, GeoPoint>> _fromPixelToLatLngCache = new List<
+            Dictionary<GPoint, GeoPoint>
+        >(33);
 
         public PureProjection()
         {
@@ -32,26 +32,17 @@ namespace Asv.Avalonia.Map
         /// <summary>
         ///     size of tile
         /// </summary>
-        public abstract GSize TileSize
-        {
-            get;
-        }
+        public abstract GSize TileSize { get; }
 
         /// <summary>
         ///     Semi-major axis of ellipsoid, in meters
         /// </summary>
-        public abstract double Axis
-        {
-            get;
-        }
+        public abstract double Axis { get; }
 
         /// <summary>
         ///     Flattening of ellipsoid
         /// </summary>
-        public abstract double Flattening
-        {
-            get;
-        }
+        public abstract double Flattening { get; }
 
         /// <summary>
         ///     get pixel coordinates from lat/lng
@@ -99,7 +90,9 @@ namespace Asv.Avalonia.Map
                         _fromPixelToLatLngCache[zoom].Add(ret, p);
                     }
 
-                    Debug.WriteLine("FromLatLngToPixelCache[" + zoom + "] added " + p + " with " + ret);
+                    Debug.WriteLine(
+                        "FromLatLngToPixelCache[" + zoom + "] added " + p + " with " + ret
+                    );
                 }
 
                 return ret;
@@ -138,7 +131,9 @@ namespace Asv.Avalonia.Map
                         _fromLatLngToPixelCache[zoom].Add(ret, p);
                     }
 
-                    Debug.WriteLine("FromPixelToLatLngCache[" + zoom + "] added " + p + " with " + ret);
+                    Debug.WriteLine(
+                        "FromPixelToLatLngCache[" + zoom + "] added " + p + " with " + ret
+                    );
                 }
 
                 return ret;
@@ -230,7 +225,7 @@ namespace Asv.Avalonia.Map
             long toX = rightBottom.X + padding;
             long y0 = Max(0, topLeft.Y - padding);
             long toY = rightBottom.Y + padding;
-            
+
             var list = new List<GPoint>((int)((toX - x + 1) * (toY - y0 + 1)));
 
             for (; x <= toX; x++)
@@ -262,10 +257,7 @@ namespace Asv.Avalonia.Map
         /// </summary>
         public virtual RectLatLng Bounds
         {
-            get
-            {
-                return RectLatLng.FromLTRB(-180, 90, 180, -90);
-            }
+            get { return RectLatLng.FromLTRB(-180, 90, 180, -90); }
         }
 
         #region -- math functions --
@@ -434,7 +426,9 @@ namespace Asv.Avalonia.Map
             double dLong2InRad = p2.Longitude * (PI / 180);
             double dLongitude = dLong2InRad - dLong1InRad;
             double dLatitude = dLat2InRad - dLat1InRad;
-            double a = Pow(Sin(dLatitude / 2), 2) + Cos(dLat1InRad) * Cos(dLat2InRad) * Pow(Sin(dLongitude / 2), 2);
+            double a =
+                Pow(Sin(dLatitude / 2), 2)
+                + Cos(dLat1InRad) * Cos(dLat2InRad) * Pow(Sin(dLongitude / 2), 2);
             double c = 2 * Atan2(Sqrt(a), Sqrt(1 - a));
             double dDistance = Axis / 1000.0 * c;
             return dDistance;
@@ -459,7 +453,9 @@ namespace Asv.Avalonia.Map
             double longitudeDifference = DegreesToRadians(p2.Longitude - p1.Longitude);
 
             double y = Sin(longitudeDifference) * Cos(latitude2);
-            double x = Cos(latitude1) * Sin(latitude2) - Sin(latitude1) * Cos(latitude2) * Cos(longitudeDifference);
+            double x =
+                Cos(latitude1) * Sin(latitude2)
+                - Sin(latitude1) * Cos(latitude2) * Cos(longitudeDifference);
 
             return (RadiansToDegrees(Atan2(y, x)) + 360) % 360;
         }
@@ -473,8 +469,14 @@ namespace Asv.Avalonia.Map
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="z"></param>
-        public void FromGeodeticToCartesian(double lat, double lng, double height, out double x, out double y,
-            out double z)
+        public void FromGeodeticToCartesian(
+            double lat,
+            double lng,
+            double height,
+            out double x,
+            out double y,
+            out double z
+        )
         {
             lat = PI / 180 * lat;
             lng = PI / 180 * lng;
@@ -496,7 +498,13 @@ namespace Asv.Avalonia.Map
         /// <param name="z"></param>
         /// <param name="lat"></param>
         /// <param name="lng"></param>
-        public void FromCartesianTGeodetic(double x, double y, double z, out double lat, out double lng)
+        public void FromCartesianTGeodetic(
+            double x,
+            double y,
+            double z,
+            out double lat,
+            out double lng
+        )
         {
             double e = Flattening * (2.0 - Flattening);
             lng = Atan2(y, x);
@@ -505,7 +513,10 @@ namespace Asv.Avalonia.Map
             double theta = Atan2(z, p * (1.0 - Flattening));
             double st = Sin(theta);
             double ct = Cos(theta);
-            lat = Atan2(z + e / (1.0 - Flattening) * Axis * st * st * st, p - e * Axis * ct * ct * ct);
+            lat = Atan2(
+                z + e / (1.0 - Flattening) * Axis * st * st * st,
+                p - e * Axis * ct * ct * ct
+            );
 
             lat /= PI / 180;
             lng /= PI / 180;
@@ -551,7 +562,7 @@ namespace Asv.Avalonia.Map
                     lng += (result & 1) != 0 ? ~(result >> 1) : result >> 1;
                 }
 
-                path.Add(new GeoPoint(lat * 1e-5, lng * 1e-5,0));
+                path.Add(new GeoPoint(lat * 1e-5, lng * 1e-5, 0));
             }
 
             return path;

@@ -9,9 +9,7 @@ namespace Asv.Avalonia.Map
     {
         public static readonly ArcGIS_ShadedRelief_World_2D_MapProvider Instance;
 
-        ArcGIS_ShadedRelief_World_2D_MapProvider()
-        {
-        }
+        ArcGIS_ShadedRelief_World_2D_MapProvider() { }
 
         static ArcGIS_ShadedRelief_World_2D_MapProvider()
         {
@@ -20,15 +18,9 @@ namespace Asv.Avalonia.Map
 
         #region GMapProvider Members
 
-        public override Guid Id
-        {
-            get;
-        } = new Guid("A8995FA4-D9D8-415B-87D0-51A7E53A90D4");
+        public override Guid Id { get; } = new Guid("A8995FA4-D9D8-415B-87D0-51A7E53A90D4");
 
-        public override string Name
-        {
-            get;
-        } = "ArcGIS_ShadedRelief_World_2D_Map";
+        public override string Name { get; } = "ArcGIS_ShadedRelief_World_2D_Map";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {
