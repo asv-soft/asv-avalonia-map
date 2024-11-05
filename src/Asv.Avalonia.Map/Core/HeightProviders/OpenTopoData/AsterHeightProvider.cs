@@ -40,7 +40,10 @@ public class AsterHeightProvider : HeightProviderBase
         var content = await response.Content.ReadAsStringAsync();
         var jObject = JObject.Parse(content)["results"];
         if (jObject is null)
+        {
             return pointsCollection;
+        }
+
         for (var i = 0; i < jObject.Count(); i++)
         {
             var elevationString = jObject[i]?["elevation"]?.ToString();

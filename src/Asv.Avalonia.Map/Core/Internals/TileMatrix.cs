@@ -65,7 +65,7 @@ namespace Asv.Avalonia.Map
 
         List<KeyValuePair<GPoint, Tile>> _tmp = new List<KeyValuePair<GPoint, Tile>>(44);
 
-        public void ClearLevelAndPointsNotIn(int zoom, List<DrawTile> list)
+        public void ClearLevelAndPointsNotIn(int zoom, List<DrawTile>? list)
         {
             _lock.AcquireWriterLock();
             try

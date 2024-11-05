@@ -50,7 +50,7 @@ namespace Asv.Avalonia.Map
                 string dir =
                     Path.Combine(CacheFolder, type.ToString()) + Path.DirectorySeparatorChar;
 
-                // precrete dir
+                // preset dir
                 if (!Directory.Exists(dir))
                 {
                     Directory.CreateDirectory(dir);
@@ -58,10 +58,8 @@ namespace Asv.Avalonia.Map
 
                 string file = dir + url + ".txt";
 
-                using (var writer = new StreamWriter(file, false, Encoding.UTF8))
-                {
-                    writer.Write(content);
-                }
+                using var writer = new StreamWriter(file, false, Encoding.UTF8);
+                writer.Write(content);
             }
             catch (Exception ex)
             {
@@ -69,9 +67,9 @@ namespace Asv.Avalonia.Map
             }
         }
 
-        public string GetContent(string url, CacheType type, TimeSpan stayInCache)
+        public string? GetContent(string url, CacheType type, TimeSpan stayInCache)
         {
-            string ret = null;
+            string? ret = null;
 
             try
             {
@@ -86,10 +84,8 @@ namespace Asv.Avalonia.Map
                     var writeTime = File.GetLastWriteTime(file);
                     if (DateTime.Now - writeTime < stayInCache)
                     {
-                        using (var r = new StreamReader(file, Encoding.UTF8))
-                        {
-                            ret = r.ReadToEnd();
-                        }
+                        using var r = new StreamReader(file, Encoding.UTF8);
+                        ret = r.ReadToEnd();
                     }
                     else
                     {
@@ -106,7 +102,7 @@ namespace Asv.Avalonia.Map
             return ret;
         }
 
-        public string GetContent(string url, CacheType type)
+        public string? GetContent(string url, CacheType type)
         {
             return GetContent(url, type, TimeSpan.FromDays(100));
         }

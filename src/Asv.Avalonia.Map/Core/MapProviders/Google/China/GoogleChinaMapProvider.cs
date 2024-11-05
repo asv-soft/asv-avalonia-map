@@ -27,7 +27,7 @@ namespace Asv.Avalonia.Map.China
 
         public override string Name { get; } = "GoogleChinaMap";
 
-        public override PureImage GetTileImage(GPoint pos, int zoom)
+        public override PureImage? GetTileImage(GPoint pos, int zoom)
         {
             string url = MakeTileImageUrl(pos, zoom, LanguageStr);
 

@@ -199,15 +199,11 @@ namespace Asv.Avalonia.Map
             message.Append("\r\n");
 
             // add content
-            if (_requestContentBuffer != null && _requestContentBuffer.Length > 0)
+            if (_requestContentBuffer.Length > 0)
             {
-                using (var stream = new MemoryStream(_requestContentBuffer, false))
-                {
-                    using (var reader = new StreamReader(stream))
-                    {
-                        message.Append(reader.ReadToEnd());
-                    }
-                }
+                using var stream = new MemoryStream(_requestContentBuffer, false);
+                using var reader = new StreamReader(stream);
+                message.Append(reader.ReadToEnd());
             }
 
             return message.ToString();
@@ -215,7 +211,7 @@ namespace Asv.Avalonia.Map
 
         private SocksHttpWebResponse InternalGetResponse()
         {
-            MemoryStream data = null;
+            MemoryStream? data = null;
             string header = string.Empty;
 
             using (
@@ -228,7 +224,12 @@ namespace Asv.Avalonia.Map
             {
                 var proxyUri = Proxy.GetProxy(RequestUri);
                 var ipAddress = GetProxyIpAddress(proxyUri);
-                socksConnection.ProxyEndPoint = new IPEndPoint(ipAddress, proxyUri.Port);
+
+                if (proxyUri is not null)
+                {
+                    socksConnection.ProxyEndPoint = new IPEndPoint(ipAddress, proxyUri.Port);
+                }
+
                 socksConnection.ProxyType = ProxyTypes.Socks5;
 
                 // open connection
@@ -297,25 +298,24 @@ namespace Asv.Avalonia.Map
             return new SocksHttpWebResponse(data, header);
         }
 
-        private static IPAddress GetProxyIpAddress(Uri proxyUri)
+        private static IPAddress GetProxyIpAddress(Uri? proxyUri)
         {
-            IPAddress ipAddress;
-            if (!IPAddress.TryParse(proxyUri.Host, out ipAddress))
+            if (IPAddress.TryParse(proxyUri?.Host, out var ipAddress))
             {
-                try
-                {
-                    return Dns.GetHostEntry(proxyUri.Host).AddressList[0];
-                }
-                catch (Exception e)
-                {
-                    throw new InvalidOperationException(
-                        string.Format(
-                            "Unable to resolve proxy hostname '{0}' to a valid IP address.",
-                            proxyUri.Host
-                        ),
-                        e
-                    );
-                }
+                return ipAddress;
+            }
+
+            try
+            {
+                ArgumentNullException.ThrowIfNull(proxyUri);
+                return Dns.GetHostEntry(proxyUri.Host).AddressList[0];
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException(
+                    $"Unable to resolve proxy hostname '{proxyUri!.Host}' to a valid IP address.",
+                    e
+                );
             }
 
             return ipAddress;
@@ -346,7 +346,7 @@ namespace Asv.Avalonia.Map
         #region Member Variables
 
         WebHeaderCollection _httpResponseHeaders;
-        MemoryStream data;
+        MemoryStream? data;
 
         public override long ContentLength { get; set; }
 
@@ -356,7 +356,7 @@ namespace Asv.Avalonia.Map
 
         #region Constructors
 
-        public SocksHttpWebResponse(MemoryStream data, string headers)
+        public SocksHttpWebResponse(MemoryStream? data, string headers)
         {
             this.data = data;
 
@@ -377,6 +377,7 @@ namespace Asv.Avalonia.Map
                         {
                             ContentType = headerEntry[1];
                         }
+
                         break;
 
                     case "Content-Length":
@@ -386,6 +387,7 @@ namespace Asv.Avalonia.Map
                                 ContentLength = r;
                             }
                         }
+
                         break;
                 }
             }
@@ -395,7 +397,7 @@ namespace Asv.Avalonia.Map
 
         #region WebResponse Members
 
-        public override Stream GetResponseStream()
+        public override Stream? GetResponseStream()
         {
             return data != null ? data : Stream.Null;
         }

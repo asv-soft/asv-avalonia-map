@@ -8,11 +8,11 @@ namespace Asv.Avalonia.Map
     /// </summary>
     public abstract class PureImageProxy
     {
-        public abstract PureImage FromStream(Stream stream);
+        public abstract PureImage? FromStream(Stream stream);
 
         public abstract bool Save(Stream stream, PureImage image);
 
-        public PureImage FromArray(byte[] data)
+        public PureImage? FromArray(byte[] data)
         {
             var m = new MemoryStream(data, 0, data.Length, false, true);
             var pi = FromStream(m);
@@ -51,7 +51,7 @@ namespace Asv.Avalonia.Map
 
         private DefaultImageProxy() { }
 
-        public override PureImage FromStream(Stream stream)
+        public override PureImage? FromStream(Stream stream)
         {
             return new DefaultImage();
         }

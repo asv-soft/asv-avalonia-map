@@ -1,4 +1,4 @@
-﻿<RuleSet Name="Rules for Asv.Audio project" Description="Rule set for StyleCopAnalyzer" ToolsVersion="14.0">
+﻿<RuleSet Name="Rules for Asv.Avalonia.Map project" Description="Rule set for StyleCopAnalyzer" ToolsVersion="14.0">
     <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
         <!-->         None            <-->
         <Rule Id="SA0001" Action="None" />

@@ -41,7 +41,7 @@ namespace Asv.Avalonia.Map
     internal sealed class Socks4Handler : SocksHandler
     {
         /// <summary>
-        ///     Initilizes a new instance of the SocksHandler class.
+        /// Initializes a new instance of the <see cref="Socks4Handler"/> class.
         /// </summary>
         /// <param name="server">The socket connection with the proxy server.</param>
         /// <param name="user">The username to use when authenticating with the server.</param>
@@ -63,10 +63,13 @@ namespace Asv.Avalonia.Map
         /// <exception cref="ArgumentException"><c>port</c> is invalid.</exception>
         private byte[] GetHostPortBytes(string host, int port)
         {
-            if (host == null)
-                throw new ArgumentNullException();
+            ArgumentNullException.ThrowIfNull(host);
+
             if (port <= 0 || port > 65535)
+            {
                 throw new ArgumentException();
+            }
+
             byte[] connect = new byte[10 + Username.Length + host.Length];
             connect[0] = 4;
             connect[1] = 1;
@@ -88,8 +91,8 @@ namespace Asv.Avalonia.Map
         /// <exception cref="ArgumentNullException"><c>remoteEP</c> is null.</exception>
         private byte[] GetEndPointBytes(IPEndPoint remoteEP)
         {
-            if (remoteEP == null)
-                throw new ArgumentNullException();
+            ArgumentNullException.ThrowIfNull(remoteEP);
+
             byte[] connect = new byte[9 + Username.Length];
             connect[0] = 4;
             connect[1] = 1;
@@ -139,10 +142,13 @@ namespace Asv.Avalonia.Map
         /// <exception cref="ObjectDisposedException">The Socket has been closed.</exception>
         private void Negotiate(byte[] connect)
         {
-            if (connect == null)
-                throw new ArgumentNullException();
+            ArgumentNullException.ThrowIfNull(connect);
+
             if (connect.Length < 2)
+            {
                 throw new ArgumentException();
+            }
+
             Server.Send(connect);
             byte[] buffer = ReadBytes(8);
             if (buffer[1] != 90)
@@ -271,7 +277,9 @@ namespace Asv.Avalonia.Map
                 if (Received == 8)
                 {
                     if (Buffer[1] == 90)
+                    {
                         ProtocolComplete(null);
+                    }
                     else
                     {
                         Server.Close();

@@ -12,7 +12,7 @@ namespace Asv.Avalonia.Map
         public static readonly Tile Empty = new Tile();
 
         GPoint _pos;
-        PureImage[] _overlays;
+        PureImage?[] _overlays;
         long _overlaysCount;
 
         public readonly bool NotEmpty;
@@ -26,7 +26,7 @@ namespace Asv.Avalonia.Map
             _overlaysCount = 0;
         }
 
-        public IEnumerable<PureImage> Overlays
+        public IEnumerable<PureImage?> Overlays
         {
             get
             {
@@ -37,7 +37,7 @@ namespace Asv.Avalonia.Map
             }
         }
 
-        internal void AddOverlay(PureImage i)
+        internal void AddOverlay(PureImage? i)
         {
             if (_overlays == null)
             {

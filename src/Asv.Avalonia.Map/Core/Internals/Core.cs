@@ -50,10 +50,10 @@ namespace Asv.Avalonia.Map
 
         internal bool FillEmptyTiles = true;
 
-        public TileMatrix Matrix = new TileMatrix();
+        public TileMatrix? Matrix = new TileMatrix();
 
-        internal List<DrawTile> TileDrawingList = new List<DrawTile>();
-        internal FastReaderWriterLock TileDrawingListLock = new FastReaderWriterLock();
+        internal List<DrawTile>? TileDrawingList = new List<DrawTile>();
+        internal FastReaderWriterLock? TileDrawingListLock = new FastReaderWriterLock();
 
 #if !NET46
         public readonly Stack<LoadTask> TileLoadQueue = new Stack<LoadTask>();
@@ -112,13 +112,16 @@ namespace Asv.Avalonia.Map
                     {
                         CancelAsyncTasks();
 
-                        Matrix.ClearLevelsBelow(_zoom - LevelsKeepInMemory);
-                        Matrix.ClearLevelsAbove(_zoom + LevelsKeepInMemory);
+                        Matrix?.ClearLevelsBelow(_zoom - LevelsKeepInMemory);
+                        Matrix?.ClearLevelsAbove(_zoom + LevelsKeepInMemory);
 
-                        lock (FailedLoads)
+                        if (FailedLoads is not null)
                         {
-                            FailedLoads.Clear();
-                            _raiseEmptyTileError = true;
+                            lock (FailedLoads)
+                            {
+                                FailedLoads.Clear();
+                                _raiseEmptyTileError = true;
+                            }
                         }
 
                         GoToCurrentPositionOnZoom();
@@ -160,7 +163,9 @@ namespace Asv.Avalonia.Map
                     }
 
                     if (OnCurrentPositionChanged != null)
+                    {
                         OnCurrentPositionChanged(_position);
+                    }
                 }
             }
         }
@@ -215,11 +220,6 @@ namespace Asv.Avalonia.Map
                             MinZoom = _provider.MinZoom;
                         }
 
-                        //if(provider.MaxZoom.HasValue && maxZoom > provider.MaxZoom)
-                        //{
-                        //   maxZoom = provider.MaxZoom.Value;
-                        //}
-
                         ZoomToArea = true;
 
                         if (_provider.Area.HasValue && !_provider.Area.Value.Contains(Position))
@@ -242,7 +242,7 @@ namespace Asv.Avalonia.Map
         /// <summary>
         ///     sets zoom to max to fit rect
         /// </summary>
-        /// <param name="rect"></param>
+        /// <param name="rect">.</param>
         /// <returns></returns>
         public bool SetZoomToFitRect(RectLatLng rect)
         {
@@ -250,8 +250,8 @@ namespace Asv.Avalonia.Map
             if (mmaxZoom > 0)
             {
                 var center = new GeoPoint(
-                    rect.Lat - rect.HeightLat / 2,
-                    rect.Lng + rect.WidthLng / 2,
+                    rect.Lat - (rect.HeightLat / 2),
+                    rect.Lng + (rect.WidthLng / 2),
                     0
                 );
                 Position = center;
@@ -353,9 +353,9 @@ namespace Asv.Avalonia.Map
 
         internal static int Instances;
 
-        BackgroundWorker _invalidator;
+        BackgroundWorker? _invalidator;
 
-        public BackgroundWorker OnMapOpen()
+        public BackgroundWorker? OnMapOpen()
         {
             if (!IsStarted)
             {
@@ -376,11 +376,6 @@ namespace Asv.Avalonia.Map
                 _invalidator.WorkerReportsProgress = true;
                 _invalidator.DoWork += InvalidatorWatch;
                 _invalidator.RunWorkerAsync();
-
-                //if(x == 1)
-                //{
-                // first control shown
-                //}
             }
 
             return _invalidator;
@@ -398,19 +393,23 @@ namespace Asv.Avalonia.Map
         {
             var w = sender as BackgroundWorker;
 
+            ArgumentNullException.ThrowIfNull(w);
+
             var span = TimeSpan.FromMilliseconds(111);
             int spanMs = (int)span.TotalMilliseconds;
-            bool skiped = false;
+            bool isSkipped = false;
             TimeSpan delta;
             DateTime now;
 
             while (
                 Refresh != null
-                && (!skiped && Refresh.WaitOne() || Refresh.WaitOne(spanMs, false) || true)
+                && (!isSkipped && Refresh.WaitOne() || Refresh.WaitOne(spanMs, false) || true)
             )
             {
                 if (w.CancellationPending)
+                {
                     break;
+                }
 
                 now = DateTime.Now;
                 lock (InvalidationLock)
@@ -425,14 +424,14 @@ namespace Asv.Avalonia.Map
                         LastInvalidation = now;
                     }
 
-                    skiped = false;
+                    isSkipped = false;
 
                     w.ReportProgress(1);
                     Debug.WriteLine("Invalidate delta: " + (int)delta.TotalMilliseconds + "ms");
                 }
                 else
                 {
-                    skiped = true;
+                    isSkipped = true;
                 }
             }
         }
@@ -456,17 +455,17 @@ namespace Asv.Avalonia.Map
             {
                 int diag = (int)
                     Math.Round(
-                        Math.Sqrt(Width * Width + Height * Height)
+                        Math.Sqrt((Width * Width) + (Height * Height))
                             / Provider.Projection.TileSize.Width,
                         MidpointRounding.AwayFromZero
                     );
-                _sizeOfMapArea.Width = 1 + diag / 2;
-                _sizeOfMapArea.Height = 1 + diag / 2;
+                _sizeOfMapArea.Width = 1 + (diag / 2);
+                _sizeOfMapArea.Height = 1 + (diag / 2);
             }
             else
             {
-                _sizeOfMapArea.Width = 1 + Width / Provider.Projection.TileSize.Width / 2;
-                _sizeOfMapArea.Height = 1 + Height / Provider.Projection.TileSize.Height / 2;
+                _sizeOfMapArea.Width = 1 + (Width / Provider.Projection.TileSize.Width / 2);
+                _sizeOfMapArea.Height = 1 + (Height / Provider.Projection.TileSize.Height / 2);
             }
 
             Debug.WriteLine(
@@ -503,8 +502,8 @@ namespace Asv.Avalonia.Map
         /// <summary>
         ///     gets lat/lng from local control coordinates
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
+        /// <param name="x">.</param>
+        /// <param name="y">.</param>
         /// <returns></returns>
         public GeoPoint FromLocalToLatLng(long x, long y)
         {
@@ -518,7 +517,7 @@ namespace Asv.Avalonia.Map
         /// <summary>
         ///     return local coordinates from lat/lng
         /// </summary>
-        /// <param name="latlng"></param>
+        /// <param name="latlng">.</param>
         /// <returns></returns>
         public GPoint FromLatLngToLocal(GeoPoint latlng)
         {
@@ -531,7 +530,7 @@ namespace Asv.Avalonia.Map
         /// <summary>
         ///     gets max zoom level to fit rectangle
         /// </summary>
-        /// <param name="rect"></param>
+        /// <param name="rect">.</param>
         /// <returns></returns>
         public int GetMaxZoomToFitRect(RectLatLng rect)
         {
@@ -565,7 +564,7 @@ namespace Asv.Avalonia.Map
         /// <summary>
         ///     initiates map dragging
         /// </summary>
-        /// <param name="pt"></param>
+        /// <param name="pt">.</param>
         public void BeginDrag(GPoint pt)
         {
             _dragPoint.X = pt.X - RenderOffset.X;
@@ -574,14 +573,14 @@ namespace Asv.Avalonia.Map
         }
 
         /// <summary>
-        ///     ends map dragging
+        ///     ends map dragging.
         /// </summary>
         public void EndDrag()
         {
             IsDragging = false;
             MouseDown = GPoint.Empty;
 
-            Refresh.Set();
+            Refresh?.Set();
         }
 
         /// <summary>
@@ -598,15 +597,18 @@ namespace Asv.Avalonia.Map
 
                 CancelAsyncTasks();
 
-                Matrix.ClearAllLevels();
+                Matrix?.ClearAllLevels();
 
-                lock (FailedLoads)
+                if (FailedLoads is not null)
                 {
-                    FailedLoads.Clear();
-                    _raiseEmptyTileError = true;
+                    lock (FailedLoads)
+                    {
+                        FailedLoads.Clear();
+                        _raiseEmptyTileError = true;
+                    }
                 }
 
-                Refresh.Set();
+                Refresh?.Set();
 
                 UpdateBounds();
             }
@@ -653,9 +655,6 @@ namespace Asv.Avalonia.Map
             RenderOffset = GPoint.Empty;
             _dragPoint = GPoint.Empty;
 
-            //var dd = new GPoint(-(CurrentPositionGPixel.X - Width / 2), -(CurrentPositionGPixel.Y - Height / 2));
-            //dd.Offset(compensationOffset);
-
             var d = new GPoint(Width / 2, Height / 2);
 
             Drag(d);
@@ -680,8 +679,8 @@ namespace Asv.Avalonia.Map
                 if (MouseWheelZoomType != MouseWheelZoomType.MousePositionWithoutCenter)
                 {
                     var pt = new GPoint(
-                        -(_positionPixel.X - Width / 2),
-                        -(_positionPixel.Y - Height / 2)
+                        -(_positionPixel.X - (Width / 2)),
+                        -(_positionPixel.Y - (Height / 2))
                     );
                     pt.Offset(CompensationOffset);
                     RenderOffset.X = pt.X - _dragPoint.X;
@@ -700,8 +699,8 @@ namespace Asv.Avalonia.Map
                 MouseLastZoom = GPoint.Empty;
 
                 var pt = new GPoint(
-                    -(_positionPixel.X - Width / 2),
-                    -(_positionPixel.Y - Height / 2)
+                    -(_positionPixel.X - (Width / 2)),
+                    -(_positionPixel.Y - (Height / 2))
                 );
                 pt.Offset(CompensationOffset);
                 RenderOffset.X = pt.X - _dragPoint.X;
@@ -714,7 +713,7 @@ namespace Asv.Avalonia.Map
         /// <summary>
         ///     darg map by offset in pixels
         /// </summary>
-        /// <param name="offset"></param>
+        /// <param name="offset">.</param>
         public void DragOffset(GPoint offset)
         {
             RenderOffset.Offset(offset);
@@ -744,7 +743,7 @@ namespace Asv.Avalonia.Map
         /// <summary>
         ///     drag map
         /// </summary>
-        /// <param name="pt"></param>
+        /// <param name="pt">.</param>
         public void Drag(GPoint pt)
         {
             RenderOffset.X = pt.X - _dragPoint.X;
@@ -795,7 +794,7 @@ namespace Asv.Avalonia.Map
 
         bool _raiseEmptyTileError;
 
-        internal Dictionary<LoadTask, Exception> FailedLoads = new Dictionary<LoadTask, Exception>(
+        internal Dictionary<LoadTask, Exception>? FailedLoads = new Dictionary<LoadTask, Exception>(
             new LoadTaskComparer()
         );
 
@@ -901,8 +900,7 @@ namespace Asv.Avalonia.Map
 
                         if (
                             !IsStarted
-                            || false
-                                == Monitor.Wait(TileLoadQueue, WaitForTileLoadThreadTimeout, false)
+                            || !Monitor.Wait(TileLoadQueue, WaitForTileLoadThreadTimeout, false)
                             || !IsStarted
                         )
                         {
@@ -955,8 +953,8 @@ namespace Asv.Avalonia.Map
                     return;
                 }
 
-                var m = task.Core.Matrix.GetTileWithReadLock(task.Zoom, task.Pos);
-                if (!m.NotEmpty)
+                var m = task.Core.Matrix?.GetTileWithReadLock(task.Zoom, task.Pos);
+                if (!m.HasValue)
                 {
                     Debug.WriteLine(ctid + " - try load: " + task);
 
@@ -967,8 +965,8 @@ namespace Asv.Avalonia.Map
                         int retry = 0;
                         do
                         {
-                            PureImage img = null;
-                            Exception ex = null;
+                            PureImage? img = null;
+                            Exception? ex = null;
 
                             if (
                                 task.Zoom >= task.Core._provider.MinZoom
@@ -1066,8 +1064,8 @@ namespace Asv.Avalonia.Map
                                 if (img != null)
                                 {
                                     // offsets in quadrant
-                                    long xOff = Math.Abs(task.Pos.X - parentTile.X * ix);
-                                    long yOff = Math.Abs(task.Pos.Y - parentTile.Y * ix);
+                                    long xOff = Math.Abs(task.Pos.X - (parentTile.X * ix));
+                                    long yOff = Math.Abs(task.Pos.Y - (parentTile.Y * ix));
 
                                     img.IsParent = true;
                                     img.Ix = ix;
@@ -1089,49 +1087,46 @@ namespace Asv.Avalonia.Map
                                 Debug.WriteLine(
                                     ctid
                                         + " - tile loaded: "
-                                        + img.Data.Length / 1024
+                                        + (img.Data.Length / 1024)
                                         + "KB, "
                                         + task
                                 );
                                 {
                                     t.AddOverlay(img);
                                 }
+
                                 break;
                             }
-                            else
-                            {
-                                if (ex != null && task.Core.FailedLoads != null)
-                                {
-                                    lock (task.Core.FailedLoads)
-                                    {
-                                        if (!task.Core.FailedLoads.ContainsKey(task))
-                                        {
-                                            task.Core.FailedLoads.Add(task, ex);
 
-                                            if (task.Core.OnEmptyTileError != null)
+                            if (ex != null && task.Core.FailedLoads != null)
+                            {
+                                lock (task.Core.FailedLoads)
+                                {
+                                    if (task.Core.FailedLoads.TryAdd(task, ex))
+                                    {
+                                        if (task.Core.OnEmptyTileError != null)
+                                        {
+                                            if (!task.Core._raiseEmptyTileError)
                                             {
-                                                if (!task.Core._raiseEmptyTileError)
-                                                {
-                                                    task.Core._raiseEmptyTileError = true;
-                                                    task.Core.OnEmptyTileError(task.Zoom, task.Pos);
-                                                }
+                                                task.Core._raiseEmptyTileError = true;
+                                                task.Core.OnEmptyTileError(task.Zoom, task.Pos);
                                             }
                                         }
                                     }
                                 }
+                            }
 
-                                if (task.Core.RetryLoadTile > 0)
+                            if (task.Core.RetryLoadTile > 0)
+                            {
+                                Debug.WriteLine(
+                                    ctid
+                                        + " - ProcessLoadTask: "
+                                        + task
+                                        + " -> empty tile, retry "
+                                        + retry
+                                );
                                 {
-                                    Debug.WriteLine(
-                                        ctid
-                                            + " - ProcessLoadTask: "
-                                            + task
-                                            + " -> empty tile, retry "
-                                            + retry
-                                    );
-                                    {
-                                        Thread.Sleep(1111);
-                                    }
+                                    Thread.Sleep(1111);
                                 }
                             }
                         } while (++retry < task.Core.RetryLoadTile);
@@ -1139,7 +1134,7 @@ namespace Asv.Avalonia.Map
 
                     if (t.HasAnyOverlays && task.Core.IsStarted)
                     {
-                        task.Core.Matrix.SetTile(t);
+                        task.Core.Matrix?.SetTile(t);
                     }
                     else
                     {
@@ -1174,14 +1169,14 @@ namespace Asv.Avalonia.Map
             {
                 GMaps.Instance.MemoryCache.RemoveOverload();
 
-                TileDrawingListLock.AcquireReaderLock();
+                TileDrawingListLock?.AcquireReaderLock();
                 try
                 {
-                    Matrix.ClearLevelAndPointsNotIn(Zoom, TileDrawingList);
+                    Matrix?.ClearLevelAndPointsNotIn(Zoom, TileDrawingList);
                 }
                 finally
                 {
-                    TileDrawingListLock.ReleaseReaderLock();
+                    TileDrawingListLock?.ReleaseReaderLock();
                 }
             }
 
@@ -1208,7 +1203,7 @@ namespace Asv.Avalonia.Map
             }
         }
 
-        public AutoResetEvent Refresh = new AutoResetEvent(false);
+        public AutoResetEvent? Refresh = new AutoResetEvent(false);
 
         public bool UpdatingBounds;
 
@@ -1224,12 +1219,12 @@ namespace Asv.Avalonia.Map
 
             UpdatingBounds = true;
 
-            TileDrawingListLock.AcquireWriterLock();
+            TileDrawingListLock?.AcquireWriterLock();
             try
             {
                 #region -- find tiles around --
 
-                TileDrawingList.Clear();
+                TileDrawingList?.Clear();
 
                 for (
                     long i = (int)Math.Floor(-_sizeOfMapArea.Width * ScaleX),
@@ -1275,10 +1270,20 @@ namespace Asv.Avalonia.Map
                                 PosXY = p,
                                 PosPixel = new GPoint(p.X * TileRect.Width, p.Y * TileRect.Height),
                                 DistanceSqr =
-                                    (CenterTileXYLocation.X - p.X) * (CenterTileXYLocation.X - p.X)
-                                    + (CenterTileXYLocation.Y - p.Y)
-                                        * (CenterTileXYLocation.Y - p.Y),
+                                    (
+                                        (CenterTileXYLocation.X - p.X)
+                                        * (CenterTileXYLocation.X - p.X)
+                                    )
+                                    + (
+                                        (CenterTileXYLocation.Y - p.Y)
+                                        * (CenterTileXYLocation.Y - p.Y)
+                                    ),
                             };
+
+                            if (TileDrawingList is null)
+                            {
+                                return;
+                            }
 
                             if (!TileDrawingList.Contains(dt))
                             {
@@ -1294,14 +1299,14 @@ namespace Asv.Avalonia.Map
                 }
                 else
                 {
-                    TileDrawingList.Sort();
+                    TileDrawingList?.Sort();
                 }
 
                 #endregion
             }
             finally
             {
-                TileDrawingListLock.ReleaseWriterLock();
+                TileDrawingListLock?.ReleaseWriterLock();
             }
 
 #if NET46
@@ -1311,7 +1316,7 @@ namespace Asv.Avalonia.Map
             try
             {
 #endif
-                TileDrawingListLock.AcquireReaderLock();
+                TileDrawingListLock?.AcquireReaderLock();
                 try
                 {
                     foreach (var p in TileDrawingList)
@@ -1446,14 +1451,14 @@ namespace Asv.Avalonia.Map
                     FailedLoads = null;
                 }
 
-                TileDrawingListLock.AcquireWriterLock();
+                TileDrawingListLock?.AcquireWriterLock();
                 try
                 {
-                    TileDrawingList.Clear();
+                    TileDrawingList?.Clear();
                 }
                 finally
                 {
-                    TileDrawingListLock.ReleaseWriterLock();
+                    TileDrawingListLock?.ReleaseWriterLock();
                 }
 
 #if NET46

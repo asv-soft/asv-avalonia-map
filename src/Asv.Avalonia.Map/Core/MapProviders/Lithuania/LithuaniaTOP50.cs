@@ -45,7 +45,7 @@ namespace Asv.Avalonia.Map
             }
         }
 
-        public override PureImage GetTileImage(GPoint pos, int zoom)
+        public override PureImage? GetTileImage(GPoint pos, int zoom)
         {
             return null;
         }

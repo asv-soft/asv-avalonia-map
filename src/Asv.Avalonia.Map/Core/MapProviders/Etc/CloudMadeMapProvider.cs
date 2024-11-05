@@ -58,7 +58,7 @@ namespace Asv.Avalonia.Map
             }
         }
 
-        public override PureImage GetTileImage(GPoint pos, int zoom)
+        public override PureImage? GetTileImage(GPoint pos, int zoom)
         {
             throw new NotImplementedException();
         }
@@ -675,7 +675,7 @@ namespace Asv.Avalonia.Map
 
         public override string Name { get; } = "CloudMade, Demo";
 
-        public override PureImage GetTileImage(GPoint pos, int zoom)
+        public override PureImage? GetTileImage(GPoint pos, int zoom)
         {
             string url = MakeTileImageUrl(pos, zoom, LanguageStr);
 

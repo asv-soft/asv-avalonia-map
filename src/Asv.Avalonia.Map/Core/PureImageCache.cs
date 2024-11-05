@@ -16,7 +16,7 @@ namespace Asv.Avalonia.Map
         /// <param name="pos">The position of the image.</param>
         /// <param name="zoom">The zoom level of the image.</param>
         /// <returns>True if the image was successfully stored in the cache; otherwise, false.</returns>
-        bool PutImageToCache(byte[] tile, int type, GPoint pos, int zoom);
+        bool PutImageToCache(byte[]? tile, int type, GPoint pos, int zoom);
 
         /// <summary>
         /// Gets the image from the cache based on the specified parameters.
@@ -25,7 +25,7 @@ namespace Asv.Avalonia.Map
         /// <param name="pos">The position of the image.</param>
         /// <param name="zoom">The zoom level of the image.</param>
         /// <returns>The requested PureImage from the cache.</returns>
-        PureImage GetImageFromCache(int type, GPoint pos, int zoom);
+        PureImage? GetImageFromCache(int type, GPoint pos, int zoom);
 
         /// <summary>
         /// Deletes old tiles older than the specified date from the specified provider or all providers.

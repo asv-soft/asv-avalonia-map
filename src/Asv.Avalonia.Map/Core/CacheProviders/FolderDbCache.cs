@@ -12,22 +12,25 @@ namespace Asv.Avalonia.Map
         public FolderDbCache(string rootFolder)
         {
             _rootFolder = rootFolder;
-            if (Directory.Exists(_rootFolder) == false)
+            if (!Directory.Exists(_rootFolder))
+            {
                 Directory.CreateDirectory(_rootFolder);
+            }
         }
 
         public bool PutImageToCache(byte[] tile, int type, GPoint pos, int zoom)
         {
             var fileName = GetFileName(type, zoom, pos.X, pos.Y, out var dir);
-            if (Directory.Exists(dir) == false)
+            if (!Directory.Exists(dir))
             {
-                Directory.CreateDirectory(dir);
-                // if directory not exist, file not exist too
+                Directory.CreateDirectory(dir); // if directory does not exist, file does not exist too
             }
             else
             {
                 if (File.Exists(fileName))
+                {
                     File.Delete(fileName);
+                }
             }
 
             File.WriteAllBytes(fileName, tile);
@@ -40,11 +43,14 @@ namespace Asv.Avalonia.Map
             return Path.Combine(dir, $"X_{posX}_Y_{posY}.jpg");
         }
 
-        public PureImage GetImageFromCache(int type, GPoint pos, int zoom)
+        public PureImage? GetImageFromCache(int type, GPoint pos, int zoom)
         {
             var fileName = GetFileName(type, zoom, pos.X, pos.Y, out var dir);
-            if (File.Exists(fileName) == false)
+            if (!File.Exists(fileName))
+            {
                 return null;
+            }
+
             using var file = File.OpenRead(fileName);
             var m = new MemoryStream();
             file.CopyTo(m);
@@ -64,7 +70,7 @@ namespace Asv.Avalonia.Map
 
         public int DeleteOlderThan(DateTime date, int? type)
         {
-            //TODO: delete files by creation time
+            // TODO: delete files by creation time
             return 0;
         }
     }

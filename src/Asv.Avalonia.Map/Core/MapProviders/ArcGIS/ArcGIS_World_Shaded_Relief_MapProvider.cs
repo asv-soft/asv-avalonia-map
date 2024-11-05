@@ -22,7 +22,7 @@ namespace Asv.Avalonia.Map
 
         public override string Name { get; } = "ArcGIS_World_Shaded_Relief_Map";
 
-        public override PureImage GetTileImage(GPoint pos, int zoom)
+        public override PureImage? GetTileImage(GPoint pos, int zoom)
         {
             string url = MakeTileImageUrl(pos, zoom, LanguageStr);
 

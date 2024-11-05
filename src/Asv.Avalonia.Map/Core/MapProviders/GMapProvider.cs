@@ -319,7 +319,7 @@ namespace Asv.Avalonia.Map
         /// <param name="pos"></param>
         /// <param name="zoom"></param>
         /// <returns></returns>
-        public abstract PureImage GetTileImage(GPoint pos, int zoom);
+        public abstract PureImage? GetTileImage(GPoint pos, int zoom);
 
         static readonly List<GMapProvider> MapProviders = new List<GMapProvider>();
 
@@ -486,9 +486,9 @@ namespace Asv.Avalonia.Map
 
         protected virtual void InitializeWebRequest(WebRequest request) { }
 
-        protected PureImage GetTileImageUsingHttp(string url)
+        protected PureImage? GetTileImageUsingHttp(string url)
         {
-            PureImage ret = null;
+            PureImage? ret = null;
 
             var request =
                 IsSocksProxy ? SocksHttpWebRequest.Create(url)
@@ -669,12 +669,12 @@ namespace Asv.Avalonia.Map
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        protected virtual PureImage GetTileImageFromFile(string fileName)
+        protected virtual PureImage? GetTileImageFromFile(string fileName)
         {
             return GetTileImageFromArray(File.ReadAllBytes(fileName));
         }
 
-        protected virtual PureImage GetTileImageFromArray(byte[] data)
+        protected virtual PureImage? GetTileImageFromArray(byte[] data)
         {
             return TileImageProxy.FromArray(data);
         }
@@ -743,7 +743,7 @@ namespace Asv.Avalonia.Map
             get { return null; }
         }
 
-        public override PureImage GetTileImage(GPoint pos, int zoom)
+        public override PureImage? GetTileImage(GPoint pos, int zoom)
         {
             return null;
         }

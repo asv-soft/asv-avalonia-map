@@ -65,7 +65,7 @@ namespace Asv.Avalonia.Map
 
         public static readonly MapImageProxy Instance = new MapImageProxy();
 
-        public override PureImage FromStream(Stream stream)
+        public override PureImage? FromStream(Stream stream)
         {
             if (stream != null)
             {

@@ -286,7 +286,7 @@ namespace Asv.Avalonia.Map
 
                         if (t.NotEmpty)
                         {
-                            foreach (MapImage img in t.Overlays)
+                            foreach (MapImage? img in t.Overlays)
                             {
                                 if (img != null && img.Img != null)
                                 {

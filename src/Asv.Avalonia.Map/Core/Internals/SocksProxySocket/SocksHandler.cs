@@ -37,7 +37,7 @@ namespace Asv.Avalonia.Map
     /// <summary>
     ///     References the callback method to be called when the protocol negotiation is completed.
     /// </summary>
-    internal delegate void HandShakeComplete(Exception error);
+    internal delegate void HandShakeComplete(Exception? error);
 
     /// <summary>
     ///     Implements a specific version of the SOCKS protocol. This is an abstract class; it must be inherited.
@@ -45,7 +45,7 @@ namespace Asv.Avalonia.Map
     internal abstract class SocksHandler
     {
         /// <summary>
-        ///     Initilizes a new instance of the SocksHandler class.
+        /// Initializes a new instance of the <see cref="SocksHandler"/> class.
         /// </summary>
         /// <param name="server">The socket connection with the proxy server.</param>
         /// <param name="user">The username to use when authenticating with the server.</param>
@@ -80,7 +80,10 @@ namespace Asv.Avalonia.Map
         protected byte[] ReadBytes(int count)
         {
             if (count <= 0)
+            {
                 throw new ArgumentException();
+            }
+
             var buffer = new byte[count];
             int received = 0;
             while (received != count)
@@ -98,13 +101,8 @@ namespace Asv.Avalonia.Map
         /// <exception cref="ArgumentNullException">The specified value is null.</exception>
         protected Socket Server
         {
-            get { return _server; }
-            set
-            {
-                if (value == null)
-                    throw new ArgumentNullException();
-                _server = value;
-            }
+            get => _server;
+            set => _server = value ?? throw new ArgumentNullException();
         }
 
         /// <summary>
@@ -114,8 +112,8 @@ namespace Asv.Avalonia.Map
         /// <exception cref="ArgumentNullException">The specified value is null.</exception>
         protected string Username
         {
-            get { return _username; }
-            set { _username = value ?? throw new ArgumentNullException(); }
+            get => _username;
+            set => _username = value ?? throw new ArgumentNullException();
         }
 
         /// <summary>

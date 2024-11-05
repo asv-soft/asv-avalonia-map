@@ -43,7 +43,7 @@ namespace Asv.Avalonia.Map
             get { return MercatorProjection.Instance; }
         }
 
-        public override PureImage GetTileImage(GPoint pos, int zoom)
+        public override PureImage? GetTileImage(GPoint pos, int zoom)
         {
             string url = MakeTileImageUrl(pos, zoom, LanguageStr);
 

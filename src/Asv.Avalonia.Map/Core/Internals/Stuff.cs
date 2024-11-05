@@ -27,7 +27,7 @@ namespace Asv.Avalonia.Map
 
         public static readonly Random Random = new Random();
 
-        public static void Shuffle<T>(List<T> deck)
+        public static void Shuffle<T>(List<T>? deck)
         {
             int n = deck.Count;
 

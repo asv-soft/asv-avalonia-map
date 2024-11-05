@@ -50,7 +50,7 @@ namespace Asv.Avalonia.Map
             get { throw new NotImplementedException(); }
         }
 
-        public override PureImage GetTileImage(GPoint pos, int zoom)
+        public override PureImage? GetTileImage(GPoint pos, int zoom)
         {
             throw new NotImplementedException();
         }
@@ -619,7 +619,7 @@ namespace Asv.Avalonia.Map
             }
         }
 
-        public override PureImage GetTileImage(GPoint pos, int zoom)
+        public override PureImage? GetTileImage(GPoint pos, int zoom)
         {
             string url = MakeTileImageUrl(pos, zoom, string.Empty);
 

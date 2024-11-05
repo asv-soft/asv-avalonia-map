@@ -41,12 +41,11 @@ namespace Asv.Avalonia.Map
     {
         /// <summary>Initializes the internal variables of this object</summary>
         /// <param name="stateObject">An object that contains state information for this request.</param>
-        internal void Init(object stateObject)
+        internal void Init(object? stateObject)
         {
             _stateObject = stateObject;
             Completed = false;
-            if (_waitHandle != null)
-                _waitHandle.Reset();
+            _waitHandle?.Reset();
         }
 
         /// <summary>Initializes the internal variables of this object</summary>
@@ -54,38 +53,28 @@ namespace Asv.Avalonia.Map
         {
             _stateObject = null;
             Completed = true;
-            if (_waitHandle != null)
-                _waitHandle.Set();
+            _waitHandle?.Set();
         }
 
         /// <summary>
-        ///     Gets a value that indicates whether the server has completed processing the call. It is illegal for the server
-        ///     to use any client supplied resources outside of the agreed upon sharing semantics after it sets the IsCompleted
+        ///     Gets a value indicating whether the server has completed processing the call. It is illegal for the server
+        ///     to use any client supplied resources outside the agreed upon sharing semantics after it sets the IsCompleted
         ///     property to "true". Thus, it is safe for the client to destroy the resources after IsCompleted property returns
         ///     "true".
         /// </summary>
         /// <value>A boolean that indicates whether the server has completed processing the call.</value>
-        public bool IsCompleted
-        {
-            get { return Completed; }
-        }
+        public bool IsCompleted => Completed;
 
         /// <summary>
-        ///     Gets a value that indicates whether the BeginXXXX call has been completed synchronously. If this is detected
+        ///     Gets a value indicating whether the BeginXXXX call has been completed synchronously. If this is detected
         ///     in the AsyncCallback delegate, it is probable that the thread that called BeginInvoke is the current thread.
         /// </summary>
         /// <value>Returns false.</value>
-        public bool CompletedSynchronously
-        {
-            get { return false; }
-        }
+        public bool CompletedSynchronously => false;
 
         /// <summary>Gets an object that was passed as the state parameter of the BeginXXXX method call.</summary>
         /// <value>The object that was passed as the state parameter of the BeginXXXX method call.</value>
-        public object AsyncState
-        {
-            get { return _stateObject; }
-        }
+        public object? AsyncState => _stateObject;
 
         /// <summary>
         ///     The AsyncWaitHandle property returns the WaitHandle that can use to perform a WaitHandle.WaitOne or WaitAny or
@@ -100,22 +89,16 @@ namespace Asv.Avalonia.Map
         /// <value>The WaitHandle associated with this asynchronous result.</value>
         public WaitHandle AsyncWaitHandle
         {
-            get
-            {
-                if (_waitHandle == null)
-                    _waitHandle = new ManualResetEvent(false);
-                return _waitHandle;
-            }
+            get { return _waitHandle ??= new ManualResetEvent(false); }
         }
 
-        // private variables
         /// <summary>Used internally to represent the state of the asynchronous request</summary>
-        internal bool Completed = true;
+        internal bool Completed { get; set; } = true;
 
         /// <summary>Holds the value of the StateObject property.</summary>
-        private object _stateObject;
+        private object? _stateObject;
 
         /// <summary>Holds the value of the WaitHandle property.</summary>
-        private ManualResetEvent _waitHandle;
+        private ManualResetEvent? _waitHandle;
     }
 }

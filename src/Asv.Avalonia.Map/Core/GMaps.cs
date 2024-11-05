@@ -686,14 +686,14 @@ namespace Asv.Avalonia.Map
         /// <param name="zoom"></param>
         /// <param name="result"></param>
         /// <returns></returns>
-        public PureImage GetImageFrom(
+        public PureImage? GetImageFrom(
             GMapProvider provider,
             GPoint pos,
             int zoom,
             out Exception result
         )
         {
-            PureImage ret = null;
+            PureImage? ret = null;
             result = null;
 
             try

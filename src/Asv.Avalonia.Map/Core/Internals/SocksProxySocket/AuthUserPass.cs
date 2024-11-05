@@ -146,11 +146,18 @@ namespace Asv.Avalonia.Map
             {
                 Received += Server.EndReceive(ar);
                 if (Received == Buffer.Length)
+                {
                     if (Buffer[1] == 0)
+                    {
                         CallBack(null);
+                    }
                     else
+                    {
                         throw new ProxyException("Username/password combination not accepted.");
+                    }
+                }
                 else
+                {
                     Server.BeginReceive(
                         Buffer,
                         Received,
@@ -159,6 +166,7 @@ namespace Asv.Avalonia.Map
                         OnReceive,
                         Server
                     );
+                }
             }
             catch (Exception e)
             {
@@ -173,13 +181,8 @@ namespace Asv.Avalonia.Map
         /// <exception cref="ArgumentNullException">The specified value is null.</exception>
         private string Username
         {
-            get { return _username; }
-            set
-            {
-                if (value == null)
-                    throw new ArgumentNullException();
-                _username = value;
-            }
+            get => _username;
+            set => _username = value ?? throw new ArgumentNullException();
         }
 
         /// <summary>
@@ -189,16 +192,10 @@ namespace Asv.Avalonia.Map
         /// <exception cref="ArgumentNullException">The specified value is null.</exception>
         private string Password
         {
-            get { return _password; }
-            set
-            {
-                if (value == null)
-                    throw new ArgumentNullException();
-                _password = value;
-            }
+            get => _password;
+            set => _password = value ?? throw new ArgumentNullException();
         }
 
-        // private variables
         /// <summary>Holds the value of the Username property.</summary>
         private string _username;
 

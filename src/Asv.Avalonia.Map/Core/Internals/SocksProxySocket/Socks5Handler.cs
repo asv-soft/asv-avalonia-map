@@ -41,24 +41,24 @@ namespace Asv.Avalonia.Map
     internal sealed class Socks5Handler : SocksHandler
     {
         /// <summary>
-        ///     Initiliazes a new Socks5Handler instance.
+        /// Initializes a new instance of the <see cref="Socks5Handler"/> class.
         /// </summary>
         /// <param name="server">The socket connection with the proxy server.</param>
         /// <exception cref="ArgumentNullException"><c>server</c>  is null.</exception>
         public Socks5Handler(Socket server)
-            : this(server, "") { }
+            : this(server, string.Empty) { }
 
         /// <summary>
-        ///     Initiliazes a new Socks5Handler instance.
+        /// Initializes a new instance of the <see cref="Socks5Handler"/> class.
         /// </summary>
         /// <param name="server">The socket connection with the proxy server.</param>
         /// <param name="user">The username to use.</param>
         /// <exception cref="ArgumentNullException"><c>server</c> -or- <c>user</c> is null.</exception>
         public Socks5Handler(Socket server, string user)
-            : this(server, user, "") { }
+            : this(server, user, string.Empty) { }
 
         /// <summary>
-        ///     Initiliazes a new Socks5Handler instance.
+        /// Initializes a new instance of the <see cref="Socks5Handler"/> class.
         /// </summary>
         /// <param name="server">The socket connection with the proxy server.</param>
         /// <param name="user">The username to use.</param>
@@ -82,7 +82,10 @@ namespace Asv.Avalonia.Map
             Server.Send(new byte[] { 5, 2, 0, 2 });
             var buffer = ReadBytes(2);
             if (buffer[1] == 255)
+            {
                 throw new ProxyException("No authentication method accepted.");
+            }
+
             AuthMethod authenticate;
             switch (buffer[1])
             {
@@ -109,10 +112,13 @@ namespace Asv.Avalonia.Map
         /// <exception cref="ArgumentException"><c>port</c> or <c>host</c> is invalid.</exception>
         private byte[] GetHostPortBytes(string host, int port)
         {
-            if (host == null)
-                throw new ArgumentNullException();
+            ArgumentNullException.ThrowIfNull(host);
+
             if (port <= 0 || port > 65535 || host.Length > 255)
+            {
                 throw new ArgumentException();
+            }
+
             var connect = new byte[7 + host.Length];
             connect[0] = 5;
             connect[1] = 1;
@@ -132,8 +138,8 @@ namespace Asv.Avalonia.Map
         /// <exception cref="ArgumentNullException"><c>remoteEP</c> is null.</exception>
         private byte[] GetEndPointBytes(IPEndPoint remoteEP)
         {
-            if (remoteEP == null)
-                throw new ArgumentNullException();
+            ArgumentNullException.ThrowIfNull(remoteEP);
+
             var connect = new byte[10];
             connect[0] = 5;
             connect[1] = 1;
@@ -334,7 +340,9 @@ namespace Asv.Avalonia.Map
             {
                 Received += Server.EndReceive(ar);
                 if (Received <= 0)
+                {
                     throw new SocketException();
+                }
             }
             catch (Exception e)
             {
@@ -449,8 +457,11 @@ namespace Asv.Avalonia.Map
             try
             {
                 if (Received == Buffer.Length)
+                {
                     ProcessReply(Buffer);
+                }
                 else
+                {
                     Server.BeginReceive(
                         Buffer,
                         Received,
@@ -459,6 +470,7 @@ namespace Asv.Avalonia.Map
                         OnReceive,
                         Server
                     );
+                }
             }
             catch (Exception e)
             {
@@ -511,8 +523,11 @@ namespace Asv.Avalonia.Map
             try
             {
                 if (Received == Buffer.Length)
+                {
                     ProtocolComplete(null);
+                }
                 else
+                {
                     Server.BeginReceive(
                         Buffer,
                         Received,
@@ -521,6 +536,7 @@ namespace Asv.Avalonia.Map
                         OnReadLast,
                         Server
                     );
+                }
             }
             catch (Exception e)
             {
@@ -534,13 +550,8 @@ namespace Asv.Avalonia.Map
         /// <value>The password to use when authenticating with the SOCKS5 server.</value>
         private string Password
         {
-            get { return _password; }
-            set
-            {
-                if (value == null)
-                    throw new ArgumentNullException();
-                _password = value;
-            }
+            get => _password;
+            set => _password = value ?? throw new ArgumentNullException();
         }
 
         /// <summary>
