@@ -1319,6 +1319,11 @@ namespace Asv.Avalonia.Map
                 TileDrawingListLock?.AcquireReaderLock();
                 try
                 {
+                    if (TileDrawingList is null)
+                    {
+                        return;
+                    }
+
                     foreach (var p in TileDrawingList)
                     {
                         var task = new LoadTask(p.PosXY, Zoom, this);
@@ -1336,7 +1341,7 @@ namespace Asv.Avalonia.Map
                 }
                 finally
                 {
-                    TileDrawingListLock.ReleaseReaderLock();
+                    TileDrawingListLock?.ReleaseReaderLock();
                 }
 
 #if !NET46

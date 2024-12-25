@@ -15,20 +15,23 @@ namespace Asv.Avalonia.Map
         public static string EnumToString(Enum value)
         {
             var fi = value.GetType().GetField(value.ToString());
-            var attributes = (DescriptionAttribute[])
-                fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
 
-            return attributes.Length > 0 ? attributes[0].Description : value.ToString();
+            var attributes =
+                fi?.GetCustomAttributes(typeof(DescriptionAttribute), false)
+                as DescriptionAttribute[];
+
+            return attributes?.Length > 0 ? attributes[0].Description : value.ToString();
         }
-
-        // [System.Runtime.InteropServices.DllImportAttribute("user32.dll", EntryPoint = "SetCursorPos")]
-        // [return: System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.Bool)]
-        // public static extern bool SetCursorPos(int x, int y);
 
         public static readonly Random Random = new Random();
 
         public static void Shuffle<T>(List<T>? deck)
         {
+            if (deck is null)
+            {
+                return;
+            }
+
             int n = deck.Count;
 
             for (int i = 0; i < n; ++i)
@@ -46,6 +49,7 @@ namespace Asv.Avalonia.Map
             {
                 inputStream.Seek(0, SeekOrigin.Begin);
             }
+
             ms.Seek(0, SeekOrigin.Begin);
             return ms;
         }

@@ -5,14 +5,14 @@ using System.Threading;
 namespace Asv.Avalonia.Map
 {
     /// <summary>
-    ///     represent tile
+    ///     represent tile.
     /// </summary>
     public struct Tile : IDisposable
     {
         public static readonly Tile Empty = new Tile();
 
         GPoint _pos;
-        PureImage?[] _overlays;
+        PureImage?[]? _overlays;
         long _overlaysCount;
 
         public readonly bool NotEmpty;
@@ -32,14 +32,14 @@ namespace Asv.Avalonia.Map
             {
                 for (long i = 0, size = Interlocked.Read(ref _overlaysCount); i < size; i++)
                 {
-                    yield return _overlays[i];
+                    yield return _overlays?[i];
                 }
             }
         }
 
         internal void AddOverlay(PureImage? i)
         {
-            if (_overlays == null)
+            if (_overlays is null)
             {
                 _overlays = new PureImage[4];
             }
@@ -47,10 +47,7 @@ namespace Asv.Avalonia.Map
             _overlays[Interlocked.Increment(ref _overlaysCount) - 1] = i;
         }
 
-        internal bool HasAnyOverlays
-        {
-            get { return Interlocked.Read(ref _overlaysCount) > 0; }
-        }
+        internal bool HasAnyOverlays => Interlocked.Read(ref _overlaysCount) > 0;
 
         public int Zoom { get; private set; }
 
@@ -69,7 +66,7 @@ namespace Asv.Avalonia.Map
                 for (long i = Interlocked.Read(ref _overlaysCount) - 1; i >= 0; i--)
                 {
                     Interlocked.Decrement(ref _overlaysCount);
-                    _overlays[i].Dispose();
+                    _overlays[i]?.Dispose();
                     _overlays[i] = null;
                 }
 
@@ -92,7 +89,9 @@ namespace Asv.Avalonia.Map
         public override bool Equals(object obj)
         {
             if (!(obj is Tile))
+            {
                 return false;
+            }
 
             Tile comp = (Tile)obj;
             return comp.Zoom == Zoom && comp.Pos == Pos;

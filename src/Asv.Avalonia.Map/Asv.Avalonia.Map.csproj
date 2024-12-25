@@ -28,6 +28,7 @@
       CA1510,
       CA1851
     </WarningsAsErrors>
+    <NoWarn>$(NoWarn);RCS1037</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Asv.Common" Version="$(AsvCommonVersion)" />
