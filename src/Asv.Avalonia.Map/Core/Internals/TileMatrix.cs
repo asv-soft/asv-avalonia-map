@@ -8,8 +8,8 @@ namespace Asv.Avalonia.Map
     /// </summary>
     internal class TileMatrix : IDisposable
     {
-        List<Dictionary<GPoint, Tile>> _levels = new List<Dictionary<GPoint, Tile>>(33);
-        FastReaderWriterLock _lock = new FastReaderWriterLock();
+        List<Dictionary<GPoint, Tile>>? _levels = new List<Dictionary<GPoint, Tile>>(33);
+        FastReaderWriterLock? _lock = new FastReaderWriterLock();
 
         public TileMatrix()
         {
@@ -21,9 +21,14 @@ namespace Asv.Avalonia.Map
 
         public void ClearAllLevels()
         {
-            _lock.AcquireWriterLock();
+            _lock?.AcquireWriterLock();
             try
             {
+                if (_levels is null)
+                {
+                    return;
+                }
+
                 foreach (var matrix in _levels)
                 {
                     foreach (var t in matrix)
@@ -36,18 +41,94 @@ namespace Asv.Avalonia.Map
             }
             finally
             {
-                _lock.ReleaseWriterLock();
+                _lock?.ReleaseWriterLock();
             }
         }
 
         public void ClearLevel(int zoom)
         {
-            _lock.AcquireWriterLock();
+            _lock?.AcquireWriterLock();
             try
             {
-                if (zoom < _levels.Count)
+                if (!(zoom < _levels?.Count))
                 {
-                    var l = _levels[zoom];
+                    return;
+                }
+
+                var l = _levels[zoom];
+
+                foreach (var t in l)
+                {
+                    t.Value.Dispose();
+                }
+
+                l.Clear();
+            }
+            finally
+            {
+                _lock?.ReleaseWriterLock();
+            }
+        }
+
+        List<KeyValuePair<GPoint, Tile>>? _tmp = new List<KeyValuePair<GPoint, Tile>>(44);
+
+        public void ClearLevelAndPointsNotIn(int zoom, List<DrawTile>? list)
+        {
+            _lock?.AcquireWriterLock();
+            try
+            {
+                if (zoom >= _levels?.Count)
+                {
+                    return;
+                }
+
+                var l = _levels?[zoom];
+
+                _tmp?.Clear();
+
+                if (l is null)
+                {
+                    return;
+                }
+
+                foreach (var t in l)
+                {
+                    if (!list?.Exists(p => p.PosXY == t.Key) ?? false)
+                    {
+                        _tmp?.Add(t);
+                    }
+                }
+
+                if (_tmp is not null)
+                {
+                    foreach (var r in _tmp)
+                    {
+                        l.Remove(r.Key);
+                        r.Value.Dispose();
+                    }
+                }
+
+                _tmp?.Clear();
+            }
+            finally
+            {
+                _lock?.ReleaseWriterLock();
+            }
+        }
+
+        public void ClearLevelsBelow(int zoom)
+        {
+            _lock?.AcquireWriterLock();
+            try
+            {
+                if (!(zoom - 1 < _levels?.Count))
+                {
+                    return;
+                }
+
+                for (int i = zoom - 1; i >= 0; i--)
+                {
+                    var l = _levels[i];
 
                     foreach (var t in l)
                     {
@@ -59,116 +140,53 @@ namespace Asv.Avalonia.Map
             }
             finally
             {
-                _lock.ReleaseWriterLock();
-            }
-        }
-
-        List<KeyValuePair<GPoint, Tile>> _tmp = new List<KeyValuePair<GPoint, Tile>>(44);
-
-        public void ClearLevelAndPointsNotIn(int zoom, List<DrawTile>? list)
-        {
-            _lock.AcquireWriterLock();
-            try
-            {
-                if (zoom < _levels.Count)
-                {
-                    var l = _levels[zoom];
-
-                    _tmp.Clear();
-
-                    foreach (var t in l)
-                    {
-                        if (!list.Exists(p => p.PosXY == t.Key))
-                        {
-                            _tmp.Add(t);
-                        }
-                    }
-
-                    foreach (var r in _tmp)
-                    {
-                        l.Remove(r.Key);
-                        r.Value.Dispose();
-                    }
-
-                    _tmp.Clear();
-                }
-            }
-            finally
-            {
-                _lock.ReleaseWriterLock();
-            }
-        }
-
-        public void ClearLevelsBelow(int zoom)
-        {
-            _lock.AcquireWriterLock();
-            try
-            {
-                if (zoom - 1 < _levels.Count)
-                {
-                    for (int i = zoom - 1; i >= 0; i--)
-                    {
-                        var l = _levels[i];
-
-                        foreach (var t in l)
-                        {
-                            t.Value.Dispose();
-                        }
-
-                        l.Clear();
-                    }
-                }
-            }
-            finally
-            {
-                _lock.ReleaseWriterLock();
+                _lock?.ReleaseWriterLock();
             }
         }
 
         public void ClearLevelsAbove(int zoom)
         {
-            _lock.AcquireWriterLock();
+            _lock?.AcquireWriterLock();
             try
             {
-                if (zoom + 1 < _levels.Count)
+                if (!(zoom + 1 < _levels?.Count))
                 {
-                    for (int i = zoom + 1; i < _levels.Count; i++)
+                    return;
+                }
+
+                for (int i = zoom + 1; i < _levels.Count; i++)
+                {
+                    var l = _levels[i];
+
+                    foreach (var t in l)
                     {
-                        var l = _levels[i];
-
-                        foreach (var t in l)
-                        {
-                            t.Value.Dispose();
-                        }
-
-                        l.Clear();
+                        t.Value.Dispose();
                     }
+
+                    l.Clear();
                 }
             }
             finally
             {
-                _lock.ReleaseWriterLock();
+                _lock?.ReleaseWriterLock();
             }
         }
 
         public void EnterReadLock()
         {
-            _lock.AcquireReaderLock();
+            _lock?.AcquireReaderLock();
         }
 
         public void LeaveReadLock()
         {
-            _lock.ReleaseReaderLock();
+            _lock?.ReleaseReaderLock();
         }
 
         public Tile GetTileWithNoLock(int zoom, GPoint p)
         {
             var ret = Tile.Empty;
 
-            //if(zoom < Levels.Count)
-            {
-                _levels[zoom].TryGetValue(p, out ret);
-            }
+            _levels?[zoom].TryGetValue(p, out ret);
 
             return ret;
         }
@@ -177,14 +195,14 @@ namespace Asv.Avalonia.Map
         {
             var ret = Tile.Empty;
 
-            _lock.AcquireReaderLock();
+            _lock?.AcquireReaderLock();
             try
             {
                 ret = GetTileWithNoLock(zoom, p);
             }
             finally
             {
-                _lock.ReleaseReaderLock();
+                _lock?.ReleaseReaderLock();
             }
 
             return ret;
@@ -192,17 +210,17 @@ namespace Asv.Avalonia.Map
 
         public void SetTile(Tile t)
         {
-            _lock.AcquireWriterLock();
+            _lock?.AcquireWriterLock();
             try
             {
-                if (t.Zoom < _levels.Count)
+                if (t.Zoom < _levels?.Count)
                 {
                     _levels[t.Zoom][t.Pos] = t;
                 }
             }
             finally
             {
-                _lock.ReleaseWriterLock();
+                _lock?.ReleaseWriterLock();
             }
         }
 
@@ -215,22 +233,24 @@ namespace Asv.Avalonia.Map
 
         void Dispose(bool disposing)
         {
-            if (_lock != null)
+            if (_lock == null)
             {
-                if (disposing)
-                {
-                    ClearAllLevels();
-                }
-
-                _levels.Clear();
-                _levels = null;
-
-                _tmp.Clear();
-                _tmp = null;
-
-                _lock.Dispose();
-                _lock = null;
+                return;
             }
+
+            if (disposing)
+            {
+                ClearAllLevels();
+            }
+
+            _levels?.Clear();
+            _levels = null;
+
+            _tmp?.Clear();
+            _tmp = null;
+
+            _lock.Dispose();
+            _lock = null;
         }
 
         public void Dispose()

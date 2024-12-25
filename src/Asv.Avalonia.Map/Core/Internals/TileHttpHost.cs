@@ -11,7 +11,7 @@ namespace Asv.Avalonia.Map
     internal class TileHttpHost
     {
         volatile bool _listen;
-        TcpListener _server;
+        TcpListener? _server;
         int _port;
 
         readonly byte[] _responseHeaderBytes;
@@ -97,57 +97,55 @@ namespace Asv.Avalonia.Map
         {
             try
             {
-                using (var c = p as TcpClient)
+                using var c = p as TcpClient;
+
+                if (c is null)
                 {
-                    using (var s = c.GetStream())
+                    return;
+                }
+
+                using (var s = c.GetStream())
+                {
+                    using (var r = new StreamReader(s, Encoding.UTF8))
                     {
-                        using (var r = new StreamReader(s, Encoding.UTF8))
+                        string? request = r.ReadLine();
+
+                        if (!string.IsNullOrEmpty(request) && request.StartsWith("GET"))
                         {
-                            string request = r.ReadLine();
-
-                            if (!string.IsNullOrEmpty(request) && request.StartsWith("GET"))
+                            // http://localhost:88/88888/5/15/11
+                            // GET /8888888888/5/15/11 HTTP/1.1
+                            var rq = request.Split(' ');
+                            if (rq.Length >= 2)
                             {
-                                //Debug.WriteLine("TileHttpHost: " + request);
-
-                                // http://localhost:88/88888/5/15/11
-                                // GET /8888888888/5/15/11 HTTP/1.1
-
-                                var rq = request.Split(' ');
-                                if (rq.Length >= 2)
+                                var ids = rq[1]
+                                    .Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                                if (ids.Length == 4)
                                 {
-                                    var ids = rq[1]
-                                        .Split(
-                                            new[] { '/' },
-                                            StringSplitOptions.RemoveEmptyEntries
-                                        );
-                                    if (ids.Length == 4)
-                                    {
-                                        int dbId = int.Parse(ids[0]);
-                                        int zoom = int.Parse(ids[1]);
-                                        int x = int.Parse(ids[2]);
-                                        int y = int.Parse(ids[3]);
+                                    int dbId = int.Parse(ids[0]);
+                                    int zoom = int.Parse(ids[1]);
+                                    int x = int.Parse(ids[2]);
+                                    int y = int.Parse(ids[3]);
 
-                                        var pr = GMapProviders.TryGetProvider(dbId);
-                                        if (pr != null)
+                                    var pr = GMapProviders.TryGetProvider(dbId);
+                                    if (pr != null)
+                                    {
+                                        Exception ex;
+                                        var img = GMaps.Instance.GetImageFrom(
+                                            pr,
+                                            new GPoint(x, y),
+                                            zoom,
+                                            out ex
+                                        );
+                                        if (img != null)
                                         {
-                                            Exception ex;
-                                            var img = GMaps.Instance.GetImageFrom(
-                                                pr,
-                                                new GPoint(x, y),
-                                                zoom,
-                                                out ex
-                                            );
-                                            if (img != null)
+                                            using (img)
                                             {
-                                                using (img)
-                                                {
-                                                    s.Write(
-                                                        _responseHeaderBytes,
-                                                        0,
-                                                        _responseHeaderBytes.Length
-                                                    );
-                                                    img.Data.WriteTo(s);
-                                                }
+                                                s.Write(
+                                                    _responseHeaderBytes,
+                                                    0,
+                                                    _responseHeaderBytes.Length
+                                                );
+                                                img.Data.WriteTo(s);
                                             }
                                         }
                                     }
@@ -155,16 +153,14 @@ namespace Asv.Avalonia.Map
                             }
                         }
                     }
-
-                    c.Close();
                 }
+
+                c.Close();
             }
             catch (Exception ex)
             {
                 Debug.WriteLine("TileHttpHost, ProcessRequest: " + ex);
             }
-
-            //Debug.WriteLine("disconnected");
         }
     }
 }
