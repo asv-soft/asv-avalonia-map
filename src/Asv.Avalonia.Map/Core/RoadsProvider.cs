@@ -17,7 +17,7 @@ namespace Asv.Avalonia.Map
         /// <returns>
         /// The calculated map route object.
         /// </returns>
-        MapRoute GetRoadsRoute(List<GeoPoint> points, bool interpolate);
+        MapRoute? GetRoadsRoute(List<GeoPoint> points, bool interpolate);
 
         /// <summary>
         /// Gets the route for a set of points on the roads.
@@ -32,6 +32,6 @@ namespace Asv.Avalonia.Map
         /// The interpolate parameter determines whether the route should be interpolated, providing additional points along the roads.
         /// </remarks>
         /// <exception cref="ArgumentException">Thrown if the points parameter is null or empty.</exception>
-        MapRoute GetRoadsRoute(string points, bool interpolate);
+        MapRoute? GetRoadsRoute(string points, bool interpolate);
     }
 }

@@ -49,7 +49,6 @@ namespace Asv.Avalonia.Map
         string MakeTileImageUrl(GPoint pos, int zoom, string language)
         {
             // http://m2.mapserver.mapy.cz/hybrid/9_7d00000_7b80000
-
             long xx = pos.X << (28 - zoom);
             long yy = ((long)Math.Pow(2.0, zoom) - 1 - pos.Y) << (28 - zoom);
 

@@ -36,7 +36,6 @@ namespace Asv.Avalonia.Map
             if (!DisableDynamicTileUrlFormat)
             {
                 //UrlFormat[AerialWithLabels]: http://ecn.{subdomain}.tiles.virtualearth.net/tiles/h{quadkey}.jpeg?g=3179&mkt={culture}
-
                 _urlDynamicFormat = GetTileUrl("AerialWithLabels");
                 if (!string.IsNullOrEmpty(_urlDynamicFormat))
                 {
@@ -72,7 +71,6 @@ namespace Asv.Avalonia.Map
         string _urlDynamicFormat = string.Empty;
 
         // http://ecn.dynamic.t3.tiles.virtualearth.net/comp/CompositionHandler/12030012020203?mkt=en-us&it=A,G,L&n=z
-
         static readonly string UrlFormat =
             "http://ecn.t{0}.tiles.virtualearth.net/tiles/h{1}.jpeg?g={2}&mkt={3}&n=z{4}";
     }

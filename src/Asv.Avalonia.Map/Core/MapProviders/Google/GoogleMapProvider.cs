@@ -21,7 +21,7 @@ namespace Asv.Avalonia.Map
         public GoogleMapProviderBase()
         {
             MaxZoom = null;
-            RefererUrl = string.Format("https://maps.{0}/", Server);
+            RefererUrl = $"https://maps.{Server}/";
             Copyright = string.Format(
                 "©{0} Google - Map data ©{0} Tele Atlas, Imagery ©{0} TerraMetrics",
                 DateTime.Today.Year
@@ -111,7 +111,7 @@ namespace Asv.Avalonia.Map
                 );
                 try
                 {
-                    string html = GMaps.Instance.UseUrlCache
+                    string? html = GMaps.Instance.UseUrlCache
                         ? Cache.Instance.GetContent(
                             url,
                             CacheType.UrlCache,
@@ -276,7 +276,7 @@ namespace Asv.Avalonia.Map
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine("TryCorrectGoogleVersions failed: " + ex.ToString());
+                    Debug.WriteLine("TryCorrectGoogleVersions failed: " + ex);
                 }
             }
         }
@@ -285,7 +285,7 @@ namespace Asv.Avalonia.Map
         {
             sec1 = string.Empty; // after &x=...
             sec2 = string.Empty; // after &zoom=...
-            int seclen = (int)(pos.X * 3 + pos.Y) % 8;
+            int seclen = (int)((pos.X * 3) + pos.Y) % 8;
             sec2 = SecureWord.Substring(0, seclen);
 
             if (pos.Y >= 10000 && pos.Y < 100000)
@@ -298,7 +298,7 @@ namespace Asv.Avalonia.Map
 
         #region RoutingProvider Members
 
-        public virtual MapRoute GetRoute(
+        public virtual MapRoute? GetRoute(
             GeoPoint start,
             GeoPoint end,
             bool avoidHighways,
@@ -309,7 +309,7 @@ namespace Asv.Avalonia.Map
             return GetRoute(MakeRouteUrl(start, end, LanguageStr, avoidHighways, walkingMode));
         }
 
-        public virtual MapRoute GetRoute(
+        public virtual MapRoute? GetRoute(
             string start,
             string end,
             bool avoidHighways,
@@ -369,14 +369,14 @@ namespace Asv.Avalonia.Map
             );
         }
 
-        MapRoute GetRoute(string url)
+        MapRoute? GetRoute(string url)
         {
-            MapRoute ret = null;
-            StrucRute routeResult = null;
+            MapRoute? ret = null;
+            StrucRute? routeResult = null;
 
             try
             {
-                string route = GMaps.Instance.UseRouteCache
+                var route = GMaps.Instance.UseRouteCache
                     ? Cache.Instance.GetContent(
                         url,
                         CacheType.RouteCache,
@@ -449,7 +449,6 @@ namespace Asv.Avalonia.Map
                                     ret.Points.AddRange(points);
 
                                     ret.Duration = routeResult.routes[0].legs[0].duration.text;
-                                    //ret.DistanceRoute = Math.Round((RouteResult.routes[0].legs[0].distance.value / 1000.0), 1);
                                 }
                             }
                         }
@@ -462,7 +461,9 @@ namespace Asv.Avalonia.Map
                         RouteStatusCode code;
 
                         if (Enum.TryParse(routeResult.error.status, false, out code))
+                        {
                             ret.Status = code;
+                        }
                     }
                 }
             }
@@ -491,35 +492,34 @@ namespace Asv.Avalonia.Map
 
         #region GeocodingProvider Members
 
-        public GeoCoderStatusCode GetPoints(string keywords, out List<GeoPoint> pointList)
+        public GeoCoderStatusCode GetPoints(string keywords, out List<GeoPoint>? pointList)
         {
             return GetLatLngFromGeocoderUrl(MakeGeocoderUrl(keywords, LanguageStr), out pointList);
         }
 
         public GeoPoint? GetPoint(string keywords, out GeoCoderStatusCode status)
         {
-            List<GeoPoint> pointList;
-            status = GetPoints(keywords, out pointList);
+            status = GetPoints(keywords, out var pointList);
             return pointList != null && pointList.Count > 0 ? pointList[0] : (GeoPoint?)null;
         }
 
         /// <summary>
-        ///     NotImplemented
+        ///     NotImplemented.
         /// </summary>
-        /// <param name="placemark"></param>
-        /// <param name="pointList"></param>
-        /// <returns></returns>
+        /// <param name="placemark">placeMark.</param>
+        /// <param name="pointList">pointList.</param>
+        /// <returns>.</returns>
         public GeoCoderStatusCode GetPoints(Placemark placemark, out List<GeoPoint> pointList)
         {
             throw new NotImplementedException("use GetPoints(string keywords...");
         }
 
         /// <summary>
-        ///     NotImplemented
+        ///     NotImplemented.
         /// </summary>
-        /// <param name="placemark"></param>
-        /// <param name="status"></param>
-        /// <returns></returns>
+        /// <param name="placemark">placemark.</param>
+        /// <param name="status">status.</param>
+        /// <returns>.</returns>
         public GeoPoint? GetPoint(Placemark placemark, out GeoCoderStatusCode status)
         {
             throw new NotImplementedException("use GetPoint(string keywords...");
@@ -527,7 +527,7 @@ namespace Asv.Avalonia.Map
 
         public GeoCoderStatusCode GetPlacemarks(
             GeoPoint location,
-            out List<Placemark> placemarkList
+            out List<Placemark>? placemarkList
         )
         {
             return GetPlacemarkFromReverseGeocoderUrl(
@@ -538,15 +538,13 @@ namespace Asv.Avalonia.Map
 
         public Placemark? GetPlacemark(GeoPoint location, out GeoCoderStatusCode status)
         {
-            List<Placemark> pointList;
-            status = GetPlacemarks(location, out pointList);
+            status = GetPlacemarks(location, out var pointList);
             return pointList != null && pointList.Count > 0 ? pointList[0] : (Placemark?)null;
         }
 
         #region -- internals --
 
         // The Coogle Geocoding API: http://tinyurl.com/cdlj889
-
         string MakeGeocoderUrl(string keywords, string language)
         {
             return string.Format(
@@ -570,15 +568,14 @@ namespace Asv.Avalonia.Map
             );
         }
 
-        GeoCoderStatusCode GetLatLngFromGeocoderUrl(string url, out List<GeoPoint> pointList)
+        GeoCoderStatusCode GetLatLngFromGeocoderUrl(string url, out List<GeoPoint>? pointList)
         {
             var status = GeoCoderStatusCode.UNKNOWN_ERROR;
-
             pointList = null;
 
             try
             {
-                string geo = GMaps.Instance.UseGeocoderCache
+                string? geo = GMaps.Instance.UseGeocoderCache
                     ? Cache.Instance.GetContent(
                         url,
                         CacheType.GeocoderCache,
@@ -621,20 +618,24 @@ namespace Asv.Avalonia.Map
                         if (geoResult.status == GeoCoderStatusCode.OK)
                         {
                             if (cache && GMaps.Instance.UseGeocoderCache)
+                            {
                                 Cache.Instance.SaveContent(url, CacheType.GeocoderCache, geo);
+                            }
 
                             pointList = new List<GeoPoint>();
 
                             if (geoResult.results != null && geoResult.results.Count > 0)
                             {
-                                for (int i = 0; i < geoResult.results.Count; i++)
+                                foreach (var t in geoResult.results)
+                                {
                                     pointList.Add(
                                         new GeoPoint(
-                                            geoResult.results[i].geometry.location.lat,
-                                            geoResult.results[i].geometry.location.lng,
+                                            t.geometry.location.lat,
+                                            t.geometry.location.lng,
                                             0
                                         )
                                     );
+                                }
                             }
                         }
                         else
@@ -655,7 +656,7 @@ namespace Asv.Avalonia.Map
 
         GeoCoderStatusCode GetPlacemarkFromReverseGeocoderUrl(
             string url,
-            out List<Placemark> placemarkList
+            out List<Placemark>? placemarkList
         )
         {
             var status = GeoCoderStatusCode.UNKNOWN_ERROR;
@@ -663,7 +664,7 @@ namespace Asv.Avalonia.Map
 
             try
             {
-                string reverse = GMaps.Instance.UsePlacemarkCache
+                string? reverse = GMaps.Instance.UsePlacemarkCache
                     ? Cache.Instance.GetContent(
                         url,
                         CacheType.PlacemarkCache,
@@ -706,7 +707,9 @@ namespace Asv.Avalonia.Map
                         if (geoResult.status == GeoCoderStatusCode.OK)
                         {
                             if (cache && GMaps.Instance.UseGeocoderCache)
+                            {
                                 Cache.Instance.SaveContent(url, CacheType.GeocoderCache, reverse);
+                            }
 
                             placemarkList = new List<Placemark>();
 
@@ -730,155 +733,132 @@ namespace Asv.Avalonia.Map
                                     }
 
                                     if (
-                                        geoResult.results[i].address_components != null
-                                        && geoResult.results[i].address_components.Count > 0
+                                        geoResult.results[i].address_components == null
+                                        || geoResult.results[i].address_components.Count <= 0
                                     )
                                     {
-                                        for (
-                                            int j = 0;
-                                            j < geoResult.results[i].address_components.Count;
-                                            j++
+                                        continue;
+                                    }
+
+                                    for (
+                                        int j = 0;
+                                        j < geoResult.results[i].address_components.Count;
+                                        j++
+                                    )
+                                    {
+                                        if (
+                                            geoResult.results[i].address_components[j].types != null
+                                            && geoResult
+                                                .results[i]
+                                                .address_components[j]
+                                                .types
+                                                .Count > 0
                                         )
                                         {
-                                            if (
-                                                geoResult.results[i].address_components[j].types
-                                                    != null
-                                                && geoResult
-                                                    .results[i]
-                                                    .address_components[j]
-                                                    .types
-                                                    .Count > 0
-                                            )
-                                            {
-                                                Debug.Write(
-                                                    "Type: ["
-                                                        + geoResult
-                                                            .results[i]
-                                                            .address_components[j]
-                                                            .types[0]
-                                                        + "], "
-                                                );
-                                                Debug.WriteLine(
-                                                    "long_name: ["
-                                                        + geoResult
-                                                            .results[i]
-                                                            .address_components[j]
-                                                            .long_name
-                                                        + "]"
-                                                );
-
-                                                switch (
-                                                    geoResult
+                                            Debug.Write(
+                                                "Type: ["
+                                                    + geoResult
                                                         .results[i]
                                                         .address_components[j]
                                                         .types[0]
-                                                )
-                                                {
-                                                    case "street_number":
-                                                        {
-                                                            ret.StreetNumber = geoResult
-                                                                .results[i]
-                                                                .address_components[j]
-                                                                .long_name;
-                                                        }
-                                                        break;
+                                                    + "], "
+                                            );
+                                            Debug.WriteLine(
+                                                "long_name: ["
+                                                    + geoResult
+                                                        .results[i]
+                                                        .address_components[j]
+                                                        .long_name
+                                                    + "]"
+                                            );
 
-                                                    case "street_address":
-                                                        {
-                                                            ret.StreetAddress = geoResult
-                                                                .results[i]
-                                                                .address_components[j]
-                                                                .long_name;
-                                                        }
-                                                        break;
+                                            switch (
+                                                geoResult.results[i].address_components[j].types[0]
+                                            )
+                                            {
+                                                case "street_number":
+                                                    ret.StreetNumber = geoResult
+                                                        .results[i]
+                                                        .address_components[j]
+                                                        .long_name;
+                                                    break;
 
-                                                    case "route":
-                                                        {
-                                                            ret.ThoroughfareName = geoResult
-                                                                .results[i]
-                                                                .address_components[j]
-                                                                .long_name;
-                                                        }
-                                                        break;
+                                                case "street_address":
+                                                    ret.StreetAddress = geoResult
+                                                        .results[i]
+                                                        .address_components[j]
+                                                        .long_name;
+                                                    break;
 
-                                                    case "postal_code":
-                                                        {
-                                                            ret.PostalCodeNumber = geoResult
-                                                                .results[i]
-                                                                .address_components[j]
-                                                                .long_name;
-                                                        }
-                                                        break;
+                                                case "route":
+                                                    ret.ThoroughfareName = geoResult
+                                                        .results[i]
+                                                        .address_components[j]
+                                                        .long_name;
+                                                    break;
 
-                                                    case "country":
-                                                        {
-                                                            ret.CountryName = geoResult
-                                                                .results[i]
-                                                                .address_components[j]
-                                                                .long_name;
-                                                        }
-                                                        break;
+                                                case "postal_code":
+                                                    ret.PostalCodeNumber = geoResult
+                                                        .results[i]
+                                                        .address_components[j]
+                                                        .long_name;
+                                                    break;
 
-                                                    case "locality":
-                                                        {
-                                                            ret.LocalityName = geoResult
-                                                                .results[i]
-                                                                .address_components[j]
-                                                                .long_name;
-                                                        }
-                                                        break;
+                                                case "country":
+                                                    ret.CountryName = geoResult
+                                                        .results[i]
+                                                        .address_components[j]
+                                                        .long_name;
+                                                    break;
 
-                                                    case "administrative_area_level_2":
-                                                        {
-                                                            ret.DistrictName = geoResult
-                                                                .results[i]
-                                                                .address_components[j]
-                                                                .long_name;
-                                                        }
-                                                        break;
+                                                case "locality":
+                                                    ret.LocalityName = geoResult
+                                                        .results[i]
+                                                        .address_components[j]
+                                                        .long_name;
+                                                    break;
 
-                                                    case "administrative_area_level_1":
-                                                        {
-                                                            ret.AdministrativeAreaName = geoResult
-                                                                .results[i]
-                                                                .address_components[j]
-                                                                .long_name;
-                                                        }
-                                                        break;
+                                                case "administrative_area_level_2":
+                                                    ret.DistrictName = geoResult
+                                                        .results[i]
+                                                        .address_components[j]
+                                                        .long_name;
+                                                    break;
 
-                                                    case "administrative_area_level_3":
-                                                        {
-                                                            ret.SubAdministrativeAreaName =
-                                                                geoResult
-                                                                    .results[i]
-                                                                    .address_components[j]
-                                                                    .long_name;
-                                                        }
-                                                        break;
+                                                case "administrative_area_level_1":
+                                                    ret.AdministrativeAreaName = geoResult
+                                                        .results[i]
+                                                        .address_components[j]
+                                                        .long_name;
+                                                    break;
 
-                                                    case "neighborhood":
-                                                        {
-                                                            ret.Neighborhood = geoResult
-                                                                .results[i]
-                                                                .address_components[j]
-                                                                .long_name;
-                                                        }
-                                                        break;
-                                                    default:
-                                                        break;
-                                                }
+                                                case "administrative_area_level_3":
+                                                    ret.SubAdministrativeAreaName = geoResult
+                                                        .results[i]
+                                                        .address_components[j]
+                                                        .long_name;
+                                                    break;
+
+                                                case "neighborhood":
+                                                    ret.Neighborhood = geoResult
+                                                        .results[i]
+                                                        .address_components[j]
+                                                        .long_name;
+                                                    break;
+                                                default:
+                                                    break;
                                             }
                                         }
-
-                                        placemarkList.Add(ret);
                                     }
+
+                                    placemarkList.Add(ret);
                                 }
                             }
                         }
                     }
                     else
                     {
-                        Debug.WriteLine("GetPlacemarkFromReverseGeocoderUrl: " + geoResult.status);
+                        Debug.WriteLine("GetPlacemarkFromReverseGeocoderUrl: " + geoResult?.status);
                     }
                 }
             }
@@ -886,7 +866,7 @@ namespace Asv.Avalonia.Map
             {
                 status = GeoCoderStatusCode.EXCEPTION_IN_CODE;
                 placemarkList = null;
-                Debug.WriteLine("GetPlacemarkReverseGeocoderUrl: " + ex.ToString());
+                Debug.WriteLine("GetPlacemarkReverseGeocoderUrl: " + ex);
             }
 
             return status;
@@ -905,7 +885,7 @@ namespace Asv.Avalonia.Map
         #region DirectionsProvider Members
 
         public DirectionsStatusCode GetDirections(
-            out GDirections direction,
+            out GDirections? direction,
             GeoPoint start,
             GeoPoint end,
             bool avoidHighways,
@@ -931,7 +911,7 @@ namespace Asv.Avalonia.Map
         }
 
         public DirectionsStatusCode GetDirections(
-            out GDirections direction,
+            out GDirections? direction,
             string start,
             string end,
             bool avoidHighways,
@@ -957,17 +937,17 @@ namespace Asv.Avalonia.Map
         }
 
         /// <summary>
-        ///     NotImplemented
+        ///     NotImplemented.
         /// </summary>
-        /// <param name="status"></param>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <param name="avoidHighways"></param>
-        /// <param name="avoidTolls"></param>
-        /// <param name="walkingMode"></param>
-        /// <param name="sensor"></param>
-        /// <param name="metric"></param>
-        /// <returns></returns>
+        /// <param name="status">status.</param>
+        /// <param name="start">start.</param>
+        /// <param name="end">end.</param>
+        /// <param name="avoidHighways">avoidHighways.</param>
+        /// <param name="avoidTolls">avoidTolls.</param>
+        /// <param name="walkingMode">walkingMode.</param>
+        /// <param name="sensor">sensor.</param>
+        /// <param name="metric">metric.</param>
+        /// <returns>.</returns>
         public IEnumerable<GDirections> GetDirections(
             out DirectionsStatusCode status,
             string start,
@@ -980,22 +960,21 @@ namespace Asv.Avalonia.Map
         )
         {
             // TODO: add alternative directions
-
             throw new NotImplementedException();
         }
 
         /// <summary>
-        ///     NotImplemented
+        ///     NotImplemented.
         /// </summary>
-        /// <param name="status"></param>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <param name="avoidHighways"></param>
-        /// <param name="avoidTolls"></param>
-        /// <param name="walkingMode"></param>
-        /// <param name="sensor"></param>
-        /// <param name="metric"></param>
-        /// <returns></returns>
+        /// <param name="status">status.</param>
+        /// <param name="start">start.</param>
+        /// <param name="end">end.</param>
+        /// <param name="avoidHighways">avoidHighways.</param>
+        /// <param name="avoidTolls">avoidTolls.</param>
+        /// <param name="walkingMode">walkingMode.</param>
+        /// <param name="sensor">sensor.</param>
+        /// <param name="metric">metric.</param>
+        /// <returns>.</returns>
         public IEnumerable<GDirections> GetDirections(
             out DirectionsStatusCode status,
             GeoPoint start,
@@ -1008,12 +987,11 @@ namespace Asv.Avalonia.Map
         )
         {
             // TODO: add alternative directions
-
             throw new NotImplementedException();
         }
 
         public DirectionsStatusCode GetDirections(
-            out GDirections direction,
+            out GDirections? direction,
             GeoPoint start,
             IEnumerable<GeoPoint> wayPoints,
             GeoPoint end,
@@ -1041,7 +1019,7 @@ namespace Asv.Avalonia.Map
         }
 
         public DirectionsStatusCode GetDirections(
-            out GDirections direction,
+            out GDirections? direction,
             string start,
             IEnumerable<string> wayPoints,
             string end,
@@ -1071,7 +1049,6 @@ namespace Asv.Avalonia.Map
         #region -- internals --
 
         // The Coogle Directions API: http://tinyurl.com/6vv4cac
-
         string MakeDirectionsUrl(
             GeoPoint start,
             GeoPoint end,
@@ -1228,14 +1205,14 @@ namespace Asv.Avalonia.Map
             );
         }
 
-        DirectionsStatusCode GetDirectionsUrl(string url, out GDirections direction)
+        DirectionsStatusCode GetDirectionsUrl(string url, out GDirections? direction)
         {
             var ret = DirectionsStatusCode.UNKNOWN_ERROR;
             direction = null;
 
             try
             {
-                string kml = GMaps.Instance.UseDirectionsCache
+                string? kml = GMaps.Instance.UseDirectionsCache
                     ? Cache.Instance.GetContent(
                         url,
                         CacheType.DirectionsCache,
@@ -1513,12 +1490,12 @@ namespace Asv.Avalonia.Map
 
         #region RoadsProvider Members
 
-        public virtual MapRoute GetRoadsRoute(List<GeoPoint> points, bool interpolate)
+        public virtual MapRoute? GetRoadsRoute(List<GeoPoint> points, bool interpolate)
         {
             return GetRoadsRoute(MakeRoadsUrl(points, interpolate.ToString()));
         }
 
-        public virtual MapRoute GetRoadsRoute(string points, bool interpolate)
+        public virtual MapRoute? GetRoadsRoute(string points, bool interpolate)
         {
             return GetRoadsRoute(MakeRoadsUrl(points, interpolate.ToString()));
         }
@@ -1527,7 +1504,7 @@ namespace Asv.Avalonia.Map
 
         string MakeRoadsUrl(List<GeoPoint> points, string interpolate)
         {
-            string pointstr = "";
+            string pointstr = string.Empty;
 
             foreach (var item in points)
             {
@@ -1535,7 +1512,7 @@ namespace Asv.Avalonia.Map
                     "{2}{0},{1}",
                     item.Latitude,
                     item.Longitude,
-                    pointstr == "" ? "" : "|"
+                    pointstr == string.Empty ? string.Empty : "|"
                 );
             }
 
@@ -1547,14 +1524,14 @@ namespace Asv.Avalonia.Map
             return string.Format(RoadsUrlFormatStr, interpolate, points, Server);
         }
 
-        MapRoute GetRoadsRoute(string url)
+        MapRoute? GetRoadsRoute(string url)
         {
-            MapRoute ret = null;
-            StrucRoads roadsResult = null;
+            MapRoute? ret = null;
+            StrucRoads? roadsResult = null;
 
             try
             {
-                string route = GMaps.Instance.UseRouteCache
+                string? route = GMaps.Instance.UseRouteCache
                     ? Cache.Instance.GetContent(
                         url,
                         CacheType.RouteCache,
@@ -1625,7 +1602,9 @@ namespace Asv.Avalonia.Map
                         RouteStatusCode code;
 
                         if (Enum.TryParse(roadsResult.error.status, false, out code))
+                        {
                             ret.Status = code;
+                        }
                     }
                 }
             }
@@ -1655,8 +1634,8 @@ namespace Asv.Avalonia.Map
         ///     All client IDs begin with a gme- prefix. Your client ID is passed as the value of the client parameter.
         ///     Generally, you should store your private key someplace safe and read them into your code
         /// </summary>
-        /// <param name="clientId"></param>
-        /// <param name="privateKey"></param>
+        /// <param name="clientId">clientId.</param>
+        /// <param name="privateKey">privateKey.</param>
         public void SetEnterpriseCredentials(string clientId, string privateKey)
         {
             privateKey = privateKey.Replace("-", "+").Replace("_", "/");
@@ -1707,7 +1686,7 @@ namespace Asv.Avalonia.Map
     }
 
     /// <summary>
-    ///     GoogleMap provider
+    ///     GoogleMap provider.
     /// </summary>
     public class GoogleMapProvider : GoogleMapProviderBase
     {

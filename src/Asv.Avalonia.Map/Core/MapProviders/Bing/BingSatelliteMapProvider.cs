@@ -33,17 +33,18 @@ namespace Asv.Avalonia.Map
         {
             base.OnInitialized();
 
-            if (!DisableDynamicTileUrlFormat)
+            if (DisableDynamicTileUrlFormat)
             {
-                //UrlFormat[Aerial]: http://ecn.{subdomain}.tiles.virtualearth.net/tiles/a{quadkey}.jpeg?g=3179
+                return;
+            }
 
-                _urlDynamicFormat = GetTileUrl("Aerial");
-                if (!string.IsNullOrEmpty(_urlDynamicFormat))
-                {
-                    _urlDynamicFormat = _urlDynamicFormat
-                        .Replace("{subdomain}", "t{0}")
-                        .Replace("{quadkey}", "{1}");
-                }
+            // UrlFormat[Aerial]: http://ecn.{subdomain}.tiles.virtualearth.net/tiles/a{quadkey}.jpeg?g=3179
+            _urlDynamicFormat = GetTileUrl("Aerial");
+            if (!string.IsNullOrEmpty(_urlDynamicFormat))
+            {
+                _urlDynamicFormat = _urlDynamicFormat
+                    .Replace("{subdomain}", "t{0}")
+                    .Replace("{quadkey}", "{1}");
             }
         }
 
@@ -71,7 +72,6 @@ namespace Asv.Avalonia.Map
         string _urlDynamicFormat = string.Empty;
 
         // http://ecn.t1.tiles.virtualearth.net/tiles/a12030003131321231.jpeg?g=875&mkt=en-us&n=z
-
         static readonly string UrlFormat =
             "http://ecn.t{0}.tiles.virtualearth.net/tiles/a{1}.jpeg?g={2}&mkt={3}&n=z{4}";
     }

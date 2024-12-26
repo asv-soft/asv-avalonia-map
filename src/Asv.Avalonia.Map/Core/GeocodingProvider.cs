@@ -33,7 +33,7 @@ namespace Asv.Avalonia.Map
         /// }
         /// </code>
         /// </example>
-        GeoCoderStatusCode GetPoints(string keywords, out List<GeoPoint> pointList);
+        GeoCoderStatusCode GetPoints(string keywords, out List<GeoPoint>? pointList);
 
         /// <summary>
         /// Retrieves the geographical point for the given keywords.
@@ -55,7 +55,7 @@ namespace Asv.Avalonia.Map
         /// indicating the status of the operation. A successful retrieval will return <see cref="GeoCoderStatusCode.Success"/>,
         /// while a failure will return an appropriate error code from the <see cref="GeoCoderStatusCode"/> enumeration.
         /// </remarks>
-        GeoCoderStatusCode GetPoints(Placemark placemark, out List<GeoPoint> pointList);
+        GeoCoderStatusCode GetPoints(Placemark placemark, out List<GeoPoint>? pointList);
 
         /// <summary>
         /// Retrieves the geographic coordinates (latitude and longitude) of the given placemark.
@@ -82,7 +82,7 @@ namespace Asv.Avalonia.Map
         /// <param name="location">The geographical point for which to retrieve placemarks.</param>
         /// <param name="placemarkList">An output parameter to store the retrieved list of placemarks.</param>
         /// <returns>A <see cref="GeoCoderStatusCode"/> indicating the status of the operation.</returns>
-        GeoCoderStatusCode GetPlacemarks(GeoPoint location, out List<Placemark> placemarkList);
+        GeoCoderStatusCode GetPlacemarks(GeoPoint location, out List<Placemark>? placemarkList);
 
         /// <summary>
         /// Retrieves a Placemark object corresponding to a given location.

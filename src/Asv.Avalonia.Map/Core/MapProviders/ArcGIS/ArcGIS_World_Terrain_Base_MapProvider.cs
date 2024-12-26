@@ -34,7 +34,6 @@ namespace Asv.Avalonia.Map
         string MakeTileImageUrl(GPoint pos, int zoom, string language)
         {
             // http://services.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/0/0/0jpg
-
             return string.Format(UrlFormat, zoom, pos.Y, pos.X);
         }
 

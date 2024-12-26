@@ -3,7 +3,7 @@
 namespace Asv.Avalonia.Map
 {
     /// <summary>
-    ///     TurkeyMap provider, http://maps.pergo.com.tr/
+    ///     TurkeyMap provider, http://maps.pergo.com.tr/.
     /// </summary>
     public class TurkeyMapProvider : GMapProvider
     {
@@ -71,7 +71,6 @@ namespace Asv.Avalonia.Map
 
             // updated version
             // http://map1.pergo.com.tr/publish/tile/tile9913/06/000/000/038/000/000/039.png
-
             string x = pos.X.ToString(Zeros).Insert(3, Slash).Insert(7, Slash); // - 000/000/001
             string y = pos.Y.ToString(Zeros).Insert(3, Slash).Insert(7, Slash); // - 000/000/000
 

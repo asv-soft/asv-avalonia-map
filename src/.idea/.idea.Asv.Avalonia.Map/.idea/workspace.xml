@@ -4,10 +4,48 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a1c7651e-8ed5-4bc7-8038-c28f17025a4e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Asv.Avalonia.Map.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Asv.Avalonia.Map.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/Internals/Core.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/Internals/Core.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/Internals/Stuff.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/Internals/Stuff.cs" afterDir="false" />
+    <list default="true" id="a1c7651e-8ed5-4bc7-8038-c28f17025a4e" name="Changes" comment="fix more and more">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Asv.Avalonia.Map/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Asv.Avalonia.Map/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/DirectionsProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/DirectionsProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/GeocodingProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/GeocodingProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/ArcGIS/ArcGIS_DarbAE_Q2_2011_NAVTQ_Eng_V5_MapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/ArcGIS/ArcGIS_DarbAE_Q2_2011_NAVTQ_Eng_V5_MapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/ArcGIS/ArcGIS_Imagery_World_2D_MapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/ArcGIS/ArcGIS_Imagery_World_2D_MapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/ArcGIS/ArcGIS_ShadedRelief_World_2D_MapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/ArcGIS/ArcGIS_ShadedRelief_World_2D_MapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/ArcGIS/ArcGIS_StreetMap_World_2D_MapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/ArcGIS/ArcGIS_StreetMap_World_2D_MapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/ArcGIS/ArcGIS_Topo_US_2D_MapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/ArcGIS/ArcGIS_Topo_US_2D_MapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/ArcGIS/ArcGIS_World_Physical_MapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/ArcGIS/ArcGIS_World_Physical_MapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/ArcGIS/ArcGIS_World_Shaded_Relief_MapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/ArcGIS/ArcGIS_World_Shaded_Relief_MapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/ArcGIS/ArcGIS_World_Street_MapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/ArcGIS/ArcGIS_World_Street_MapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/ArcGIS/ArcGIS_World_Terrain_Base_MapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/ArcGIS/ArcGIS_World_Terrain_Base_MapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/ArcGIS/ArcGIS_World_Topo_MapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/ArcGIS/ArcGIS_World_Topo_MapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Bing/BingHybridMapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Bing/BingHybridMapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Bing/BingMapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Bing/BingMapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Bing/BingOSMapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Bing/BingOSMapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Bing/BingSatelliteMapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Bing/BingSatelliteMapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Custom/CustomMapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Custom/CustomMapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Czech/CzechGeographicMapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Czech/CzechGeographicMapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Czech/CzechHistoryMapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Czech/CzechHistoryMapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Czech/CzechHybridMapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Czech/CzechHybridMapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Czech/CzechMapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Czech/CzechMapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Czech/CzechSatelliteMapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Czech/CzechSatelliteMapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Czech/CzechTuristMapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Czech/CzechTuristMapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Czech/CzechTuristWinterMapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Czech/CzechTuristWinterMapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/CzechOld/CzechHistoryMapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/CzechOld/CzechHistoryMapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/CzechOld/CzechHybridMapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/CzechOld/CzechHybridMapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/CzechOld/CzechMapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/CzechOld/CzechMapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/CzechOld/CzechSatelliteMapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/CzechOld/CzechSatelliteMapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/CzechOld/CzechTuristMapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/CzechOld/CzechTuristMapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Etc/CloudMadeMapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Etc/CloudMadeMapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Etc/LatviaMapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Etc/LatviaMapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Etc/SwedenMapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Etc/SwedenMapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Etc/SwedenMapProviderAlt.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Etc/SwedenMapProviderAlt.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Etc/TurkeyMapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Etc/TurkeyMapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Etc/WikiMapiaMapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Etc/WikiMapiaMapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Google/GoogleMapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/Google/GoogleMapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/OpenStreetMap/OpenStreetMapProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/MapProviders/OpenStreetMap/OpenStreetMapProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/RoadsProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/RoadsProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/RoutingProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Asv.Avalonia.Map/Core/RoutingProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CodeStyle.ruleset" beforeDir="false" afterPath="$PROJECT_DIR$/CodeStyle.ruleset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,23 +60,73 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
+  <component name="GithubDefaultAccount">
+    <option name="defaultAccountId" value="3fb50390-d1ca-41eb-b134-e06331e75e41" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="mock:///Users/levmyts/RiderProjects/asv-avalonia-map/src/Asv.Avalonia.Map/Core/MapProviders/Bing/BingMapProvider.cs" root0="SKIP_HIGHLIGHTING" />
+  </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="false" />
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 2
+}]]></component>
+  <component name="ProjectId" id="2qk6tlqdmdCStVdGwiRve4G6SQL" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "feat/husky",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)"
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
+    <task id="LOCAL-00001" summary="fix some more">
+      <option name="closed" value="true" />
+      <created>1735137950874</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1735137950874</updated>
+    </task>
+    <task id="LOCAL-00002" summary="fix more and more">
+      <option name="closed" value="true" />
+      <created>1735139220083</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1735139220083</updated>
+    </task>
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="a1c7651e-8ed5-4bc7-8038-c28f17025a4e" name="Changes" comment="fix more and more" />
+      <created>1735194443818</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1735194443818</updated>
+      <workItem from="1735194446532" duration="6645000" />
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="false" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="fix some more" />
+    <MESSAGE value="fix more and more" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix more and more" />
   </component>
 </project>

@@ -23,7 +23,7 @@ namespace Asv.Avalonia.Map
         /// A DirectionsStatusCode indicating the status of the directions request.
         /// </returns>
         DirectionsStatusCode GetDirections(
-            out GDirections direction,
+            out GDirections? direction,
             GeoPoint start,
             GeoPoint end,
             bool avoidHighways,
@@ -48,7 +48,7 @@ namespace Asv.Avalonia.Map
         /// The status code indicating the result of the directions request.
         /// </returns>
         DirectionsStatusCode GetDirections(
-            out GDirections direction,
+            out GDirections? direction,
             string start,
             string end,
             bool avoidHighways,
@@ -147,7 +147,7 @@ namespace Asv.Avalonia.Map
         /// <param name="metric">Specifies whether the distances in the directions response should be returned in metric or imperial units.</param>
         /// <returns>The status code indicating the success or failure of the directions request.</returns>
         DirectionsStatusCode GetDirections(
-            out GDirections direction,
+            out GDirections? direction,
             string start,
             IEnumerable<string> wayPoints,
             string end,

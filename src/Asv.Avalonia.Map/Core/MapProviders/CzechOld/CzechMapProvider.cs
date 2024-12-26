@@ -88,7 +88,6 @@ namespace Asv.Avalonia.Map
         {
             // ['base','ophoto','turist','army2']
             // http://m1.mapserver.mapy.cz/base-n/3_8000000_8000000
-
             long xx = pos.X << (28 - zoom);
             long yy = ((long)Math.Pow(2.0, zoom) - 1 - pos.Y) << (28 - zoom);
 

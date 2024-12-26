@@ -45,7 +45,7 @@ namespace Asv.Avalonia.Map
 
         public static int GetServerNum(GPoint pos)
         {
-            return (int)(pos.X % 4 + pos.Y % 4 * 4);
+            return (int)((pos.X % 4) + ((pos.Y % 4) * 4));
         }
     }
 

@@ -35,8 +35,7 @@ namespace Asv.Avalonia.Map
 
             if (!DisableDynamicTileUrlFormat)
             {
-                //UrlFormat[OrdnanceSurvey]: http://ecn.{subdomain}.tiles.virtualearth.net/tiles/r{quadkey}.jpeg?g=3179&productSet=mmOS
-
+                // UrlFormat[OrdnanceSurvey]: http://ecn.{subdomain}.tiles.virtualearth.net/tiles/r{quadkey}.jpeg?g=3179&productSet=mmOS
                 _urlDynamicFormat = GetTileUrl("OrdnanceSurvey");
                 if (!string.IsNullOrEmpty(_urlDynamicFormat))
                 {
@@ -71,7 +70,6 @@ namespace Asv.Avalonia.Map
         string _urlDynamicFormat = string.Empty;
 
         // http://ecn.t1.tiles.virtualearth.net/tiles/r12030003131321231.jpeg?g=875&mkt=en-us&n=z&productSet=mmOS
-
         static readonly string UrlFormat =
             "http://ecn.t{0}.tiles.virtualearth.net/tiles/r{1}.jpeg?g={2}&mkt={3}&n=z{4}&productSet=mmOS";
     }

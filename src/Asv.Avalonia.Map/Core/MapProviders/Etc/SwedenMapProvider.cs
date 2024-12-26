@@ -9,7 +9,6 @@ namespace Asv.Avalonia.Map
             RefererUrl = "https://kso.etjanster.lantmateriet.se/?lang=en";
             Copyright = string.Format("©{0} Lantmäteriet", DateTime.Today.Year);
             MaxZoom = 11;
-            //Area = new RectLatLng(58.0794870805093, 20.3286067123543, 7.90883164336887, 2.506129113082);
         }
 
         #region GMapProvider Members
@@ -84,7 +83,6 @@ namespace Asv.Avalonia.Map
         string MakeTileImageUrl(GPoint pos, int zoom, string language)
         {
             // https://kso.etjanster.lantmateriet.se/karta/topowebb/v1/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=topowebb&STYLE=default&TILEMATRIXSET=3006&TILEMATRIX=2&TILEROW=6&TILECOL=7&FORMAT=image%2Fpng
-
             return string.Format(UrlFormat, zoom, pos.Y, pos.X);
         }
 

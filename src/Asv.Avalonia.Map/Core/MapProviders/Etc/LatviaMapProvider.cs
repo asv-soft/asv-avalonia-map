@@ -61,7 +61,7 @@ namespace Asv.Avalonia.Map
     }
 
     /// <summary>
-    ///     LatviaMap provider, http://www.ikarte.lv/
+    ///     LatviaMap provider, http://www.ikarte.lv/.
     /// </summary>
     public class LatviaMapProvider : LatviaMapProviderBase
     {
@@ -94,13 +94,12 @@ namespace Asv.Avalonia.Map
             // http://www.maps.lt/cache/ikartelv/map/_alllayers/L03/R00000037/C00000053.png
             // http://www.maps.lt/arcgiscache/ikartelv/map/_alllayers/L02/R0000001c/C0000002a.png
             // http://services.maps.lt/mapsk_services/rest/services/ikartelv/MapServer/tile/5/271/416.png?cl=ikrlv
-
             return string.Format(UrlFormat, zoom, pos.Y, pos.X);
         }
 
         static readonly string UrlFormat =
             "http://services.maps.lt/mapsk_services/rest/services/ikartelv/MapServer/tile/{0}/{1}/{2}.png?cl=ikrlv";
 
-        //static readonly string UrlFormat = "http://www.maps.lt/arcgiscache/ikartelv/map/_alllayers/L{0:00}/R{1:x8}/C{2:x8}.png";
+        // static readonly string UrlFormat = "http://www.maps.lt/arcgiscache/ikartelv/map/_alllayers/L{0:00}/R{1:x8}/C{2:x8}.png";
     }
 }

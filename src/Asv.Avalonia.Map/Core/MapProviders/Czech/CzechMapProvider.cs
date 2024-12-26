@@ -88,11 +88,9 @@ namespace Asv.Avalonia.Map
         {
             // ['base-m','ophoto-m','turist-m','army2-m']
             // http://m3.mapserver.mapy.cz/base-m/14-8802-5528
-
             return string.Format(UrlFormat, GetServerNum(pos, 3) + 1, zoom, pos.X, pos.Y);
         }
 
         static readonly string UrlFormat = "http://m{0}.mapserver.mapy.cz/base-m/{1}-{2}-{3}";
-        //static readonly string UrlFormat = "https://m{0}.mapserver.mapy.cz/turist-m/{1}-{2}-{3}";
     }
 }

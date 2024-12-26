@@ -3,7 +3,7 @@
 namespace Asv.Avalonia.Map
 {
     /// <summary>
-    ///     CzechTuristMap provider, http://www.mapy.cz/
+    ///     CzechTuristMap provider, http://www.mapy.cz/.
     /// </summary>
     public class CzechGeographicMapProvider : CzechMapProviderBase
     {
@@ -34,7 +34,6 @@ namespace Asv.Avalonia.Map
         string MakeTileImageUrl(GPoint pos, int zoom, string language)
         {
             // http://m3.mapserver.mapy.czzemepis-m/14-8802-5528
-
             return string.Format(UrlFormat, GetServerNum(pos, 3) + 1, zoom, pos.X, pos.Y);
         }
 

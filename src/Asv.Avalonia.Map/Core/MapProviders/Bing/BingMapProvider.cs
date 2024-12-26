@@ -175,167 +175,166 @@ namespace Asv.Avalonia.Map
 
         public override void OnInitialized()
         {
-            if (!_init)
+            if (_init)
             {
-                try
-                {
-                    string key = ClientKey;
+                return;
+            }
 
-                    // to avoid registration stuff, default key
-                    if (TryGetDefaultKey && string.IsNullOrEmpty(ClientKey))
+            try
+            {
+                string key = ClientKey;
+
+                // to avoid registration stuff, default key
+                if (TryGetDefaultKey && string.IsNullOrEmpty(ClientKey))
+                {
+                    // old: Vx8dmDflxzT02jJUG8bEjMU07Xr9QWRpPTeRuAZTC1uZFQdDCvK/jUbHKdyHEWj4LvccTPoKofDHtzHsWu/0xuo5u2Y9rj88
+                    key = Stuff.GString(
+                        "Jq7FrGTyaYqcrvv9ugBKv4OVSKnmzpigqZtdvtcDdgZexmOZ2RugOexFSmVzTAhOWiHrdhFoNCoySnNF3MyyIOo5u2Y9rj88"
+                    );
+                }
+
+                #region -- try get sesion key --
+
+                if (!string.IsNullOrEmpty(key))
+                {
+                    string? keyResponse = GMaps.Instance.UseUrlCache
+                        ? Cache.Instance.GetContent(
+                            "BingLoggingServiceV1" + key,
+                            CacheType.UrlCache,
+                            TimeSpan.FromHours(TTLCache)
+                        )
+                        : string.Empty;
+
+                    if (string.IsNullOrEmpty(keyResponse))
                     {
-                        //old: Vx8dmDflxzT02jJUG8bEjMU07Xr9QWRpPTeRuAZTC1uZFQdDCvK/jUbHKdyHEWj4LvccTPoKofDHtzHsWu/0xuo5u2Y9rj88
-                        key = Stuff.GString(
-                            "Jq7FrGTyaYqcrvv9ugBKv4OVSKnmzpigqZtdvtcDdgZexmOZ2RugOexFSmVzTAhOWiHrdhFoNCoySnNF3MyyIOo5u2Y9rj88"
+                        // Bing Maps WPF Control
+                        // http://dev.virtualearth.net/webservices/v1/LoggingService/LoggingService.svc/Log?entry=0&auth={0}&fmt=1&type=3&group=MapControl&name=WPF&version=1.0.0.0&session=00000000-0000-0000-0000-000000000000&mkt=en-US
+                        keyResponse = GetContentUsingHttp(
+                            string.Format(
+                                "http://dev.virtualearth.net/webservices/v1/LoggingService/LoggingService.svc/Log?entry=0&fmt=1&type=3&group=MapControl&name=AJAX&mkt=en-us&auth={0}&jsonp=microsoftMapsNetworkCallback",
+                                key
+                            )
                         );
+
+                        if (
+                            !string.IsNullOrEmpty(keyResponse)
+                            && keyResponse.Contains("ValidCredentials")
+                        )
+                        {
+                            if (GMaps.Instance.UseUrlCache)
+                            {
+                                Cache.Instance.SaveContent(
+                                    "BingLoggingServiceV1" + key,
+                                    CacheType.UrlCache,
+                                    keyResponse
+                                );
+                            }
+                        }
                     }
 
-                    #region -- try get sesion key --
-
-                    if (!string.IsNullOrEmpty(key))
+                    if (
+                        !string.IsNullOrEmpty(keyResponse)
+                        && keyResponse.Contains("sessionId")
+                        && keyResponse.Contains("ValidCredentials")
+                    )
                     {
-                        string keyResponse = GMaps.Instance.UseUrlCache
-                            ? Cache.Instance.GetContent(
-                                "BingLoggingServiceV1" + key,
-                                CacheType.UrlCache,
-                                TimeSpan.FromHours(TTLCache)
-                            )
-                            : string.Empty;
+                        // microsoftMapsNetworkCallback({"sessionId" : "xxx", "authenticationResultCode" : "ValidCredentials"})
+                        SessionId = keyResponse
+                            .Split(',')[0]
+                            .Split(':')[1]
+                            .Replace("\"", string.Empty)
+                            .Replace(" ", string.Empty);
+                        Debug.WriteLine("GMapProviders.BingMap.SessionId: " + SessionId);
+                    }
+                    else
+                    {
+                        Debug.WriteLine("BingLoggingServiceV1: " + keyResponse);
+                    }
+                }
 
-                        if (string.IsNullOrEmpty(keyResponse))
+                #endregion
+
+                // supporting old road
+                if (TryCorrectVersion && DisableDynamicTileUrlFormat)
+                {
+                    #region -- get the version --
+
+                    string url = @"http://www.bing.com/maps";
+                    string? html = GMaps.Instance.UseUrlCache
+                        ? Cache.Instance.GetContent(
+                            url,
+                            CacheType.UrlCache,
+                            TimeSpan.FromDays(TTLCache)
+                        )
+                        : string.Empty;
+
+                    if (string.IsNullOrEmpty(html))
+                    {
+                        html = GetContentUsingHttp(url);
+
+                        if (!string.IsNullOrEmpty(html))
                         {
-                            // Bing Maps WPF Control
-                            // http://dev.virtualearth.net/webservices/v1/LoggingService/LoggingService.svc/Log?entry=0&auth={0}&fmt=1&type=3&group=MapControl&name=WPF&version=1.0.0.0&session=00000000-0000-0000-0000-000000000000&mkt=en-US
-
-                            keyResponse = GetContentUsingHttp(
-                                string.Format(
-                                    "http://dev.virtualearth.net/webservices/v1/LoggingService/LoggingService.svc/Log?entry=0&fmt=1&type=3&group=MapControl&name=AJAX&mkt=en-us&auth={0}&jsonp=microsoftMapsNetworkCallback",
-                                    key
-                                )
-                            );
-
-                            if (
-                                !string.IsNullOrEmpty(keyResponse)
-                                && keyResponse.Contains("ValidCredentials")
-                            )
+                            if (GMaps.Instance.UseUrlCache)
                             {
-                                if (GMaps.Instance.UseUrlCache)
+                                Cache.Instance.SaveContent(url, CacheType.UrlCache, html);
+                            }
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(html))
+                    {
+                        #region -- match versions --
+
+                        var reg = new Regex("tilegeneration:(\\d*)", RegexOptions.IgnoreCase);
+                        var mat = reg.Match(html);
+                        if (mat.Success)
+                        {
+                            var gc = mat.Groups;
+                            int count = gc.Count;
+                            if (count == 2)
+                            {
+                                string ver = gc[1].Value;
+                                string old = GMapProviders.BingMap.Version;
+                                if (ver != old)
                                 {
-                                    Cache.Instance.SaveContent(
-                                        "BingLoggingServiceV1" + key,
-                                        CacheType.UrlCache,
-                                        keyResponse
+                                    GMapProviders.BingMap.Version = ver;
+                                    GMapProviders.BingSatelliteMap.Version = ver;
+                                    GMapProviders.BingHybridMap.Version = ver;
+                                    GMapProviders.BingOSMap.Version = ver;
+#if DEBUG
+                                    Debug.WriteLine(
+                                        "GMapProviders.BingMap.Version: "
+                                            + ver
+                                            + ", old: "
+                                            + old
+                                            + ", consider updating source"
+                                    );
+                                    if (Debugger.IsAttached)
+                                    {
+                                        Thread.Sleep(5555);
+                                    }
+#endif
+                                }
+                                else
+                                {
+                                    Debug.WriteLine(
+                                        "GMapProviders.BingMap.Version: " + ver + ", OK"
                                     );
                                 }
                             }
                         }
 
-                        if (
-                            !string.IsNullOrEmpty(keyResponse)
-                            && keyResponse.Contains("sessionId")
-                            && keyResponse.Contains("ValidCredentials")
-                        )
-                        {
-                            // microsoftMapsNetworkCallback({"sessionId" : "xxx", "authenticationResultCode" : "ValidCredentials"})
-
-                            SessionId = keyResponse
-                                .Split(',')[0]
-                                .Split(':')[1]
-                                .Replace("\"", string.Empty)
-                                .Replace(" ", string.Empty);
-                            Debug.WriteLine("GMapProviders.BingMap.SessionId: " + SessionId);
-                        }
-                        else
-                        {
-                            Debug.WriteLine("BingLoggingServiceV1: " + keyResponse);
-                        }
-                    }
-
-                    #endregion
-
-                    // supporting old road
-
-                    if (TryCorrectVersion && DisableDynamicTileUrlFormat)
-                    {
-                        #region -- get the version --
-
-                        string url = @"http://www.bing.com/maps";
-                        string html = GMaps.Instance.UseUrlCache
-                            ? Cache.Instance.GetContent(
-                                url,
-                                CacheType.UrlCache,
-                                TimeSpan.FromDays(TTLCache)
-                            )
-                            : string.Empty;
-
-                        if (string.IsNullOrEmpty(html))
-                        {
-                            html = GetContentUsingHttp(url);
-
-                            if (!string.IsNullOrEmpty(html))
-                            {
-                                if (GMaps.Instance.UseUrlCache)
-                                {
-                                    Cache.Instance.SaveContent(url, CacheType.UrlCache, html);
-                                }
-                            }
-                        }
-
-                        if (!string.IsNullOrEmpty(html))
-                        {
-                            #region -- match versions --
-
-                            var reg = new Regex("tilegeneration:(\\d*)", RegexOptions.IgnoreCase);
-                            var mat = reg.Match(html);
-                            if (mat.Success)
-                            {
-                                var gc = mat.Groups;
-                                int count = gc.Count;
-                                if (count == 2)
-                                {
-                                    string ver = gc[1].Value;
-                                    string old = GMapProviders.BingMap.Version;
-                                    if (ver != old)
-                                    {
-                                        GMapProviders.BingMap.Version = ver;
-                                        GMapProviders.BingSatelliteMap.Version = ver;
-                                        GMapProviders.BingHybridMap.Version = ver;
-                                        GMapProviders.BingOSMap.Version = ver;
-#if DEBUG
-                                        Debug.WriteLine(
-                                            "GMapProviders.BingMap.Version: "
-                                                + ver
-                                                + ", old: "
-                                                + old
-                                                + ", consider updating source"
-                                        );
-                                        if (Debugger.IsAttached)
-                                        {
-                                            Thread.Sleep(5555);
-                                        }
-#endif
-                                    }
-                                    else
-                                    {
-                                        Debug.WriteLine(
-                                            "GMapProviders.BingMap.Version: " + ver + ", OK"
-                                        );
-                                    }
-                                }
-                            }
-
-                            #endregion
-                        }
-
                         #endregion
                     }
 
-                    _init = true; // try it only once
+                    #endregion
                 }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine("TryCorrectBingVersions failed: " + ex);
-                }
+
+                _init = true; // try it only once
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("TryCorrectBingVersions failed: " + ex);
             }
         }
 
@@ -344,7 +343,7 @@ namespace Asv.Avalonia.Map
             bool pass = base.CheckTileImageHttpResponse(response);
             if (pass)
             {
-                string tileInfo = response.Headers.Get("X-VE-Tile-Info");
+                string? tileInfo = response.Headers.Get("X-VE-Tile-Info");
                 if (tileInfo != null)
                 {
                     return !tileInfo.Equals("no-tile");
@@ -359,93 +358,95 @@ namespace Asv.Avalonia.Map
             //Retrieve map tile URL from the Imagery Metadata service: http://msdn.microsoft.com/en-us/library/ff701716.aspx
             //This ensures that the current tile URL is always used.
             //This will prevent the app from breaking when the map tiles change.
-
             string ret = string.Empty;
-            if (!string.IsNullOrEmpty(SessionId))
+            if (string.IsNullOrEmpty(SessionId))
             {
-                try
+                return ret;
+            }
+
+            try
+            {
+                string url =
+                    "http://dev.virtualearth.net/REST/V1/Imagery/Metadata/"
+                    + imageryType
+                    + "?output=xml&key="
+                    + SessionId;
+
+                string? r = GMaps.Instance.UseUrlCache
+                    ? Cache.Instance.GetContent(
+                        "GetTileUrl" + imageryType,
+                        CacheType.UrlCache,
+                        TimeSpan.FromHours(TTLCache)
+                    )
+                    : string.Empty;
+                bool cache = false;
+
+                if (string.IsNullOrEmpty(r))
                 {
-                    string url =
-                        "http://dev.virtualearth.net/REST/V1/Imagery/Metadata/"
-                        + imageryType
-                        + "?output=xml&key="
-                        + SessionId;
+                    r = GetContentUsingHttp(url);
+                    cache = true;
+                }
 
-                    string r = GMaps.Instance.UseUrlCache
-                        ? Cache.Instance.GetContent(
-                            "GetTileUrl" + imageryType,
-                            CacheType.UrlCache,
-                            TimeSpan.FromHours(TTLCache)
-                        )
-                        : string.Empty;
-                    bool cache = false;
+                if (!string.IsNullOrEmpty(r))
+                {
+                    var doc = new XmlDocument();
+                    doc.LoadXml(r);
 
-                    if (string.IsNullOrEmpty(r))
+                    XmlNode? xn = doc["Response"];
+                    var statuscode = xn?["StatusCode"]?.InnerText;
+
+                    if (string.Equals(statuscode, "200", StringComparison.OrdinalIgnoreCase))
                     {
-                        r = GetContentUsingHttp(url);
-                        cache = true;
-                    }
+                        xn = xn?["ResourceSets"]?["ResourceSet"]?["Resources"];
+                        var xnl = xn?.ChildNodes;
 
-                    if (!string.IsNullOrEmpty(r))
-                    {
-                        var doc = new XmlDocument();
-                        doc.LoadXml(r);
+                        ArgumentNullException.ThrowIfNull(xnl);
 
-                        XmlNode xn = doc["Response"];
-                        string statuscode = xn["StatusCode"].InnerText;
-
-                        if (string.Compare(statuscode, "200", true) == 0)
+                        foreach (XmlNode xno in xnl)
                         {
-                            xn = xn["ResourceSets"]["ResourceSet"]["Resources"];
-                            var xnl = xn.ChildNodes;
+                            XmlNode? imageUrl = xno?["ImageUrl"];
 
-                            foreach (XmlNode xno in xnl)
+                            if (imageUrl == null || string.IsNullOrEmpty(imageUrl.InnerText))
                             {
-                                XmlNode imageUrl = xno["ImageUrl"];
-
-                                if (imageUrl != null && !string.IsNullOrEmpty(imageUrl.InnerText))
-                                {
-                                    if (cache && GMaps.Instance.UseUrlCache)
-                                    {
-                                        Cache.Instance.SaveContent(
-                                            "GetTileUrl" + imageryType,
-                                            CacheType.UrlCache,
-                                            r
-                                        );
-                                    }
-
-                                    string baseTileUrl = imageUrl.InnerText;
-
-                                    if (
-                                        baseTileUrl.Contains("{key}")
-                                        || baseTileUrl.Contains("{token}")
-                                    )
-                                    {
-                                        baseTileUrl
-                                            .Replace("{key}", SessionId)
-                                            .Replace("{token}", SessionId);
-                                    }
-                                    else if (ForceSessionIdOnTileAccess)
-                                    {
-                                        // haven't seen anyone doing that, yet? ;/
-                                        baseTileUrl += "&key=" + SessionId;
-                                    }
-
-                                    Debug.WriteLine(
-                                        "GetTileUrl, UrlFormat[" + imageryType + "]: " + baseTileUrl
-                                    );
-
-                                    ret = baseTileUrl;
-                                    break;
-                                }
+                                continue;
                             }
+
+                            if (cache && GMaps.Instance.UseUrlCache)
+                            {
+                                Cache.Instance.SaveContent(
+                                    "GetTileUrl" + imageryType,
+                                    CacheType.UrlCache,
+                                    r
+                                );
+                            }
+
+                            var baseTileUrl = imageUrl.InnerText;
+
+                            if (baseTileUrl.Contains("{key}") || baseTileUrl.Contains("{token}"))
+                            {
+                                baseTileUrl
+                                    .Replace("{key}", SessionId)
+                                    .Replace("{token}", SessionId);
+                            }
+                            else if (ForceSessionIdOnTileAccess)
+                            {
+                                // haven't seen anyone doing that, yet? ;/
+                                baseTileUrl += "&key=" + SessionId;
+                            }
+
+                            Debug.WriteLine(
+                                "GetTileUrl, UrlFormat[" + imageryType + "]: " + baseTileUrl
+                            );
+
+                            ret = baseTileUrl;
+                            break;
                         }
                     }
                 }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine("GetTileUrl: Error getting Bing Maps tile URL - " + ex);
-                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("GetTileUrl: Error getting Bing Maps tile URL - " + ex);
             }
 
             return ret;
@@ -453,7 +454,7 @@ namespace Asv.Avalonia.Map
 
         #region RoutingProvider
 
-        public MapRoute GetRoute(
+        public MapRoute? GetRoute(
             GeoPoint start,
             GeoPoint end,
             bool avoidHighways,
@@ -464,7 +465,7 @@ namespace Asv.Avalonia.Map
             string tooltip;
             int numLevels;
             int zoomFactor;
-            MapRoute ret = null;
+            MapRoute? ret = null;
             var points = GetRoutePoints(
                 MakeRouteUrl(start, end, LanguageStr, avoidHighways, walkingMode),
                 zoom,
@@ -480,7 +481,7 @@ namespace Asv.Avalonia.Map
             return ret;
         }
 
-        public MapRoute GetRoute(
+        public MapRoute? GetRoute(
             string start,
             string end,
             bool avoidHighways,
@@ -491,7 +492,7 @@ namespace Asv.Avalonia.Map
             string tooltip;
             int numLevels;
             int zoomFactor;
-            MapRoute ret = null;
+            MapRoute? ret = null;
             var points = GetRoutePoints(
                 MakeRouteUrl(start, end, LanguageStr, avoidHighways, walkingMode),
                 zoom,
@@ -553,7 +554,7 @@ namespace Asv.Avalonia.Map
             );
         }
 
-        List<GeoPoint> GetRoutePoints(
+        List<GeoPoint>? GetRoutePoints(
             string url,
             int zoom,
             out string tooltipHtml,
@@ -561,13 +562,13 @@ namespace Asv.Avalonia.Map
             out int zoomFactor
         )
         {
-            List<GeoPoint> points = null;
+            List<GeoPoint>? points = null;
             tooltipHtml = string.Empty;
             numLevel = -1;
             zoomFactor = -1;
             try
             {
-                string route = GMaps.Instance.UseRouteCache
+                string? route = GMaps.Instance.UseRouteCache
                     ? Cache.Instance.GetContent(
                         url,
                         CacheType.RouteCache,
@@ -617,23 +618,31 @@ namespace Asv.Avalonia.Map
 
                     var doc = new XmlDocument();
                     doc.LoadXml(route);
-                    XmlNode xn = doc["Response"];
-                    string statuscode = xn["StatusCode"].InnerText;
+                    XmlNode? xn = doc["Response"];
+                    string? statuscode = xn?["StatusCode"]?.InnerText;
                     switch (statuscode)
                     {
                         case "200":
                         {
-                            xn = xn["ResourceSets"]["ResourceSet"]["Resources"]["Route"][
-                                "RoutePath"
-                            ]["Line"];
-                            var xnl = xn.ChildNodes;
-                            if (xnl.Count > 0)
+                            xn = xn
+                                ?["ResourceSets"]
+                                ?["ResourceSet"]
+                                ?["Resources"]
+                                ?["Route"]
+                                ?["RoutePath"]
+                                ?["Line"];
+                            var xnl = xn?.ChildNodes;
+                            if (xnl?.Count > 0)
                             {
                                 points = new List<GeoPoint>();
                                 foreach (XmlNode xno in xnl)
                                 {
-                                    XmlNode latitude = xno["Latitude"];
-                                    XmlNode longitude = xno["Longitude"];
+                                    XmlNode? latitude = xno?["Latitude"];
+                                    XmlNode? longitude = xno?["Longitude"];
+
+                                    ArgumentNullException.ThrowIfNull(latitude);
+                                    ArgumentNullException.ThrowIfNull(longitude);
+
                                     points.Add(
                                         new GeoPoint(
                                             double.Parse(
@@ -652,6 +661,7 @@ namespace Asv.Avalonia.Map
 
                             break;
                         }
+
                         // no status implementation on routes yet although when introduced these are the codes. Exception will be catched.
                         case "400":
                             throw new Exception("Bad Request, The request contained an error.");
@@ -700,9 +710,9 @@ namespace Asv.Avalonia.Map
 
         #region GeocodingProvider
 
-        public GeoCoderStatusCode GetPoints(string keywords, out List<GeoPoint> pointList)
+        public GeoCoderStatusCode GetPoints(string keywords, out List<GeoPoint>? pointList)
         {
-            //Escape keywords to better handle special characters.
+            // Escape keywords to better handle special characters.
             return GetLatLngFromGeocoderUrl(
                 MakeGeocoderUrl("q=" + Uri.EscapeDataString(keywords)),
                 out pointList
@@ -711,61 +721,72 @@ namespace Asv.Avalonia.Map
 
         public GeoPoint? GetPoint(string keywords, out GeoCoderStatusCode status)
         {
-            List<GeoPoint> pointList;
-            status = GetPoints(keywords, out pointList);
+            status = GetPoints(keywords, out var pointList);
             return pointList != null && pointList.Count > 0 ? pointList[0] : (GeoPoint?)null;
         }
 
-        public GeoCoderStatusCode GetPoints(Placemark placemark, out List<GeoPoint> pointList)
+        public GeoCoderStatusCode GetPoints(Placemark placemark, out List<GeoPoint>? pointList)
         {
             return GetLatLngFromGeocoderUrl(MakeGeocoderDetailedUrl(placemark), out pointList);
         }
 
         public GeoPoint? GetPoint(Placemark placemark, out GeoCoderStatusCode status)
         {
-            List<GeoPoint> pointList;
-            status = GetLatLngFromGeocoderUrl(MakeGeocoderDetailedUrl(placemark), out pointList);
+            status = GetLatLngFromGeocoderUrl(
+                MakeGeocoderDetailedUrl(placemark),
+                out var pointList
+            );
             return pointList != null && pointList.Count > 0 ? pointList[0] : (GeoPoint?)null;
         }
 
-        string MakeGeocoderDetailedUrl(Placemark placemark)
+        string MakeGeocoderDetailedUrl(Placemark placeMark)
         {
             string parameters = string.Empty;
 
-            if (!AddFieldIfNotEmpty(ref parameters, "countryRegion", placemark.CountryNameCode))
-                AddFieldIfNotEmpty(ref parameters, "countryRegion", placemark.CountryName);
+            if (!AddFieldIfNotEmpty(ref parameters, "countryRegion", placeMark.CountryNameCode))
+            {
+                AddFieldIfNotEmpty(ref parameters, "countryRegion", placeMark.CountryName);
+            }
 
-            AddFieldIfNotEmpty(ref parameters, "adminDistrict", placemark.DistrictName);
-            AddFieldIfNotEmpty(ref parameters, "locality", placemark.LocalityName);
-            AddFieldIfNotEmpty(ref parameters, "postalCode", placemark.PostalCodeNumber);
+            AddFieldIfNotEmpty(ref parameters, "adminDistrict", placeMark.DistrictName);
+            AddFieldIfNotEmpty(ref parameters, "locality", placeMark.LocalityName);
+            AddFieldIfNotEmpty(ref parameters, "postalCode", placeMark.PostalCodeNumber);
 
-            if (!string.IsNullOrEmpty(placemark.HouseNo))
+            if (!string.IsNullOrEmpty(placeMark.HouseNo))
+            {
                 AddFieldIfNotEmpty(
                     ref parameters,
                     "addressLine",
-                    placemark.ThoroughfareName + " " + placemark.HouseNo
+                    placeMark.ThoroughfareName + " " + placeMark.HouseNo
                 );
+            }
             else
-                AddFieldIfNotEmpty(ref parameters, "addressLine", placemark.ThoroughfareName);
+            {
+                AddFieldIfNotEmpty(ref parameters, "addressLine", placeMark.ThoroughfareName);
+            }
 
             return MakeGeocoderUrl(parameters);
         }
 
         bool AddFieldIfNotEmpty(ref string input, string fieldName, string value)
         {
-            if (!string.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(value))
             {
-                if (string.IsNullOrEmpty(input))
-                    input = string.Empty;
-                else
-                    input = input + "&";
-
-                input = input + fieldName + "=" + value;
-
-                return true;
+                return false;
             }
 
-            return false;
+            if (string.IsNullOrEmpty(input))
+            {
+                input = string.Empty;
+            }
+            else
+            {
+                input = input + "&";
+            }
+
+            input = input + fieldName + "=" + value;
+
+            return true;
         }
 
         public GeoCoderStatusCode GetPlacemarks(
@@ -793,14 +814,14 @@ namespace Asv.Avalonia.Map
             );
         }
 
-        GeoCoderStatusCode GetLatLngFromGeocoderUrl(string url, out List<GeoPoint> pointList)
+        GeoCoderStatusCode GetLatLngFromGeocoderUrl(string url, out List<GeoPoint>? pointList)
         {
             GeoCoderStatusCode status;
             pointList = null;
 
             try
             {
-                string geo = GMaps.Instance.UseGeocoderCache
+                string? geo = GMaps.Instance.UseGeocoderCache
                     ? Cache.Instance.GetContent(
                         url,
                         CacheType.GeocoderCache,
@@ -827,26 +848,33 @@ namespace Asv.Avalonia.Map
                     {
                         var doc = new XmlDocument();
                         doc.LoadXml(geo);
-                        XmlNode xn = doc["Response"];
-                        string statuscode = xn["StatusCode"].InnerText;
-                        switch (statuscode)
+                        XmlNode? xn = doc["Response"];
+                        var statusCode = xn?["StatusCode"]?.InnerText;
+                        switch (statusCode)
                         {
                             case "200":
                             {
                                 pointList = new List<GeoPoint>();
-                                xn = xn["ResourceSets"]["ResourceSet"]["Resources"];
-                                var xnl = xn.ChildNodes;
+                                xn = xn?["ResourceSets"]?["ResourceSet"]?["Resources"];
+                                var xnl = xn?.ChildNodes;
+
+                                ArgumentNullException.ThrowIfNull(xnl);
+
                                 foreach (XmlNode xno in xnl)
                                 {
-                                    XmlNode latitude = xno["Point"]["Latitude"];
-                                    XmlNode longitude = xno["Point"]["Longitude"];
+                                    XmlNode? latitude = xno?["Point"]?["Latitude"];
+                                    XmlNode? longitude = xno?["Point"]?["Longitude"];
+
+                                    ArgumentNullException.ThrowIfNull(latitude);
+                                    ArgumentNullException.ThrowIfNull(longitude);
+
                                     pointList.Add(
                                         new GeoPoint(
-                                            Double.Parse(
+                                            double.Parse(
                                                 latitude.InnerText,
                                                 CultureInfo.InvariantCulture
                                             ),
-                                            Double.Parse(
+                                            double.Parse(
                                                 longitude.InnerText,
                                                 CultureInfo.InvariantCulture
                                             ),
@@ -891,11 +919,9 @@ namespace Asv.Avalonia.Map
                                 status = GeoCoderStatusCode.ERROR;
                                 break; // Internal Server Error, Your request could not be completed because there was a problem with the service.
                             case "501":
-                                status = GeoCoderStatusCode.UNKNOWN_ERROR;
-                                break; // Service Unavailable, There's a problem with the service right now. Please try again later.
                             default:
                                 status = GeoCoderStatusCode.UNKNOWN_ERROR;
-                                break; // unknown, for possible future error codes
+                                break; // Service Unavailable, There's a problem with the service right now. Please try again later.
                         }
                     }
                 }
@@ -947,18 +973,19 @@ namespace Asv.Avalonia.Map
         {
             base.OnInitialized();
 
-            if (!DisableDynamicTileUrlFormat)
+            if (DisableDynamicTileUrlFormat)
             {
-                //UrlFormat[Road]: http://ecn.{subdomain}.tiles.virtualearth.net/tiles/r{quadkey}.jpeg?g=3179&mkt={culture}&shading=hill
+                return;
+            }
 
-                _urlDynamicFormat = GetTileUrl("Road");
-                if (!string.IsNullOrEmpty(_urlDynamicFormat))
-                {
-                    _urlDynamicFormat = _urlDynamicFormat
-                        .Replace("{subdomain}", "t{0}")
-                        .Replace("{quadkey}", "{1}")
-                        .Replace("{culture}", "{2}");
-                }
+            // UrlFormat[Road]: http://ecn.{subdomain}.tiles.virtualearth.net/tiles/r{quadkey}.jpeg?g=3179&mkt={culture}&shading=hill
+            _urlDynamicFormat = GetTileUrl("Road");
+            if (!string.IsNullOrEmpty(_urlDynamicFormat))
+            {
+                _urlDynamicFormat = _urlDynamicFormat
+                    .Replace("{subdomain}", "t{0}")
+                    .Replace("{quadkey}", "{1}")
+                    .Replace("{culture}", "{2}");
             }
         }
 
@@ -986,7 +1013,6 @@ namespace Asv.Avalonia.Map
         string _urlDynamicFormat = string.Empty;
 
         // http://ecn.t0.tiles.virtualearth.net/tiles/r120030?g=875&mkt=en-us&lbl=l1&stl=h&shading=hill&n=z
-
         static readonly string UrlFormat =
             "http://ecn.t{0}.tiles.virtualearth.net/tiles/r{1}?g={2}&mkt={3}&lbl=l1&stl=h&shading=hill&n=z{4}";
     }

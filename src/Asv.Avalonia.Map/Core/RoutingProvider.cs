@@ -3,7 +3,7 @@
 namespace Asv.Avalonia.Map
 {
     /// <summary>
-    /// RoutingProvider interface
+    /// RoutingProvider interface.
     /// </summary>
     public interface RoutingProvider
     {
@@ -16,7 +16,7 @@ namespace Asv.Avalonia.Map
         /// <param name="walkingMode">A boolean value indicating whether to use walking mode.</param>
         /// <param name="zoom">The zoom level of the map.</param>
         /// <returns>The MapRoute object representing the route between the two points.</returns>
-        MapRoute GetRoute(
+        MapRoute? GetRoute(
             GeoPoint start,
             GeoPoint end,
             bool avoidHighways,
@@ -33,6 +33,12 @@ namespace Asv.Avalonia.Map
         /// <param name="walkingMode">Specifies whether to use walking mode when calculating the route.</param>
         /// <param name="zoom">The zoom level of the map.</param>
         /// <returns>The calculated map route.</returns>
-        MapRoute GetRoute(string start, string end, bool avoidHighways, bool walkingMode, int zoom);
+        MapRoute? GetRoute(
+            string start,
+            string end,
+            bool avoidHighways,
+            bool walkingMode,
+            int zoom
+        );
     }
 }

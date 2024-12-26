@@ -65,7 +65,6 @@ namespace Asv.Avalonia.Map
         string MakeTileImageUrl(GPoint pos, int zoom)
         {
             // http://www.darb.ae/ArcGIS/rest/services/BaseMaps/Q2_2011_NAVTQ_Eng_V5/MapServer/tile/0/121/144
-
             return string.Format(UrlFormat, zoom, pos.Y, pos.X);
         }
 

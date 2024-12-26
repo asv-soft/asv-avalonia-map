@@ -65,7 +65,7 @@ namespace Asv.Avalonia.Map
             url = url.Replace("{y}", "{3}");
 
             string letter = string.IsNullOrEmpty(CustomServerLetters)
-                ? ""
+                ? string.Empty
                 : CustomServerLetters[GetServerNum(pos, 3)].ToString();
             return string.Format(url, letter, zoom, pos.X, pos.Y);
         }

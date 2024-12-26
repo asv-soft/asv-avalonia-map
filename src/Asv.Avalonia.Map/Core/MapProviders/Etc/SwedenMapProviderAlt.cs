@@ -25,20 +25,11 @@ namespace Asv.Avalonia.Map
         }
 
         #region GMapProvider Members
-        public override Guid Id
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public override Guid Id => throw new NotImplementedException();
 
-        public override string Name
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public override string Name => throw new NotImplementedException();
 
-        public override PureProjection Projection
-        {
-            get { return MercatorProjection.Instance; }
-        }
+        public override PureProjection Projection => MercatorProjection.Instance;
 
         GMapProvider[] overlays;
         public override GMapProvider[] Overlays
@@ -49,6 +40,7 @@ namespace Asv.Avalonia.Map
                 {
                     overlays = new GMapProvider[] { this };
                 }
+
                 return overlays;
             }
         }
@@ -63,7 +55,7 @@ namespace Asv.Avalonia.Map
     }
 
     /// <summary>
-    /// SwedenMapAlt provider
+    /// SwedenMapAlt provider.
     /// </summary>
     public class SwedenMapProviderAlt : SwedenMapProviderAltBase
     {
@@ -106,7 +98,6 @@ namespace Asv.Avalonia.Map
         string MakeTileImageUrl(GPoint pos, int zoom, string language)
         {
             // https://kso.etjanster.lantmateriet.se/karta/topowebb/v1/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=topowebb&STYLE=default&TILEMATRIXSET=3857&TILEMATRIX=2&TILEROW=6&TILECOL=7&FORMAT=image%2Fpng
-
             return string.Format(UrlFormat, zoom, pos.Y, pos.X);
         }
 
