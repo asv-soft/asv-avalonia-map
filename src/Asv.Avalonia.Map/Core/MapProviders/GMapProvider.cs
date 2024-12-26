@@ -11,7 +11,7 @@ using Asv.Avalonia.Map.Korea;
 namespace Asv.Avalonia.Map
 {
     /// <summary>
-    ///     providers that are already build in
+    ///     providers that are already build in.
     /// </summary>
     public class GMapProviders
     {
@@ -243,82 +243,66 @@ namespace Asv.Avalonia.Map
         public static readonly CustomMapProvider CustomMap = CustomMapProvider.Instance;
 
         /// <summary>
-        ///     get all instances of the supported providers
+        ///     get all instances of the supported providers.
         /// </summary>
         public static List<GMapProvider> List { get; }
 
         static Dictionary<Guid, GMapProvider> Hash;
 
-        public static GMapProvider TryGetProvider(Guid id)
+        public static GMapProvider? TryGetProvider(Guid id)
         {
-            GMapProvider ret;
-
-            if (Hash.TryGetValue(id, out ret))
-            {
-                return ret;
-            }
-
-            return null;
+            return Hash.GetValueOrDefault(id);
         }
 
         static Dictionary<int, GMapProvider> DbHash;
 
-        public static GMapProvider TryGetProvider(int dbId)
+        public static GMapProvider? TryGetProvider(int dbId)
         {
-            GMapProvider ret;
-
-            if (DbHash.TryGetValue(dbId, out ret))
-            {
-                return ret;
-            }
-
-            return null;
+            return DbHash.GetValueOrDefault(dbId);
         }
 
-        public static GMapProvider TryGetProvider(string providerName)
+        public static GMapProvider? TryGetProvider(string providerName)
         {
             if (List.Exists(x => x.Name == providerName))
             {
                 return List.Find(x => x.Name == providerName);
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
     }
 
     /// <summary>
-    ///     base class for each map provider
+    ///     base class for each map provider.
     /// </summary>
     public abstract class GMapProvider
     {
         /// <summary>
-        ///     unique provider id
+        ///     unique provider id.
         /// </summary>
         public abstract Guid Id { get; }
 
         /// <summary>
-        ///     provider name
+        ///     provider name.
         /// </summary>
         public abstract string Name { get; }
 
         /// <summary>
-        ///     provider projection
+        ///     provider projection.
         /// </summary>
         public abstract PureProjection Projection { get; }
 
         /// <summary>
-        ///     provider overlays
+        ///     provider overlays.
         /// </summary>
-        public abstract GMapProvider[] Overlays { get; }
+        public abstract GMapProvider[]? Overlays { get; }
 
         /// <summary>
-        ///     gets tile image using implemented provider
+        ///     gets tile image using implemented provider.
         /// </summary>
-        /// <param name="pos"></param>
-        /// <param name="zoom"></param>
-        /// <returns></returns>
+        /// <param name="pos">pos.</param>
+        /// <param name="zoom">zoom.</param>
+        /// <returns>.</returns>
         public abstract PureImage? GetTileImage(GPoint pos, int zoom);
 
         static readonly List<GMapProvider> MapProviders = new List<GMapProvider>();
@@ -348,12 +332,12 @@ namespace Asv.Avalonia.Map
         }
 
         /// <summary>
-        ///     was provider initialized
+        ///     was provider initialized.
         /// </summary>
         public bool IsInitialized { get; internal set; }
 
         /// <summary>
-        ///     called before first use
+        ///     called before first use.
         /// </summary>
         public virtual void OnInitialized()
         {
@@ -366,34 +350,34 @@ namespace Asv.Avalonia.Map
         public readonly int DbId;
 
         /// <summary>
-        ///     area of map
+        ///     area of map.
         /// </summary>
         public RectLatLng? Area;
 
         /// <summary>
-        ///     minimum level of zoom
+        ///     minimum level of zoom.
         /// </summary>
         public int MinZoom;
 
         /// <summary>
-        ///     maximum level of zoom
+        ///     maximum level of zoom.
         /// </summary>
         public int? MaxZoom = 17;
 
         /// <summary>
-        ///     proxy for net access
+        ///     proxy for net access.
         /// </summary>
         public static IWebProxy WebProxy;
 
         /// <summary>
-        ///     Connect trough a SOCKS 4/5 proxy server
+        ///     Connect trough a SOCKS 4/5 proxy server.
         /// </summary>
         public static bool IsSocksProxy = false;
 
         /// <summary>
-        ///     The web request factory
+        ///     The web request factory.
         /// </summary>
-        public static Func<GMapProvider, string, WebRequest> WebRequestFactory = null;
+        public static Func<GMapProvider, string, WebRequest> WebRequestFactory = null!;
 
         /// <summary>
         ///     NetworkCredential for tile http access
@@ -407,7 +391,7 @@ namespace Asv.Avalonia.Map
         public static string UserAgent = string.Format(
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:{0}.0) Gecko/20100101 Firefox/{0}.0",
             Stuff.Random.Next(
-                (DateTime.Today.Year - 2012) * 10 - 10,
+                ((DateTime.Today.Year - 2012) * 10) - 10,
                 (DateTime.Today.Year - 2012) * 10
             )
         );
@@ -459,14 +443,14 @@ namespace Asv.Avalonia.Map
         /// <summary>
         ///     internal proxy for image management
         /// </summary>
-        internal static PureImageProxy TileImageProxy = DefaultImageProxy.Instance;
+        internal static PureImageProxy? TileImageProxy = DefaultImageProxy.Instance;
 
         static readonly string requestAccept = "*/*";
         static readonly string responseContentType = "image";
 
         protected virtual bool CheckTileImageHttpResponse(WebResponse response)
         {
-            //Debug.WriteLine(response.StatusCode + "/" + response.StatusDescription + "/" + response.ContentType + " -> " + response.ResponseUri);
+            // Debug.WriteLine(response.StatusCode + "/" + response.StatusDescription + "/" + response.ContentType + " -> " + response.ResponseUri);
             return response.ContentType.Contains(responseContentType);
         }
 
@@ -475,8 +459,8 @@ namespace Asv.Avalonia.Map
         /// <summary>
         ///     http://blog.kowalczyk.info/article/at3/Forcing-basic-http-authentication-for-HttpWebReq.html
         /// </summary>
-        /// <param name="userName"></param>
-        /// <param name="userPassword"></param>
+        /// <param name="userName">userName.</param>
+        /// <param name="userPassword">userPassword.</param>
         public void ForceBasicHttpAuthentication(string userName, string userPassword)
         {
             _authorization =
@@ -493,7 +477,9 @@ namespace Asv.Avalonia.Map
             var request =
                 IsSocksProxy ? SocksHttpWebRequest.Create(url)
                 : WebRequestFactory != null ? WebRequestFactory(this, url)
+#pragma warning disable SYSLIB0014
                 : WebRequest.Create(url);
+#pragma warning restore SYSLIB0014
 
             if (WebProxy != null)
             {
@@ -543,39 +529,35 @@ namespace Asv.Avalonia.Map
 
             InitializeWebRequest(request);
 
-            using (var response = request.GetResponse())
+            using var response = request.GetResponse();
+            if (CheckTileImageHttpResponse(response))
             {
-                if (CheckTileImageHttpResponse(response))
+                using var responseStream = response.GetResponseStream();
+                var data = Stuff.CopyStream(responseStream, false);
+
+                Debug.WriteLine("Response[" + data.Length + " bytes]: " + url);
+
+                if (data.Length > 0)
                 {
-                    using (var responseStream = response.GetResponseStream())
+                    ret = TileImageProxy.FromStream(data);
+
+                    if (ret != null)
                     {
-                        var data = Stuff.CopyStream(responseStream, false);
-
-                        Debug.WriteLine("Response[" + data.Length + " bytes]: " + url);
-
-                        if (data.Length > 0)
-                        {
-                            ret = TileImageProxy.FromStream(data);
-
-                            if (ret != null)
-                            {
-                                ret.Data = data;
-                                ret.Data.Position = 0;
-                            }
-                            else
-                            {
-                                data.Dispose();
-                            }
-                        }
+                        ret.Data = data;
+                        ret.Data.Position = 0;
+                    }
+                    else
+                    {
+                        data.Dispose();
                     }
                 }
-                else
-                {
-                    Debug.WriteLine("CheckTileImageHttpResponse[false]: " + url);
-                }
-
-                response.Close();
             }
+            else
+            {
+                Debug.WriteLine("CheckTileImageHttpResponse[false]: " + url);
+            }
+
+            response.Close();
 
             return ret;
         }
@@ -587,7 +569,9 @@ namespace Asv.Avalonia.Map
             var request =
                 IsSocksProxy ? SocksHttpWebRequest.Create(url)
                 : WebRequestFactory != null ? WebRequestFactory(this, url)
+#pragma warning disable SYSLIB0014
                 : WebRequest.Create(url);
+#pragma warning restore SYSLIB0014
 
             if (WebProxy != null)
             {
@@ -633,7 +617,7 @@ namespace Asv.Avalonia.Map
 
             InitializeWebRequest(request);
 
-            WebResponse response;
+            WebResponse? response;
 
             try
             {
@@ -641,25 +625,27 @@ namespace Asv.Avalonia.Map
             }
             catch (WebException ex)
             {
-                response = (HttpWebResponse)ex.Response;
+                response = (HttpWebResponse?)ex.Response;
             }
             catch (Exception)
             {
                 response = null;
             }
 
-            if (response != null)
+            if (response == null)
             {
-                using (var responseStream = response.GetResponseStream())
-                {
-                    using (var read = new StreamReader(responseStream, Encoding.UTF8))
-                    {
-                        ret = read.ReadToEnd();
-                    }
-                }
-
-                response.Close();
+                return ret;
             }
+
+            using (var responseStream = response.GetResponseStream())
+            {
+                using (var read = new StreamReader(responseStream, Encoding.UTF8))
+                {
+                    ret = read.ReadToEnd();
+                }
+            }
+
+            response.Close();
 
             return ret;
         }
@@ -667,8 +653,8 @@ namespace Asv.Avalonia.Map
         /// <summary>
         ///     use at your own risk, storing tiles in files is slow and hard on the file system
         /// </summary>
-        /// <param name="fileName"></param>
-        /// <returns></returns>
+        /// <param name="fileName">fileName.</param>
+        /// <returns>.</returns>
         protected virtual PureImage? GetTileImageFromFile(string fileName)
         {
             return GetTileImageFromArray(File.ReadAllBytes(fileName));
@@ -681,7 +667,7 @@ namespace Asv.Avalonia.Map
 
         protected static int GetServerNum(GPoint pos, int max)
         {
-            return (int)(pos.X + 2 * pos.Y) % max;
+            return (int)(pos.X + (2 * pos.Y)) % max;
         }
 
         public override int GetHashCode()
@@ -689,11 +675,11 @@ namespace Asv.Avalonia.Map
             return DbId;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (obj is GMapProvider)
+            if (obj is GMapProvider provider)
             {
-                return Id.Equals((obj as GMapProvider).Id);
+                return Id.Equals(provider.Id);
             }
 
             return false;
@@ -706,7 +692,7 @@ namespace Asv.Avalonia.Map
     }
 
     /// <summary>
-    ///     represents empty provider
+    ///     represents empty provider.
     /// </summary>
     public class EmptyProvider : GMapProvider
     {
@@ -733,15 +719,9 @@ namespace Asv.Avalonia.Map
 
         readonly MercatorProjection _projection = MercatorProjection.Instance;
 
-        public override PureProjection Projection
-        {
-            get { return _projection; }
-        }
+        public override PureProjection Projection => _projection;
 
-        public override GMapProvider[] Overlays
-        {
-            get { return null; }
-        }
+        public override GMapProvider[]? Overlays => null;
 
         public override PureImage? GetTileImage(GPoint pos, int zoom)
         {

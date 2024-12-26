@@ -6,74 +6,74 @@ namespace Asv.Avalonia.Map
 
     public class StrucGeocode
     {
-        public List<Result> results { get; set; }
-        public GeoCoderStatusCode status { get; set; }
+        public List<Result>? Results { get; set; }
+        public GeoCoderStatusCode Status { get; set; }
     }
 
     public class AddressComponent
     {
-        public string long_name { get; set; }
-        public string short_name { get; set; }
-        public List<string> types { get; set; }
+        public string? LongName { get; set; }
+        public string? ShortName { get; set; }
+        public List<string>? Types { get; set; }
     }
 
     public class Northeast
     {
-        public double lat { get; set; }
-        public double lng { get; set; }
+        public double Lat { get; set; }
+        public double Lng { get; set; }
     }
 
     public class Southwest
     {
-        public double lat { get; set; }
-        public double lng { get; set; }
+        public double Lat { get; set; }
+        public double Lng { get; set; }
     }
 
     public class Bounds
     {
-        public Northeast northeast { get; set; }
-        public Southwest southwest { get; set; }
+        public Northeast? Northeast { get; set; }
+        public Southwest? Southwest { get; set; }
     }
 
     public class Location
     {
-        public double lat { get; set; }
-        public double lng { get; set; }
+        public double Lat { get; set; }
+        public double Lng { get; set; }
     }
 
     public class Northeast2
     {
-        public double lat { get; set; }
-        public double lng { get; set; }
+        public double Lat { get; set; }
+        public double Lng { get; set; }
     }
 
     public class Southwest2
     {
-        public double lat { get; set; }
-        public double lng { get; set; }
+        public double Lat { get; set; }
+        public double Lng { get; set; }
     }
 
     public class Viewport
     {
-        public Northeast2 northeast { get; set; }
-        public Southwest2 southwest { get; set; }
+        public Northeast2? Northeast { get; set; }
+        public Southwest2? Southwest { get; set; }
     }
 
     public class Geometry
     {
-        public Bounds bounds { get; set; }
-        public Location location { get; set; }
-        public string location_type { get; set; }
-        public Viewport viewport { get; set; }
+        public Bounds? Bounds { get; set; }
+        public Location? Location { get; set; }
+        public string? LocationType { get; set; }
+        public Viewport? Viewport { get; set; }
     }
 
     public class Result
     {
-        public List<AddressComponent> address_components { get; set; }
-        public string formatted_address { get; set; }
-        public Geometry geometry { get; set; }
-        public string place_id { get; set; }
-        public List<string> types { get; set; }
+        public List<AddressComponent>? AddressComponents { get; set; }
+        public string? FormattedAddress { get; set; }
+        public Geometry? Geometry { get; set; }
+        public string? PlaceId { get; set; }
+        public List<string>? Types { get; set; }
     }
 
     #endregion
@@ -82,110 +82,110 @@ namespace Asv.Avalonia.Map
 
     public class StrucDirection
     {
-        public List<GeocodedWaypoint> geocoded_waypoints { get; set; }
-        public List<Route> routes { get; set; }
-        public DirectionsStatusCode status { get; set; }
+        public List<GeocodedWaypoint>? GeocodedWaypoints { get; set; }
+        public List<Route>? Routes { get; set; }
+        public DirectionsStatusCode Status { get; set; }
     }
 
     public class GeocodedWaypoint
     {
-        public string geocoder_status { get; set; }
-        public string place_id { get; set; }
-        public List<string> types { get; set; }
+        public string? GeocoderStatus { get; set; }
+        public string? PlaceId { get; set; }
+        public List<string>? Types { get; set; }
     }
 
     public class Distance
     {
-        public string text { get; set; }
-        public int value { get; set; }
+        public string? Text { get; set; }
+        public int Value { get; set; }
     }
 
     public class Duration
     {
-        public string text { get; set; }
-        public int value { get; set; }
+        public string? Text { get; set; }
+        public int Value { get; set; }
     }
 
     public class EndLocation
     {
-        public double lat { get; set; }
-        public double lng { get; set; }
+        public double Lat { get; set; }
+        public double Lng { get; set; }
     }
 
     public class StartLocation
     {
-        public double lat { get; set; }
-        public double lng { get; set; }
+        public double Lat { get; set; }
+        public double Lng { get; set; }
     }
 
     public class Distance2
     {
-        public string text { get; set; }
-        public int value { get; set; }
+        public string? Text { get; set; }
+        public int Value { get; set; }
     }
 
     public class Duration2
     {
-        public string text { get; set; }
-        public int value { get; set; }
+        public string? Text { get; set; }
+        public int Value { get; set; }
     }
 
     public class EndLocation2
     {
-        public double lat { get; set; }
-        public double lng { get; set; }
+        public double Lat { get; set; }
+        public double Lng { get; set; }
     }
 
     public class Polyline
     {
-        public string points { get; set; }
+        public string? Points { get; set; }
     }
 
     public class StartLocation2
     {
-        public double lat { get; set; }
-        public double lng { get; set; }
+        public double Lat { get; set; }
+        public double Lng { get; set; }
     }
 
     public class Step
     {
-        public Distance2 distance { get; set; }
-        public Duration2 duration { get; set; }
-        public EndLocation2 end_location { get; set; }
-        public string html_instructions { get; set; }
-        public Polyline polyline { get; set; }
-        public StartLocation2 start_location { get; set; }
-        public string travel_mode { get; set; }
-        public string maneuver { get; set; }
+        public Distance2? Distance { get; set; }
+        public Duration2? Duration { get; set; }
+        public EndLocation2? EndLocation { get; set; }
+        public string? HtmlInstructions { get; set; }
+        public Polyline? Polyline { get; set; }
+        public StartLocation2? StartLocation { get; set; }
+        public string? TravelMode { get; set; }
+        public string? Maneuver { get; set; }
     }
 
     public class Leg
     {
-        public Distance distance { get; set; }
-        public Duration duration { get; set; }
-        public string end_address { get; set; }
-        public EndLocation end_location { get; set; }
-        public string start_address { get; set; }
-        public StartLocation start_location { get; set; }
-        public List<Step> steps { get; set; }
-        public List<object> traffic_speed_entry { get; set; }
-        public List<object> via_waypoint { get; set; }
+        public Distance? Distance { get; set; }
+        public Duration? Duration { get; set; }
+        public string? EndAddress { get; set; }
+        public EndLocation? EndLocation { get; set; }
+        public string? StartAddress { get; set; }
+        public StartLocation? StartLocation { get; set; }
+        public List<Step>? Steps { get; set; }
+        public List<object>? TrafficSpeedEntry { get; set; }
+        public List<object>? ViaWaypoint { get; set; }
     }
 
     public class OverviewPolyline
     {
-        public string points { get; set; }
+        public string? Points { get; set; }
     }
 
     public class Route
     {
-        public Bounds bounds { get; set; }
-        public string copyrights { get; set; }
-        public List<Leg> legs { get; set; }
-        public OverviewPolyline overview_polyline { get; set; }
-        public string summary { get; set; }
-        public List<object> warnings { get; set; }
-        public List<object> waypoint_order { get; set; }
+        public Bounds? Bounds { get; set; }
+        public string? Copyrights { get; set; }
+        public List<Leg>? Legs { get; set; }
+        public OverviewPolyline? OverviewPolyline { get; set; }
+        public string? Summary { get; set; }
+        public List<object>? Warnings { get; set; }
+        public List<object>? WaypointOrder { get; set; }
     }
 
     #endregion
@@ -194,10 +194,10 @@ namespace Asv.Avalonia.Map
 
     public class StrucRute
     {
-        public List<GeocodedWaypoint> geocoded_waypoints { get; set; }
-        public List<Route> routes { get; set; }
-        public RouteStatusCode status { get; set; }
-        public Error error { get; set; }
+        public List<GeocodedWaypoint>? GeocodedWaypoints { get; set; }
+        public List<Route>? Routes { get; set; }
+        public RouteStatusCode Status { get; set; }
+        public Error? Error { get; set; }
     }
 
     #endregion
@@ -206,22 +206,22 @@ namespace Asv.Avalonia.Map
 
     public class StrucRoads
     {
-        public Error error { get; set; }
+        public Error? Error { get; set; }
 
-        public string warningMessage { get; set; }
+        public string? WarningMessage { get; set; }
 
-        public List<SnappedPoint> snappedPoints { get; set; }
+        public List<SnappedPoint>? SnappedPoints { get; set; }
 
         public class SnappedPoint
         {
-            public Location location { get; set; }
-            public int originalIndex { get; set; }
-            public string placeId { get; set; }
+            public Location? Location1 { get; set; }
+            public int OriginalIndex { get; set; }
+            public string? PlaceId { get; set; }
 
             public class Location
             {
-                public double latitude { get; set; }
-                public double longitude { get; set; }
+                public double Latitude { get; set; }
+                public double Longitude { get; set; }
             }
         }
     }
@@ -232,22 +232,22 @@ namespace Asv.Avalonia.Map
 
     public class Error
     {
-        public int code { get; set; }
-        public string message { get; set; }
-        public string status { get; set; }
-        public List<Detail> details { get; set; }
+        public int Code { get; set; }
+        public string? Message { get; set; }
+        public string? Status { get; set; }
+        public List<Detail>? Details { get; set; }
     }
 
     public class Detail
     {
-        public string @type { get; set; }
-        public List<Link> links { get; set; }
+        public string? Type { get; set; }
+        public List<Link>? Links { get; set; }
     }
 
     public class Link
     {
-        public string description { get; set; }
-        public string url { get; set; }
+        public string? Description { get; set; }
+        public string? Url { get; set; }
     }
 
     #endregion

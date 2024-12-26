@@ -11,17 +11,17 @@ namespace Asv.Avalonia.Map
     /// </summary>
     public class Cache
     {
-        private static Cache _cacheInstance;
+        private static Cache? _cacheInstance;
 
         /// <summary>
-        ///     abstract image cache
+        ///     abstract image cache.
         /// </summary>
-        public PureImageCache ImageCache;
+        public PureImageCache? ImageCache;
 
         /// <summary>
-        ///     second level abstract image cache
+        ///     second level abstract image cache.
         /// </summary>
-        public PureImageCache ImageCacheSecond;
+        public PureImageCache? ImageCacheSecond;
 
         public static string CacheFolder { get; set; } = "map";
 

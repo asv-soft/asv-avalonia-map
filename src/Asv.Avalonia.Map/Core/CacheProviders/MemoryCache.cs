@@ -7,76 +7,75 @@ namespace Asv.Avalonia.Map
     {
         private readonly KiberTileCache _tilesInMemory = new KiberTileCache();
 
-        private FastReaderWriterLock _kiberCacheLock = new FastReaderWriterLock();
+        private FastReaderWriterLock? _kiberCacheLock = new FastReaderWriterLock();
 
         /// <summary>
-        ///     the amount of tiles in MB to keep in memory, default: 22MB, if each ~100Kb it's ~222 tiles
+        ///     the amount of tiles in MB to keep in memory, default: 22MB, if each ~100Kb it's ~222 tiles.
         /// </summary>
         public int Capacity
         {
             get
             {
-                _kiberCacheLock.AcquireReaderLock();
+                _kiberCacheLock?.AcquireReaderLock();
                 try
                 {
                     return _tilesInMemory.MemoryCacheCapacity;
                 }
                 finally
                 {
-                    _kiberCacheLock.ReleaseReaderLock();
+                    _kiberCacheLock?.ReleaseReaderLock();
                 }
             }
             set
             {
-                _kiberCacheLock.AcquireWriterLock();
+                _kiberCacheLock?.AcquireWriterLock();
                 try
                 {
                     _tilesInMemory.MemoryCacheCapacity = value;
                 }
                 finally
                 {
-                    _kiberCacheLock.ReleaseWriterLock();
+                    _kiberCacheLock?.ReleaseWriterLock();
                 }
             }
         }
 
         /// <summary>
-        ///     current memory cache size in MB
+        ///     current memory cache size in MB.
         /// </summary>
         public double Size
         {
             get
             {
-                _kiberCacheLock.AcquireReaderLock();
+                _kiberCacheLock?.AcquireReaderLock();
                 try
                 {
                     return _tilesInMemory.MemoryCacheSize;
                 }
                 finally
                 {
-                    _kiberCacheLock.ReleaseReaderLock();
+                    _kiberCacheLock?.ReleaseReaderLock();
                 }
             }
         }
 
         public void Clear()
         {
-            _kiberCacheLock.AcquireWriterLock();
+            _kiberCacheLock?.AcquireWriterLock();
             try
             {
                 _tilesInMemory.Clear();
             }
             finally
             {
-                _kiberCacheLock.ReleaseWriterLock();
+                _kiberCacheLock?.ReleaseWriterLock();
             }
         }
 
         // ...
-
-        internal byte[] GetTileFromMemoryCache(RawTile tile)
+        internal byte[]? GetTileFromMemoryCache(RawTile tile)
         {
-            _kiberCacheLock.AcquireReaderLock();
+            _kiberCacheLock?.AcquireReaderLock();
             try
             {
                 if (_tilesInMemory.TryGetValue(tile, out var ret))
@@ -86,17 +85,17 @@ namespace Asv.Avalonia.Map
             }
             finally
             {
-                _kiberCacheLock.ReleaseReaderLock();
+                _kiberCacheLock?.ReleaseReaderLock();
             }
 
             return null;
         }
 
-        internal void AddTileToMemoryCache(RawTile tile, byte[] data)
+        internal void AddTileToMemoryCache(RawTile tile, byte[]? data)
         {
             if (data != null)
             {
-                _kiberCacheLock.AcquireWriterLock();
+                _kiberCacheLock?.AcquireWriterLock();
                 try
                 {
                     if (!_tilesInMemory.ContainsKey(tile))
@@ -106,7 +105,7 @@ namespace Asv.Avalonia.Map
                 }
                 finally
                 {
-                    _kiberCacheLock.ReleaseWriterLock();
+                    _kiberCacheLock?.ReleaseWriterLock();
                 }
             }
 #if DEBUG
@@ -123,14 +122,14 @@ namespace Asv.Avalonia.Map
 
         internal void RemoveOverload()
         {
-            _kiberCacheLock.AcquireWriterLock();
+            _kiberCacheLock?.AcquireWriterLock();
             try
             {
                 _tilesInMemory.RemoveMemoryOverload();
             }
             finally
             {
-                _kiberCacheLock.ReleaseWriterLock();
+                _kiberCacheLock?.ReleaseWriterLock();
             }
         }
 
@@ -141,18 +140,20 @@ namespace Asv.Avalonia.Map
             Dispose(false);
         }
 
-        void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
-            if (_kiberCacheLock != null)
+            if (_kiberCacheLock == null)
             {
-                if (disposing)
-                {
-                    Clear();
-                }
-
-                _kiberCacheLock.Dispose();
-                _kiberCacheLock = null;
+                return;
             }
+
+            if (disposing)
+            {
+                Clear();
+            }
+
+            _kiberCacheLock.Dispose();
+            _kiberCacheLock = null;
         }
 
         public void Dispose()

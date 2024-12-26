@@ -34,7 +34,6 @@ namespace Asv.Avalonia.Map
         string MakeTileImageUrl(GPoint pos, int zoom, string language)
         {
             // http://dc5.maps.lt/cache/mapslt_ortofoto/map/_alllayers/L08/R00000914/C00000d28.jpg
-
             return string.Format(UrlFormat, zoom, pos.Y, pos.X);
         }
 

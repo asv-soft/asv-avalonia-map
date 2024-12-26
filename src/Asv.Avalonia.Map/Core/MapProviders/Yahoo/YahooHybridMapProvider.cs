@@ -3,7 +3,7 @@
 namespace Asv.Avalonia.Map
 {
     /// <summary>
-    ///     YahooHybridMap provider
+    ///     YahooHybridMap provider.
     /// </summary>
     public class YahooHybridMapProvider : YahooMapProviderBase
     {
@@ -51,7 +51,6 @@ namespace Asv.Avalonia.Map
         string MakeTileImageUrl(GPoint pos, int zoom, string language)
         {
             // http://maps1.yimg.com/hx/tl?b=1&v=4.3&t=h&.intl=en&x=14&y=5&z=7&r=1
-
             return string.Format(
                 UrlFormat,
                 GetServerNum(pos, 2) + 1,

@@ -399,7 +399,7 @@ namespace Asv.Avalonia.Map
                         if (
                             GMaps.Instance.UseRouteCache
                             && routeResult != null
-                            && routeResult.status == RouteStatusCode.OK
+                            && routeResult.Status == RouteStatusCode.OK
                         )
                         {
                             Cache.Instance.SaveContent(url, CacheType.RouteCache, route);
@@ -411,56 +411,69 @@ namespace Asv.Avalonia.Map
                     routeResult = JsonConvert.DeserializeObject<StrucRute>(route);
                 }
 
-                if (routeResult != null)
+                if (routeResult is not null)
                 {
                     if (
-                        routeResult.error == null
-                        && routeResult.routes != null
-                        && routeResult.routes.Count > 0
+                        routeResult.Error == null
+                        && routeResult.Routes is not null
+                        && routeResult.Routes.Count > 0
                     )
                     {
-                        ret = new MapRoute(routeResult.routes[0].summary);
+                        ret = new MapRoute(routeResult.Routes[0].Summary);
                     }
                     else
                     {
                         ret = new MapRoute("Route");
                     }
 
-                    if (routeResult.error == null)
+                    if (routeResult.Error is null)
                     {
-                        ret.Status = routeResult.status;
+                        ret.Status = routeResult.Status;
 
-                        if (routeResult.routes != null && routeResult.routes.Count > 0)
+                        if (routeResult.Routes is not null)
                         {
-                            if (routeResult.routes.Count > 0)
+                            if (routeResult.Routes.Count > 0)
                             {
-                                if (
-                                    routeResult.routes[0].overview_polyline != null
-                                    && routeResult.routes[0].overview_polyline.points != null
-                                )
+                                if (routeResult.Routes[0].OverviewPolyline is not null)
                                 {
-                                    var points = new List<GeoPoint>();
-                                    PureProjection.PolylineDecode(
-                                        points,
-                                        routeResult.routes[0].overview_polyline.points
-                                    );
+                                    var overviewPolyline = routeResult.Routes[0].OverviewPolyline;
+                                    if (overviewPolyline?.Points is not null)
+                                    {
+                                        var points = new List<GeoPoint>();
+                                        var polyline = routeResult.Routes[0].OverviewPolyline;
+                                        if (polyline is not null)
+                                        {
+                                            if (polyline.Points is not null)
+                                            {
+                                                PureProjection.PolylineDecode(
+                                                    points,
+                                                    polyline.Points
+                                                );
 
-                                    ret.Points.Clear();
-                                    ret.Points.AddRange(points);
+                                                ret.Points?.Clear();
+                                                ret.Points?.AddRange(points);
 
-                                    ret.Duration = routeResult.routes[0].legs[0].duration.text;
+                                                ret.Duration = routeResult
+                                                    .Routes[0]
+                                                    .Legs
+                                                    ?[0]
+                                                    .Duration
+                                                    ?.Text;
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
                     else
                     {
-                        ret.ErrorCode = routeResult.error.code;
-                        ret.ErrorMessage = routeResult.error.message;
+                        ret.ErrorCode = routeResult.Error.Code;
+                        ret.ErrorMessage = routeResult.Error.Message;
 
-                        RouteStatusCode code;
-
-                        if (Enum.TryParse(routeResult.error.status, false, out code))
+                        if (
+                            Enum.TryParse(routeResult.Error.Status, false, out RouteStatusCode code)
+                        )
                         {
                             ret.Status = code;
                         }
@@ -500,7 +513,7 @@ namespace Asv.Avalonia.Map
         public GeoPoint? GetPoint(string keywords, out GeoCoderStatusCode status)
         {
             status = GetPoints(keywords, out var pointList);
-            return pointList != null && pointList.Count > 0 ? pointList[0] : (GeoPoint?)null;
+            return pointList is not null && pointList.Count > 0 ? pointList[0] : null;
         }
 
         /// <summary>
@@ -613,9 +626,9 @@ namespace Asv.Avalonia.Map
 
                     if (geoResult != null)
                     {
-                        status = geoResult.status;
+                        status = geoResult.Status;
 
-                        if (geoResult.status == GeoCoderStatusCode.OK)
+                        if (geoResult.Status == GeoCoderStatusCode.OK)
                         {
                             if (cache && GMaps.Instance.UseGeocoderCache)
                             {
@@ -624,14 +637,14 @@ namespace Asv.Avalonia.Map
 
                             pointList = new List<GeoPoint>();
 
-                            if (geoResult.results != null && geoResult.results.Count > 0)
+                            if (geoResult.Results != null && geoResult.Results.Count > 0)
                             {
-                                foreach (var t in geoResult.results)
+                                foreach (var t in geoResult.Results)
                                 {
                                     pointList.Add(
                                         new GeoPoint(
-                                            t.geometry.location.lat,
-                                            t.geometry.location.lng,
+                                            t.Geometry.Location.Lat,
+                                            t.Geometry.Location.Lng,
                                             0
                                         )
                                     );
@@ -640,7 +653,7 @@ namespace Asv.Avalonia.Map
                         }
                         else
                         {
-                            Debug.WriteLine("GetLatLngFromGeocoderUrl: " + geoResult.status);
+                            Debug.WriteLine("GetLatLngFromGeocoderUrl: " + geoResult.Status);
                         }
                     }
                 }
@@ -702,9 +715,9 @@ namespace Asv.Avalonia.Map
 
                     if (geoResult != null)
                     {
-                        status = geoResult.status;
+                        status = geoResult.Status;
 
-                        if (geoResult.status == GeoCoderStatusCode.OK)
+                        if (geoResult.Status == GeoCoderStatusCode.OK)
                         {
                             if (cache && GMaps.Instance.UseGeocoderCache)
                             {
@@ -713,28 +726,28 @@ namespace Asv.Avalonia.Map
 
                             placemarkList = new List<Placemark>();
 
-                            if (geoResult.results != null && geoResult.results.Count > 0)
+                            if (geoResult.Results != null && geoResult.Results.Count > 0)
                             {
                                 Debug.WriteLine("---------------------");
 
-                                for (int i = 0; i < geoResult.results.Count; i++)
+                                for (int i = 0; i < geoResult.Results.Count; i++)
                                 {
-                                    var ret = new Placemark(geoResult.results[i].formatted_address);
+                                    var ret = new Placemark(geoResult.Results[i].FormattedAddress);
 
                                     Debug.WriteLine(
                                         "formatted_address: ["
-                                            + geoResult.results[i].formatted_address
+                                            + geoResult.Results[i].FormattedAddress
                                             + "]"
                                     );
 
-                                    if (geoResult.results[i].types != null)
+                                    if (geoResult.Results[i].Types != null)
                                     {
-                                        Debug.WriteLine("type: " + geoResult.results[i].types);
+                                        Debug.WriteLine("type: " + geoResult.Results[i].Types);
                                     }
 
                                     if (
-                                        geoResult.results[i].address_components == null
-                                        || geoResult.results[i].address_components.Count <= 0
+                                        geoResult.Results[i].AddressComponents == null
+                                        || geoResult.Results[i].AddressComponents.Count <= 0
                                     )
                                     {
                                         continue;
@@ -742,108 +755,105 @@ namespace Asv.Avalonia.Map
 
                                     for (
                                         int j = 0;
-                                        j < geoResult.results[i].address_components.Count;
+                                        j < geoResult.Results[i].AddressComponents.Count;
                                         j++
                                     )
                                     {
                                         if (
-                                            geoResult.results[i].address_components[j].types != null
-                                            && geoResult
-                                                .results[i]
-                                                .address_components[j]
-                                                .types
-                                                .Count > 0
+                                            geoResult.Results[i].AddressComponents[j].Types != null
+                                            && geoResult.Results[i].AddressComponents[j].Types.Count
+                                                > 0
                                         )
                                         {
                                             Debug.Write(
                                                 "Type: ["
                                                     + geoResult
-                                                        .results[i]
-                                                        .address_components[j]
-                                                        .types[0]
+                                                        .Results[i]
+                                                        .AddressComponents[j]
+                                                        .Types[0]
                                                     + "], "
                                             );
                                             Debug.WriteLine(
                                                 "long_name: ["
                                                     + geoResult
-                                                        .results[i]
-                                                        .address_components[j]
-                                                        .long_name
+                                                        .Results[i]
+                                                        .AddressComponents[j]
+                                                        .LongName
                                                     + "]"
                                             );
 
                                             switch (
-                                                geoResult.results[i].address_components[j].types[0]
+                                                geoResult.Results[i].AddressComponents[j].Types[0]
                                             )
                                             {
                                                 case "street_number":
                                                     ret.StreetNumber = geoResult
-                                                        .results[i]
-                                                        .address_components[j]
-                                                        .long_name;
+                                                        .Results[i]
+                                                        .AddressComponents[j]
+                                                        .LongName;
                                                     break;
 
                                                 case "street_address":
                                                     ret.StreetAddress = geoResult
-                                                        .results[i]
-                                                        .address_components[j]
-                                                        .long_name;
+                                                        .Results[i]
+                                                        .AddressComponents[j]
+                                                        .LongName;
                                                     break;
 
                                                 case "route":
                                                     ret.ThoroughfareName = geoResult
-                                                        .results[i]
-                                                        .address_components[j]
-                                                        .long_name;
+                                                        .Results[i]
+                                                        .AddressComponents[j]
+                                                        .LongName;
                                                     break;
 
                                                 case "postal_code":
                                                     ret.PostalCodeNumber = geoResult
-                                                        .results[i]
-                                                        .address_components[j]
-                                                        .long_name;
+                                                        .Results[i]
+                                                        .AddressComponents[j]
+                                                        .LongName;
                                                     break;
 
                                                 case "country":
                                                     ret.CountryName = geoResult
-                                                        .results[i]
-                                                        .address_components[j]
-                                                        .long_name;
+                                                        .Results[i]
+                                                        .AddressComponents[j]
+                                                        .LongName;
                                                     break;
 
                                                 case "locality":
                                                     ret.LocalityName = geoResult
-                                                        .results[i]
-                                                        .address_components[j]
-                                                        .long_name;
+                                                        .Results[i]
+                                                        .AddressComponents[j]
+                                                        .LongName;
                                                     break;
 
                                                 case "administrative_area_level_2":
                                                     ret.DistrictName = geoResult
-                                                        .results[i]
-                                                        .address_components[j]
-                                                        .long_name;
+                                                        .Results[i]
+                                                        .AddressComponents[j]
+                                                        .LongName;
                                                     break;
 
                                                 case "administrative_area_level_1":
                                                     ret.AdministrativeAreaName = geoResult
-                                                        .results[i]
-                                                        .address_components[j]
-                                                        .long_name;
+                                                        .Results[i]
+                                                        .AddressComponents[j]
+                                                        .LongName;
                                                     break;
 
                                                 case "administrative_area_level_3":
                                                     ret.SubAdministrativeAreaName = geoResult
-                                                        .results[i]
-                                                        .address_components[j]
-                                                        .long_name;
+                                                        .Results[i]
+                                                        .AddressComponents[j]
+                                                        .LongName;
                                                     break;
 
                                                 case "neighborhood":
                                                     ret.Neighborhood = geoResult
-                                                        .results[i]
-                                                        .address_components[j]
-                                                        .long_name;
+                                                        .Results[i]
+                                                        .AddressComponents[j]
+                                                        .LongName;
                                                     break;
                                                 default:
                                                     break;
@@ -858,7 +868,7 @@ namespace Asv.Avalonia.Map
                     }
                     else
                     {
-                        Debug.WriteLine("GetPlacemarkFromReverseGeocoderUrl: " + geoResult?.status);
+                        Debug.WriteLine("GetPlacemarkFromReverseGeocoderUrl: " + geoResult?.Status);
                     }
                 }
             }
@@ -1246,98 +1256,98 @@ namespace Asv.Avalonia.Map
                             Cache.Instance.SaveContent(url, CacheType.DirectionsCache, kml);
                         }
 
-                        ret = directionResult.status;
+                        ret = directionResult.Status;
 
                         if (ret == DirectionsStatusCode.OK)
                         {
                             direction = new GDirections();
 
-                            if (directionResult.routes != null && directionResult.routes.Count > 0)
+                            if (directionResult.Routes != null && directionResult.Routes.Count > 0)
                             {
-                                direction.Summary = directionResult.routes[0].summary;
+                                direction.Summary = directionResult.Routes[0].Summary;
                                 Debug.WriteLine("summary: " + direction.Summary);
 
-                                if (directionResult.routes[0].copyrights != null)
+                                if (directionResult.Routes[0].Copyrights != null)
                                 {
-                                    direction.Copyrights = directionResult.routes[0].copyrights;
+                                    direction.Copyrights = directionResult.Routes[0].Copyrights;
                                     Debug.WriteLine("copyrights: " + direction.Copyrights);
                                 }
 
                                 if (
-                                    directionResult.routes[0].overview_polyline != null
-                                    && directionResult.routes[0].overview_polyline.points != null
+                                    directionResult.Routes[0].OverviewPolyline != null
+                                    && directionResult.Routes[0].OverviewPolyline.Points != null
                                 )
                                 {
                                     direction.Route = new List<GeoPoint>();
                                     PureProjection.PolylineDecode(
                                         direction.Route,
-                                        directionResult.routes[0].overview_polyline.points
+                                        directionResult.Routes[0].OverviewPolyline.Points
                                     );
                                 }
 
                                 if (
-                                    directionResult.routes[0].legs != null
-                                    && directionResult.routes[0].legs.Count > 0
+                                    directionResult.Routes[0].Legs != null
+                                    && directionResult.Routes[0].Legs.Count > 0
                                 )
                                 {
                                     direction.Duration = directionResult
-                                        .routes[0]
-                                        .legs[0]
-                                        .duration
-                                        .text;
+                                        .Routes[0]
+                                        .Legs[0]
+                                        .Duration
+                                        .Text;
                                     Debug.WriteLine("duration: " + direction.Duration);
 
                                     direction.DurationValue = (uint)
-                                        directionResult.routes[0].legs[0].duration.value;
+                                        directionResult.Routes[0].Legs[0].Duration.Value;
                                     Debug.WriteLine("value: " + direction.DurationValue);
 
-                                    if (directionResult.routes[0].legs[0].distance != null)
+                                    if (directionResult.Routes[0].Legs[0].Distance != null)
                                     {
                                         direction.Distance = directionResult
-                                            .routes[0]
-                                            .legs[0]
-                                            .distance
-                                            .text;
+                                            .Routes[0]
+                                            .Legs[0]
+                                            .Distance
+                                            .Text;
                                         Debug.WriteLine("distance: " + direction.Distance);
 
                                         direction.DistanceValue = (uint)
-                                            directionResult.routes[0].legs[0].distance.value;
+                                            directionResult.Routes[0].Legs[0].Distance.Value;
                                         Debug.WriteLine("value: " + direction.DistanceValue);
                                     }
 
-                                    if (directionResult.routes[0].legs[0].start_location != null)
+                                    if (directionResult.Routes[0].Legs[0].StartLocation != null)
                                     {
                                         direction.StartLocation = new GeoPoint(
-                                            directionResult.routes[0].legs[0].start_location.lat,
-                                            directionResult.routes[0].legs[0].start_location.lng,
+                                            directionResult.Routes[0].Legs[0].StartLocation.Lat,
+                                            directionResult.Routes[0].Legs[0].StartLocation.Lng,
                                             0
                                         );
                                     }
 
-                                    if (directionResult.routes[0].legs[0].end_location != null)
+                                    if (directionResult.Routes[0].Legs[0].EndLocation != null)
                                     {
                                         direction.EndLocation = new GeoPoint(
-                                            directionResult.routes[0].legs[0].end_location.lat,
-                                            directionResult.routes[0].legs[0].end_location.lng,
+                                            directionResult.Routes[0].Legs[0].EndLocation.Lat,
+                                            directionResult.Routes[0].Legs[0].EndLocation.Lng,
                                             0
                                         );
                                     }
 
-                                    if (directionResult.routes[0].legs[0].start_address != null)
+                                    if (directionResult.Routes[0].Legs[0].StartAddress != null)
                                     {
                                         direction.StartAddress = directionResult
-                                            .routes[0]
-                                            .legs[0]
-                                            .start_address;
+                                            .Routes[0]
+                                            .Legs[0]
+                                            .StartAddress;
                                         Debug.WriteLine("start_address: " + direction.StartAddress);
                                     }
 
-                                    if (directionResult.routes[0].legs[0].end_address != null)
+                                    if (directionResult.Routes[0].Legs[0].EndAddress != null)
                                     {
                                         direction.EndAddress = directionResult
-                                            .routes[0]
-                                            .legs[0]
-                                            .end_address;
+                                            .Routes[0]
+                                            .Legs[0]
+                                            .EndAddress;
                                         Debug.WriteLine("end_address: " + direction.EndAddress);
                                     }
 
@@ -1345,7 +1355,7 @@ namespace Asv.Avalonia.Map
 
                                     for (
                                         int i = 0;
-                                        i < directionResult.routes[0].legs[0].steps.Count;
+                                        i < directionResult.Routes[0].Legs[0].Steps.Count;
                                         i++
                                     )
                                     {
@@ -1353,104 +1363,101 @@ namespace Asv.Avalonia.Map
                                         Debug.WriteLine("----------------------");
 
                                         step.TravelMode = directionResult
-                                            .routes[0]
-                                            .legs[0]
-                                            .steps[i]
-                                            .travel_mode;
+                                            .Routes[0]
+                                            .Legs[0]
+                                            .Steps[i]
+                                            .TravelMode;
                                         Debug.WriteLine("travel_mode: " + step.TravelMode);
 
                                         step.Duration = directionResult
-                                            .routes[0]
-                                            .legs[0]
-                                            .steps[i]
-                                            .duration
-                                            .text;
+                                            .Routes[0]
+                                            .Legs[0]
+                                            .Steps[i]
+                                            .Duration
+                                            .Text;
                                         Debug.WriteLine("duration: " + step.Duration);
 
                                         step.Distance = directionResult
-                                            .routes[0]
-                                            .legs[0]
-                                            .steps[i]
-                                            .distance
-                                            .text;
+                                            .Routes[0]
+                                            .Legs[0]
+                                            .Steps[i]
+                                            .Distance
+                                            .Text;
                                         Debug.WriteLine("distance: " + step.Distance);
 
                                         step.HtmlInstructions = directionResult
-                                            .routes[0]
-                                            .legs[0]
-                                            .steps[i]
-                                            .html_instructions;
+                                            .Routes[0]
+                                            .Legs[0]
+                                            .Steps[i]
+                                            .HtmlInstructions;
                                         Debug.WriteLine(
                                             "html_instructions: " + step.HtmlInstructions
                                         );
 
                                         if (
-                                            directionResult
-                                                .routes[0]
-                                                .legs[0]
-                                                .steps[i]
-                                                .start_location != null
+                                            directionResult.Routes[0].Legs[0].Steps[i].StartLocation
+                                            != null
                                         )
                                         {
                                             step.StartLocation = new GeoPoint(
                                                 directionResult
-                                                    .routes[0]
-                                                    .legs[0]
-                                                    .steps[i]
-                                                    .start_location
-                                                    .lat,
+                                                    .Routes[0]
+                                                    .Legs[0]
+                                                    .Steps[i]
+                                                    .StartLocation
+                                                    .Lat,
                                                 directionResult
-                                                    .routes[0]
-                                                    .legs[0]
-                                                    .steps[i]
-                                                    .start_location
-                                                    .lng,
+                                                    .Routes[0]
+                                                    .Legs[0]
+                                                    .Steps[i]
+                                                    .StartLocation
+                                                    .Lng,
                                                 0
                                             );
                                         }
 
                                         if (
-                                            directionResult.routes[0].legs[0].steps[i].end_location
+                                            directionResult.Routes[0].Legs[0].Steps[i].EndLocation
                                             != null
                                         )
                                         {
                                             step.EndLocation = new GeoPoint(
                                                 directionResult
-                                                    .routes[0]
-                                                    .legs[0]
-                                                    .steps[i]
-                                                    .end_location
-                                                    .lat,
+                                                    .Routes[0]
+                                                    .Legs[0]
+                                                    .Steps[i]
+                                                    .EndLocation
+                                                    .Lat,
                                                 directionResult
-                                                    .routes[0]
-                                                    .legs[0]
-                                                    .steps[i]
-                                                    .end_location
-                                                    .lng,
+                                                    .Routes[0]
+                                                    .Legs[0]
+                                                    .Steps[i]
+                                                    .EndLocation
+                                                    .Lng,
                                                 0
                                             );
                                         }
 
                                         if (
-                                            directionResult.routes[0].legs[0].steps[i].polyline
+                                            directionResult.Routes[0].Legs[0].Steps[i].Polyline
                                                 != null
                                             && directionResult
-                                                .routes[0]
-                                                .legs[0]
-                                                .steps[i]
-                                                .polyline
-                                                .points != null
+                                                .Routes[0]
+                                                .Legs[0]
+                                                .Steps[i]
+                                                .Polyline
+                                                .Points != null
                                         )
                                         {
                                             step.Points = new List<GeoPoint>();
                                             PureProjection.PolylineDecode(
                                                 step.Points,
                                                 directionResult
-                                                    .routes[0]
-                                                    .legs[0]
-                                                    .steps[i]
-                                                    .polyline
-                                                    .points
+                                                    .Routes[0]
+                                                    .Legs[0]
+                                                    .Steps[i]
+                                                    .Polyline
+                                                    .Points
                                             );
                                         }
 
@@ -1554,9 +1561,9 @@ namespace Asv.Avalonia.Map
                         if (
                             GMaps.Instance.UseRouteCache
                             && roadsResult != null
-                            && roadsResult.error == null
-                            && roadsResult.snappedPoints != null
-                            && roadsResult.snappedPoints.Count > 0
+                            && roadsResult.Error == null
+                            && roadsResult.SnappedPoints != null
+                            && roadsResult.SnappedPoints.Count > 0
                         )
                         {
                             Cache.Instance.SaveContent(url, CacheType.RouteCache, route);
@@ -1573,21 +1580,25 @@ namespace Asv.Avalonia.Map
                 {
                     ret = new MapRoute("Route");
 
-                    ret.WarningMessage = roadsResult.warningMessage;
+                    ret.WarningMessage = roadsResult.WarningMessage;
 
-                    if (roadsResult.error == null)
+                    if (roadsResult.Error == null)
                     {
                         if (
-                            roadsResult.snappedPoints != null
-                            && roadsResult.snappedPoints.Count > 0
+                            roadsResult.SnappedPoints != null
+                            && roadsResult.SnappedPoints.Count > 0
                         )
                         {
                             ret.Points.Clear();
 
-                            foreach (var item in roadsResult.snappedPoints)
+                            foreach (var item in roadsResult.SnappedPoints)
                             {
                                 ret.Points.Add(
-                                    new GeoPoint(item.location.latitude, item.location.longitude, 0)
+                                    new GeoPoint(
+                                        item.Location1.Latitude,
+                                        item.Location1.Longitude,
+                                        0
+                                    )
                                 );
                             }
 
@@ -1596,12 +1607,12 @@ namespace Asv.Avalonia.Map
                     }
                     else
                     {
-                        ret.ErrorCode = roadsResult.error.code;
-                        ret.ErrorMessage = roadsResult.error.message;
+                        ret.ErrorCode = roadsResult.Error.Code;
+                        ret.ErrorMessage = roadsResult.Error.Message;
 
                         RouteStatusCode code;
 
-                        if (Enum.TryParse(roadsResult.error.status, false, out code))
+                        if (Enum.TryParse(roadsResult.Error.Status, false, out code))
                         {
                             ret.Status = code;
                         }

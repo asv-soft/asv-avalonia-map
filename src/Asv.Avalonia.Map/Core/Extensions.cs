@@ -13,7 +13,7 @@ namespace Asv.Avalonia.Map
         /// <param name="info">The SerializationInfo.</param>
         /// <param name="key">The key of the value we wish to retrieve.</param>
         /// <returns>The value if found, otherwise null.</returns>
-        public static T GetValue<T>(SerializationInfo info, string key)
+        public static T? GetValue<T>(SerializationInfo info, string key)
             where T : class
         {
             try
@@ -36,16 +36,11 @@ namespace Asv.Avalonia.Map
         /// <param name="key">The key of the value we wish to retrieve.</param>
         /// <param name="defaultValue">The default value if the de-serialized value was null.</param>
         /// <returns>The value if found, otherwise the default value.</returns>
-        public static T GetValue<T>(SerializationInfo info, string key, T defaultValue)
+        public static T? GetValue<T>(SerializationInfo info, string key, T? defaultValue)
             where T : class
         {
-            T deserializedValue = GetValue<T>(info, key);
-            if (deserializedValue != null)
-            {
-                return deserializedValue;
-            }
-
-            return defaultValue;
+            var deserializedValue = GetValue<T>(info, key);
+            return deserializedValue ?? defaultValue;
         }
 
         /// <summary>
@@ -56,12 +51,12 @@ namespace Asv.Avalonia.Map
         /// <param name="key">The key of the value we wish to retrieve.</param>
         /// <param name="defaultValue">The default value if the de-serialized value was null.</param>
         /// <returns>The value if found, otherwise the default value.</returns>
-        public static T GetStruct<T>(SerializationInfo info, string key, T defaultValue)
+        public static T? GetStruct<T>(SerializationInfo info, string key, T defaultValue)
             where T : struct
         {
             try
             {
-                return (T)info.GetValue(key, typeof(T));
+                return (T?)info.GetValue(key, typeof(T));
             }
             catch (Exception ex)
             {
@@ -78,16 +73,12 @@ namespace Asv.Avalonia.Map
         /// <param name="key">The key of the value we wish to retrieve.</param>
         /// <param name="defaultValue">The default value if the de-serialized value was null.</param>
         /// <returns>The value if found, otherwise the default value.</returns>
-        public static Nullable<T> GetStruct<T>(
-            SerializationInfo info,
-            string key,
-            Nullable<T> defaultValue
-        )
+        public static T? GetStruct<T>(SerializationInfo info, string key, T? defaultValue)
             where T : struct
         {
             try
             {
-                return (Nullable<T>)info.GetValue(key, typeof(Nullable<T>));
+                return (T?)info.GetValue(key, typeof(T?));
             }
             catch (Exception ex)
             {

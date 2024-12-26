@@ -46,10 +46,7 @@ namespace Asv.Avalonia.Map
             return new GPoint(size.Width, size.Height);
         }
 
-        public bool IsEmpty
-        {
-            get { return Width == 0 && Height == 0; }
-        }
+        public bool IsEmpty => Width == 0 && Height == 0;
 
         public long Width { get; set; }
 
@@ -67,12 +64,12 @@ namespace Asv.Avalonia.Map
 
         public override bool Equals(object obj)
         {
-            if (!(obj is GSize))
+            if (obj is not GSize comp)
+            {
                 return false;
+            }
 
-            GSize comp = (GSize)obj;
             // Note value types can't have derived classes, so we don't need to
-            //
             return comp.Width == Width && comp.Height == Height;
         }
 

@@ -3,7 +3,7 @@
 namespace Asv.Avalonia.Map
 {
     /// <summary>
-    ///     NearSatelliteMap provider - http://www.nearmap.com/
+    ///     NearSatelliteMap provider - http://www.nearmap.com/.
     /// </summary>
     public class NearSatelliteMapProvider : NearMapProviderBase
     {
@@ -37,7 +37,6 @@ namespace Asv.Avalonia.Map
             // http://web2.nearmap.com/maps/hl=en&x=6&y=4&z=4&nml=Vert
             // http://web2.nearmap.com/maps/hl=en&x=3&y=1&z=3&nml=Vert&s=2edd
             // http://web0.nearmap.com/maps/hl=en&x=69&y=39&z=7&nml=Vert&s=z80wiTM
-
             return string.Format(
                 UrlFormat,
                 GetServerNum(pos, 4),

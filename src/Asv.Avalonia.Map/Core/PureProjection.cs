@@ -482,22 +482,22 @@ namespace Asv.Avalonia.Map
             lng = PI / 180 * lng;
 
             double b = Axis * (1.0 - Flattening);
-            double ee = 1.0 - b / Axis * (b / Axis);
-            double n = Axis / Sqrt(1.0 - ee * Sin(lat) * Sin(lat));
+            double ee = 1.0 - (b / Axis * (b / Axis));
+            double n = Axis / Sqrt(1.0 - (ee * Sin(lat) * Sin(lat)));
 
             x = (n + height) * Cos(lat) * Cos(lng);
             y = (n + height) * Cos(lat) * Sin(lng);
-            z = (n * (b / Axis) * (b / Axis) + height) * Sin(lat);
+            z = ((n * (b / Axis) * (b / Axis)) + height) * Sin(lat);
         }
 
         /// <summary>
-        ///     Conversion from cartesian earth-sentered coordinates to geodetic coordinates in the given datum
+        ///     Conversion from cartesian earth-sentered coordinates to geodetic coordinates in the given datum.
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="z"></param>
-        /// <param name="lat"></param>
-        /// <param name="lng"></param>
+        /// <param name="x">x.</param>
+        /// <param name="y">y.</param>
+        /// <param name="z">z.</param>
+        /// <param name="lat">lat.</param>
+        /// <param name="lng">lng.</param>
         public void FromCartesianTGeodetic(
             double x,
             double y,
@@ -509,13 +509,13 @@ namespace Asv.Avalonia.Map
             double e = Flattening * (2.0 - Flattening);
             lng = Atan2(y, x);
 
-            double p = Sqrt(x * x + y * y);
+            double p = Sqrt((x * x) + (y * y));
             double theta = Atan2(z, p * (1.0 - Flattening));
             double st = Sin(theta);
             double ct = Cos(theta);
             lat = Atan2(
-                z + e / (1.0 - Flattening) * Axis * st * st * st,
-                p - e * Axis * ct * ct * ct
+                z + (e / (1.0 - Flattening) * Axis * st * st * st),
+                p - (e * Axis * ct * ct * ct)
             );
 
             lat /= PI / 180;

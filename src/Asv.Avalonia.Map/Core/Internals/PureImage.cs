@@ -31,7 +31,7 @@ namespace Asv.Avalonia.Map
     /// </summary>
     public abstract class PureImage : IDisposable
     {
-        public MemoryStream Data;
+        public MemoryStream? Data { get; set; }
 
         internal bool IsParent;
         internal long Ix;

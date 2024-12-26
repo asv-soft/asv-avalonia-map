@@ -7,52 +7,52 @@ using Asv.Common;
 namespace Asv.Avalonia.Map
 {
     /// <summary>
-    ///     represents route of map
+    ///     represents route of map.
     /// </summary>
     [Serializable]
     public class MapRoute : ISerializable, IDeserializationCallback
     {
         /// <summary>
-        ///     points of route
+        ///     points of route.
         /// </summary>
-        public readonly List<GeoPoint> Points = new List<GeoPoint>();
+        public readonly List<GeoPoint>? Points = new List<GeoPoint>();
 
         /// <summary>
-        ///     route info
+        ///     route info.
         /// </summary>
-        public string Name;
+        public string? Name;
 
         /// <summary>
-        ///     custom object
+        ///     custom object.
         /// </summary>
-        public object Tag;
+        public object? Tag;
 
         /// <summary>
-        ///     time of route
+        ///     time of route.
         /// </summary>
-        public string Duration;
+        public string? Duration;
 
-        public List<string> Instructions = new List<string>();
+        public List<string>? Instructions = new List<string>();
 
         /// <summary>
         ///     Status of Route
         /// </summary>
         public RouteStatusCode Status { get; set; }
 
-        public string ErrorMessage { get; set; }
+        public string? ErrorMessage { get; set; }
 
         public int ErrorCode { get; set; }
 
-        public string WarningMessage { get; set; }
+        public string? WarningMessage { get; set; }
 
         /// <summary>
-        ///     route start point
+        ///     route start point.
         /// </summary>
         public GeoPoint? From
         {
             get
             {
-                if (Points.Count > 0)
+                if (Points?.Count > 0)
                 {
                     return Points[0];
                 }
@@ -62,22 +62,22 @@ namespace Asv.Avalonia.Map
         }
 
         /// <summary>
-        ///     route end point
+        ///     route end point.
         /// </summary>
         public GeoPoint? To
         {
             get
             {
-                if (Points.Count > 1)
+                if (Points?.Count > 1)
                 {
-                    return Points[Points.Count - 1];
+                    return Points[^1];
                 }
 
                 return null;
             }
         }
 
-        public MapRoute(string name)
+        public MapRoute(string? name)
         {
             Name = name;
         }
@@ -88,25 +88,25 @@ namespace Asv.Avalonia.Map
             Name = name;
         }
 
-        public MapRoute(MapRoute route)
+        public MapRoute(MapRoute? route)
         {
-            if (route != null)
+            if (route == null)
             {
-                FieldInfo[] myObjectFields = route
-                    .GetType()
-                    .GetFields(
-                        BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance
-                    );
+                return;
+            }
 
-                foreach (FieldInfo fi in myObjectFields)
-                {
-                    fi.SetValue(this, fi.GetValue(route));
-                }
+            FieldInfo[] myObjectFields = route
+                .GetType()
+                .GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+
+            foreach (var fi in myObjectFields)
+            {
+                fi.SetValue(this, fi.GetValue(route));
             }
         }
 
         /// <summary>
-        ///     route distance (in km)
+        ///     route distance (in km).
         /// </summary>
         public double Distance
         {
@@ -114,15 +114,17 @@ namespace Asv.Avalonia.Map
             {
                 double distance = 0.0;
 
-                if (From.HasValue && To.HasValue)
+                if (!From.HasValue || !To.HasValue)
                 {
-                    for (int i = 1; i < Points.Count; i++)
-                    {
-                        distance += GMapProviders.EmptyProvider.Projection.GetDistance(
-                            Points[i - 1],
-                            Points[i]
-                        );
-                    }
+                    return Math.Round(distance, 4);
+                }
+
+                for (int i = 1; i < Points?.Count; i++)
+                {
+                    distance += GMapProviders.EmptyProvider.Projection.GetDistance(
+                        Points[i - 1],
+                        Points[i]
+                    );
                 }
 
                 return Math.Round(distance, 4);
@@ -137,24 +139,26 @@ namespace Asv.Avalonia.Map
         public double? DistanceTo(GeoPoint point)
         {
             // Minimun of two elements required to compare.
-            if (Points.Count >= 2)
+            if (!(Points?.Count >= 2))
             {
-                // First element as the min.
-                double min = DistanceToLinealRoute(Points[0], Points[1], point);
-
-                // From 2.
-                for (int i = 2; i < Points.Count; i++)
-                {
-                    double distance = DistanceToLinealRoute(Points[i - 1], Points[i], point);
-
-                    if (distance < min)
-                        min = distance;
-                }
-
-                return min;
+                return null;
             }
 
-            return null;
+            // First element as the min.
+            double min = DistanceToLinealRoute(Points[0], Points[1], point);
+
+            // From 2.
+            for (int i = 2; i < Points.Count; i++)
+            {
+                double distance = DistanceToLinealRoute(Points[i - 1], Points[i], point);
+
+                if (distance < min)
+                {
+                    min = distance;
+                }
+            }
+
+            return min;
         }
 
         /// <summary>
@@ -171,11 +175,11 @@ namespace Asv.Avalonia.Map
             double m = (start.Latitude - to.Latitude) / (start.Longitude - to.Longitude);
 
             // Obtain of b => b = y-mx
-            double b = -(m * start.Longitude - start.Latitude);
+            double b = -((m * start.Longitude) - start.Latitude);
 
             // Possible points of Lat and Lng based on formula replacement (formulaLat and formulaLng).
             // Lat = m*Lngb
-            double formulaLat = m * point.Longitude + b;
+            double formulaLat = (m * point.Longitude) + b;
 
             // Lat = m*Lngb => (Lat-b)/m=Lng
             double formulaLng = (point.Latitude - b) / m;
@@ -202,7 +206,7 @@ namespace Asv.Avalonia.Map
         /// </summary>
         public void Clear()
         {
-            Points.Clear();
+            Points?.Clear();
             Tag = null;
             Name = null;
         }
@@ -210,7 +214,7 @@ namespace Asv.Avalonia.Map
         #region ISerializable Members
 
         // Temp store for de-serialization.
-        private GeoPoint[] deserializedPoints;
+        private GeoPoint[]? deserializedPoints;
 
         /// <summary>
         ///     Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo" /> with the data needed to serialize the
@@ -228,7 +232,7 @@ namespace Asv.Avalonia.Map
         {
             info.AddValue("Name", Name);
             info.AddValue("Tag", Tag);
-            info.AddValue("Points", Points.ToArray());
+            info.AddValue("Points", Points?.ToArray());
         }
 
         /// <summary>
@@ -255,11 +259,15 @@ namespace Asv.Avalonia.Map
         ///     The object that initiated the callback. The functionality for this parameter is not currently
         ///     implemented.
         /// </param>
-        public virtual void OnDeserialization(object sender)
+        public virtual void OnDeserialization(object? sender)
         {
             // Accounts for the de-serialization being breadth first rather than depth first.
-            Points.AddRange(deserializedPoints);
-            Points.TrimExcess();
+            if (deserializedPoints != null)
+            {
+                Points?.AddRange(deserializedPoints);
+            }
+
+            Points?.TrimExcess();
         }
 
         #endregion

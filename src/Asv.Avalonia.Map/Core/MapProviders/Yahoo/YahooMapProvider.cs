@@ -62,14 +62,12 @@ namespace Asv.Avalonia.Map
 
         #region GeocodingProvider Members
 
-        public GeoCoderStatusCode GetPoints(string keywords, out List<GeoPoint> pointList)
+        public GeoCoderStatusCode GetPoints(string keywords, out List<GeoPoint>? pointList)
         {
             // http://where.yahooapis.com/geocode?q=lithuania,vilnius&appid=1234&flags=CG&gflags=QL&locale=LT-lt
-
             #region -- response --
 
-            //<ResultSet version="1.0"><Error>0</Error><ErrorMessage>No error</ErrorMessage><Locale>LT-lt</Locale><Quality>40</Quality><Found>1</Found><Result><quality>40</quality><latitude>54.689850</latitude><longitude>25.269260</longitude><offsetlat>54.689850</offsetlat><offsetlon>25.269260</offsetlon><radius>46100</radius></Result></ResultSet>
-
+            // <ResultSet version="1.0"><Error>0</Error><ErrorMessage>No error</ErrorMessage><Locale>LT-lt</Locale><Quality>40</Quality><Found>1</Found><Result><quality>40</quality><latitude>54.689850</latitude><longitude>25.269260</longitude><offsetlat>54.689850</offsetlat><offsetlon>25.269260</offsetlon><radius>46100</radius></Result></ResultSet>
             #endregion
 
             return GetLatLngFromGeocoderUrl(MakeGeocoderUrl(keywords), out pointList);
@@ -77,19 +75,16 @@ namespace Asv.Avalonia.Map
 
         public GeoPoint? GetPoint(string keywords, out GeoCoderStatusCode status)
         {
-            List<GeoPoint> pointList;
-            status = GetPoints(keywords, out pointList);
+            status = GetPoints(keywords, out var pointList);
             return pointList != null && pointList.Count > 0 ? pointList[0] : (GeoPoint?)null;
         }
 
-        public GeoCoderStatusCode GetPoints(Placemark placemark, out List<GeoPoint> pointList)
+        public GeoCoderStatusCode GetPoints(Placemark placemark, out List<GeoPoint>? pointList)
         {
             // http://where.yahooapis.com/geocode?country=LT&state=Vilniaus+Apskritis&county=Vilniaus+Miesto+Savivaldybe&city=Vilnius&neighborhood=Naujamiestis&postal=01108&street=J.+Tumo-Vaizganto+Gatve&house=2&appid=1234&flags=CG&gflags=QL&locale=LT-lt
-
             #region -- response --
 
-            //<ResultSet version="1.0"><Error>0</Error><ErrorMessage>No error</ErrorMessage><Locale>LT-lt</Locale><Quality>19</Quality><Found>1</Found><Result><quality>87</quality><latitude>54.690181</latitude><longitude>25.269483</longitude><offsetlat>54.690227</offsetlat><offsetlon>25.269278</offsetlon><radius>500</radius></Result></ResultSet>
-
+            // <ResultSet version="1.0"><Error>0</Error><ErrorMessage>No error</ErrorMessage><Locale>LT-lt</Locale><Quality>19</Quality><Found>1</Found><Result><quality>87</quality><latitude>54.690181</latitude><longitude>25.269483</longitude><offsetlat>54.690227</offsetlat><offsetlon>25.269278</offsetlon><radius>500</radius></Result></ResultSet>
             #endregion
 
             return GetLatLngFromGeocoderUrl(MakeGeocoderDetailedUrl(placemark), out pointList);
@@ -97,22 +92,19 @@ namespace Asv.Avalonia.Map
 
         public GeoPoint? GetPoint(Placemark placemark, out GeoCoderStatusCode status)
         {
-            List<GeoPoint> pointList;
-            status = GetPoints(placemark, out pointList);
+            status = GetPoints(placemark, out var pointList);
             return pointList != null && pointList.Count > 0 ? pointList[0] : (GeoPoint?)null;
         }
 
         public GeoCoderStatusCode GetPlacemarks(
             GeoPoint location,
-            out List<Placemark> placemarkList
+            out List<Placemark>? placemarkList
         )
         {
             // http://where.yahooapis.com/geocode?q=54.689850,25.269260&appid=1234&flags=G&gflags=QRL&locale=LT-lt
-
             #region -- response --
 
-            //<ResultSet version="1.0"><Error>0</Error><ErrorMessage>No error</ErrorMessage><Locale>LT-lt</Locale><Quality>99</Quality><Found>1</Found><Result><quality>99</quality><latitude>54.689850</latitude><longitude>25.269260</longitude><offsetlat>54.689850</offsetlat><offsetlon>25.269260</offsetlon><radius>500</radius><name>54.689850,25.269260</name><line1>2 J. Tumo-Vaizganto Gatve</line1><line2>01108 Naujamiestis</line2><line3/><line4>Lietuvos Respublika</line4><house>2</house><street>J. Tumo-Vaizganto Gatve</street><xstreet/><unittype/><unit/><postal>01108</postal><level4>Naujamiestis</level4><level3>Vilnius</level3><level2>Vilniaus Miesto Savivaldybe</level2><level1>Vilniaus Apskritis</level1><level0>Lietuvos Respublika</level0><level0code>LT</level0code><level1code/><level2code/><hash/><woeid>12758362</woeid><woetype>11</woetype><uzip>01108</uzip></Result></ResultSet>
-
+            // <ResultSet version="1.0"><Error>0</Error><ErrorMessage>No error</ErrorMessage><Locale>LT-lt</Locale><Quality>99</Quality><Found>1</Found><Result><quality>99</quality><latitude>54.689850</latitude><longitude>25.269260</longitude><offsetlat>54.689850</offsetlat><offsetlon>25.269260</offsetlon><radius>500</radius><name>54.689850,25.269260</name><line1>2 J. Tumo-Vaizganto Gatve</line1><line2>01108 Naujamiestis</line2><line3/><line4>Lietuvos Respublika</line4><house>2</house><street>J. Tumo-Vaizganto Gatve</street><xstreet/><unittype/><unit/><postal>01108</postal><level4>Naujamiestis</level4><level3>Vilnius</level3><level2>Vilniaus Miesto Savivaldybe</level2><level1>Vilniaus Apskritis</level1><level0>Lietuvos Respublika</level0><level0code>LT</level0code><level1code/><level2code/><hash/><woeid>12758362</woeid><woetype>11</woetype><uzip>01108</uzip></Result></ResultSet>
             #endregion
 
             return GetPlacemarksFromReverseGeocoderUrl(
@@ -123,8 +115,7 @@ namespace Asv.Avalonia.Map
 
         public Placemark? GetPlacemark(GeoPoint location, out GeoCoderStatusCode status)
         {
-            List<Placemark> placemarkList;
-            status = GetPlacemarks(location, out placemarkList);
+            status = GetPlacemarks(location, out var placemarkList);
             return placemarkList != null && placemarkList.Count > 0
                 ? placemarkList[0]
                 : (Placemark?)null;
@@ -139,7 +130,7 @@ namespace Asv.Avalonia.Map
                 GeocoderUrlFormat,
                 keywords.Replace(' ', '+'),
                 AppId,
-                !string.IsNullOrEmpty(LanguageStr) ? "&locale=" + LanguageStr : ""
+                !string.IsNullOrEmpty(LanguageStr) ? "&locale=" + LanguageStr : string.Empty
             );
         }
 
@@ -168,25 +159,28 @@ namespace Asv.Avalonia.Map
                 pt.Latitude,
                 pt.Longitude,
                 AppId,
-                !string.IsNullOrEmpty(LanguageStr) ? "&locale=" + LanguageStr : ""
+                !string.IsNullOrEmpty(LanguageStr) ? "&locale=" + LanguageStr : string.Empty
             );
         }
 
         string PrepareUrlString(string str)
         {
             if (str == null)
+            {
                 return string.Empty;
+            }
+
             return str.Replace(' ', '+');
         }
 
-        GeoCoderStatusCode GetLatLngFromGeocoderUrl(string url, out List<GeoPoint> pointList)
+        GeoCoderStatusCode GetLatLngFromGeocoderUrl(string url, out List<GeoPoint>? pointList)
         {
             var status = GeoCoderStatusCode.UNKNOWN_ERROR;
             pointList = null;
 
             try
             {
-                string geo = GMaps.Instance.UseGeocoderCache
+                string? geo = GMaps.Instance.UseGeocoderCache
                     ? Cache.Instance.GetContent(
                         url,
                         CacheType.GeocoderCache,
@@ -226,31 +220,39 @@ namespace Asv.Avalonia.Map
                                 foreach (XmlNode n in l)
                                 {
                                     var nn = n.SelectSingleNode("quality");
-                                    if (nn != null)
+                                    if (nn == null)
                                     {
-                                        int quality = int.Parse(nn.InnerText);
-                                        if (quality < MinExpectedQuality)
-                                            continue;
-
-                                        nn = n.SelectSingleNode("latitude");
-                                        if (nn != null)
-                                        {
-                                            double lat = double.Parse(
-                                                nn.InnerText,
-                                                CultureInfo.InvariantCulture
-                                            );
-
-                                            nn = n.SelectSingleNode("longitude");
-                                            if (nn != null)
-                                            {
-                                                double lng = double.Parse(
-                                                    nn.InnerText,
-                                                    CultureInfo.InvariantCulture
-                                                );
-                                                pointList.Add(new GeoPoint(lat, lng, 0));
-                                            }
-                                        }
+                                        continue;
                                     }
+
+                                    int quality = int.Parse(nn.InnerText);
+                                    if (quality < MinExpectedQuality)
+                                    {
+                                        continue;
+                                    }
+
+                                    nn = n.SelectSingleNode("latitude");
+                                    if (nn == null)
+                                    {
+                                        continue;
+                                    }
+
+                                    double lat = double.Parse(
+                                        nn.InnerText,
+                                        CultureInfo.InvariantCulture
+                                    );
+
+                                    nn = n.SelectSingleNode("longitude");
+                                    if (nn == null)
+                                    {
+                                        continue;
+                                    }
+
+                                    double lng = double.Parse(
+                                        nn.InnerText,
+                                        CultureInfo.InvariantCulture
+                                    );
+                                    pointList.Add(new GeoPoint(lat, lng, 0));
                                 }
 
                                 status = GeoCoderStatusCode.OK;
@@ -270,7 +272,7 @@ namespace Asv.Avalonia.Map
 
         GeoCoderStatusCode GetPlacemarksFromReverseGeocoderUrl(
             string url,
-            out List<Placemark> placemarkList
+            out List<Placemark>? placemarkList
         )
         {
             var status = GeoCoderStatusCode.UNKNOWN_ERROR;
@@ -278,7 +280,7 @@ namespace Asv.Avalonia.Map
 
             try
             {
-                string geo = GMaps.Instance.UsePlacemarkCache
+                string? geo = GMaps.Instance.UsePlacemarkCache
                     ? Cache.Instance.GetContent(
                         url,
                         CacheType.PlacemarkCache,
@@ -319,7 +321,9 @@ namespace Asv.Avalonia.Map
                                 {
                                     var vl = n.SelectSingleNode("name");
                                     if (vl == null)
+                                    {
                                         continue;
+                                    }
 
                                     var placemark = new Placemark(vl.InnerText);
 
@@ -416,7 +420,7 @@ namespace Asv.Avalonia.Map
     }
 
     /// <summary>
-    ///     YahooMap provider
+    ///     YahooMap provider.
     /// </summary>
     public class YahooMapProvider : YahooMapProviderBase
     {
@@ -452,7 +456,6 @@ namespace Asv.Avalonia.Map
             // http://2.base.maps.api.here.com/maptile/2.1/maptile/newest/normal.day/11/1169/652/256/png8?lg=EN&token=TrLJuXVK62IQk0vuXFzaig%3D%3D&app_id=eAdkWGYRoc4RfxVo0Z4B
             // https://4.aerial.maps.api.here.com/maptile/2.1/maptile/newest/hybrid.day/11/1167/652/256/jpg?lg=ENG&token=TrLJuXVK62IQk0vuXFzaig%3D%3D&requestid=yahoo.prod&app_id=eAdkWGYRoc4RfxVo0Z4B
             // https://4.aerial.maps.api.here.com/maptile/2.1/maptile/newest/satellite.day/13/4671/2604/256/jpg?lg=ENG&token=TrLJuXVK62IQk0vuXFzaig%3D%3D&requestid=yahoo.prod&app_id=eAdkWGYRoc4RfxVo0Z4B
-
             return string.Format(
                 UrlFormat,
                 GetServerNum(pos, 2) + 1,
@@ -469,7 +472,7 @@ namespace Asv.Avalonia.Map
         string rnd1 = Guid.NewGuid().ToString("N").Substring(0, 28);
         string rnd2 = Guid.NewGuid().ToString("N").Substring(0, 20);
 
-        //static readonly string UrlFormat = "http://maps{0}.yimg.com/hx/tl?v={1}&.intl={2}&x={3}&y={4}&z={5}&r=1";
+        // static readonly string UrlFormat = "http://maps{0}.yimg.com/hx/tl?v={1}&.intl={2}&x={3}&y={4}&z={5}&r=1";
         static readonly string UrlFormat =
             "http://{0}.base.maps.api.here.com/maptile/{1}/maptile/newest/normal.day/{2}/{3}/{4}/256/png8?lg={5}&token={6}&requestid=yahoo.prod&app_id={7}";
     }

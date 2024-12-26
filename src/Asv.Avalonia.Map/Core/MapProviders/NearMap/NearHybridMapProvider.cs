@@ -50,7 +50,6 @@ namespace Asv.Avalonia.Map
         {
             // http://web1.nearmap.com/maps/hl=en&x=37&y=19&z=6&nml=MapT&nmg=1&s=2KbhmZZ
             // http://web1.nearmap.com/maps/hl=en&x=36&y=19&z=6&nml=MapT&nmg=1&s=2YKWhQi
-
             return string.Format(UrlFormat, GetServerNum(pos, 3), pos.X, pos.Y, zoom);
         }
 

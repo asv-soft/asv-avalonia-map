@@ -14,85 +14,85 @@ using GMap.NET;
 namespace Asv.Avalonia.Map
 {
     /// <summary>
-    ///     maps manager
+    ///     maps manager.
     /// </summary>
     public class GMaps
     {
         /// <summary>
-        ///     tile access mode
+        ///     tile access mode.
         /// </summary>
         public AccessMode Mode = AccessMode.ServerAndCache;
 
         /// <summary>
-        ///     is map using cache for routing
+        ///     is map using cache for routing.
         /// </summary>
         public bool UseRouteCache = true;
 
         /// <summary>
-        ///     is map using cache for geocoder
+        ///     is map using cache for geocoder.
         /// </summary>
         public bool UseGeocoderCache = true;
 
         /// <summary>
-        ///     is map using cache for directions
+        ///     is map using cache for directions.
         /// </summary>
         public bool UseDirectionsCache = true;
 
         /// <summary>
-        ///     is map using cache for placemarks
+        ///     is map using cache for placemarks.
         /// </summary>
         public bool UsePlacemarkCache = true;
 
         /// <summary>
-        ///     is map using cache for other url
+        ///     is map using cache for other url.
         /// </summary>
         public bool UseUrlCache = true;
 
         /// <summary>
-        ///     is map using memory cache for tiles
+        ///     is map using memory cache for tiles.
         /// </summary>
         public bool UseMemoryCache = true;
 
         /// <summary>
-        ///     primary cache provider, by default: ultra fast SQLite!
+        ///     primary cache provider, by default: ultra-fast SQLite!.
         /// </summary>
-        public PureImageCache PrimaryCache
+        public PureImageCache? PrimaryCache
         {
-            get { return Cache.Instance.ImageCache; }
-            set { Cache.Instance.ImageCache = value; }
+            get => Cache.Instance.ImageCache;
+            set => Cache.Instance.ImageCache = value;
         }
 
         /// <summary>
         ///     secondary cache provider, by default: none,
-        ///     use it if you have server in your local network
+        ///     use it if you have server in your local network.
         /// </summary>
-        public PureImageCache SecondaryCache
+        public PureImageCache? SecondaryCache
         {
-            get { return Cache.Instance.ImageCacheSecond; }
-            set { Cache.Instance.ImageCacheSecond = value; }
+            get => Cache.Instance.ImageCacheSecond;
+            set => Cache.Instance.ImageCacheSecond = value;
         }
 
         /// <summary>
-        ///     MemoryCache provider
+        ///     MemoryCache provider.
         /// </summary>
-        public readonly MemoryCache MemoryCache = new MemoryCache();
+        public readonly MemoryCache? MemoryCache = new MemoryCache();
 
         /// <summary>
-        ///     load tiles in random sequence
+        ///     load tiles in random sequence.
         /// </summary>
         public bool ShuffleTilesOnLoad = false;
 
         /// <summary>
-        ///     tile queue to cache
+        ///     tile queue to cache.
         /// </summary>
         private readonly Queue<CacheQueueItem> _tileCacheQueue = new Queue<CacheQueueItem>();
 
         private bool? _isRunningOnMono;
 
         /// <summary>
-        ///     return true if running on mono
+        ///     return true if running on mono.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>.</returns>
         public bool IsRunningOnMono
         {
             get
@@ -104,7 +104,10 @@ namespace Asv.Avalonia.Map
                         _isRunningOnMono = Type.GetType("Mono.Runtime") != null;
                         return _isRunningOnMono.Value;
                     }
-                    catch { }
+                    catch
+                    {
+                        // ignored
+                    }
                 }
                 else
                 {
@@ -116,84 +119,90 @@ namespace Asv.Avalonia.Map
         }
 
         /// <summary>
-        ///     cache worker
+        ///     cache worker.
         /// </summary>
-        private Thread _cacheEngine;
+        private Thread? _cacheEngine;
 
         internal readonly AutoResetEvent WaitForCache = new AutoResetEvent(false);
 
         static GMaps()
         {
-            if (GMapProvider.TileImageProxy == null)
+            if (GMapProvider.TileImageProxy != null)
             {
-                try
+                return;
+            }
+
+            try
+            {
+                var d = AppDomain.CurrentDomain;
+                var assembliesLoaded = d.GetAssemblies();
+
+                Assembly? l = null;
+
+                foreach (var a in assembliesLoaded)
                 {
-                    var d = AppDomain.CurrentDomain;
-                    var assembliesLoaded = d.GetAssemblies();
-
-                    Assembly l = null;
-
-                    foreach (var a in assembliesLoaded)
+                    ArgumentNullException.ThrowIfNull(a.FullName);
+                    if (
+                        !a.FullName.Contains("GMap.NET.WindowsForms")
+                        && !a.FullName.Contains("GMap.NET.WindowsPresentation")
+                    )
                     {
-                        if (
-                            a.FullName.Contains("GMap.NET.WindowsForms")
-                            || a.FullName.Contains("GMap.NET.WindowsPresentation")
-                        )
-                        {
-                            l = a;
-                            break;
-                        }
+                        continue;
                     }
 
-                    if (l == null)
+                    l = a;
+                    break;
+                }
+
+                if (l == null)
+                {
+                    string jj = Assembly.GetExecutingAssembly().Location;
+                    string? hh = Path.GetDirectoryName(jj);
+                    string f1 = hh + Path.DirectorySeparatorChar + "GMap.NET.WindowsForms.dll";
+                    string f2 =
+                        hh + Path.DirectorySeparatorChar + "GMap.NET.WindowsPresentation.dll";
+                    if (File.Exists(f1))
                     {
-                        string jj = Assembly.GetExecutingAssembly().Location;
-                        string hh = Path.GetDirectoryName(jj);
-                        string f1 = hh + Path.DirectorySeparatorChar + "GMap.NET.WindowsForms.dll";
-                        string f2 =
-                            hh + Path.DirectorySeparatorChar + "GMap.NET.WindowsPresentation.dll";
-                        if (File.Exists(f1))
-                        {
-                            l = Assembly.LoadFile(f1);
-                        }
-                        else if (File.Exists(f2))
-                        {
-                            l = Assembly.LoadFile(f2);
-                        }
+                        l = Assembly.LoadFile(f1);
                     }
-
-                    if (l != null)
+                    else if (File.Exists(f2))
                     {
-                        Type t = null;
-
-                        if (l.FullName.Contains("GMap.NET.WindowsForms"))
-                        {
-                            t = l.GetType("GMap.NET.WindowsForms.GMapImageProxy");
-                        }
-                        else if (l.FullName.Contains("GMap.NET.WindowsPresentation"))
-                        {
-                            t = l.GetType("GMap.NET.WindowsPresentation.GMapImageProxy");
-                        }
-
-                        if (t != null)
-                        {
-                            t.InvokeMember(
-                                "Enable",
-                                BindingFlags.DeclaredOnly
-                                    | BindingFlags.Public
-                                    | BindingFlags.Static
-                                    | BindingFlags.InvokeMethod,
-                                null,
-                                null,
-                                null
-                            );
-                        }
+                        l = Assembly.LoadFile(f2);
                     }
                 }
-                catch (Exception ex)
+
+                if (l == null)
                 {
-                    Debug.WriteLine("GMaps, try set TileImageProxy failed: " + ex.Message);
+                    return;
                 }
+
+                Type? t = null;
+
+                ArgumentNullException.ThrowIfNull(l.FullName);
+
+                if (l.FullName.Contains("GMap.NET.WindowsForms"))
+                {
+                    t = l.GetType("GMap.NET.WindowsForms.GMapImageProxy");
+                }
+                else if (l.FullName.Contains("GMap.NET.WindowsPresentation"))
+                {
+                    t = l.GetType("GMap.NET.WindowsPresentation.GMapImageProxy");
+                }
+
+                t?.InvokeMember(
+                    "Enable",
+                    BindingFlags.DeclaredOnly
+                        | BindingFlags.Public
+                        | BindingFlags.Static
+                        | BindingFlags.InvokeMethod,
+                    null,
+                    null,
+                    null
+                );
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("GMaps, try set TileImageProxy failed: " + ex.Message);
             }
         }
 
@@ -209,10 +218,10 @@ namespace Asv.Avalonia.Map
         /// <summary>
         ///     exports current map cache to GMDB file
         ///     if file exsist only new records will be added
-        ///     otherwise file will be created and all data exported
+        ///     otherwise file will be created and all data exported.
         /// </summary>
-        /// <param name="file"></param>
-        /// <returns></returns>
+        /// <param name="file">file.</param>
+        /// <returns>.</returns>
         public bool ExportToGMDB(string file)
         {
             // #if SQLite
@@ -232,10 +241,10 @@ namespace Asv.Avalonia.Map
 
         /// <summary>
         ///     imports GMDB file to current map cache
-        ///     only new records will be added
+        ///     only new records will be added.
         /// </summary>
-        /// <param name="file"></param>
-        /// <returns></returns>
+        /// <param name="file">file.</param>
+        /// <returns>.</returns>
         public bool ImportFromGMDB(string file)
         {
             // #if SQLite
@@ -285,38 +294,40 @@ namespace Asv.Avalonia.Map
 #endif
 
         /// <summary>
-        ///     enqueueens tile to cache
+        ///     enqueueens tile to cache.
         /// </summary>
-        /// <param name="task"></param>
+        /// <param name="task">task.</param>
         void EnqueueCacheTask(CacheQueueItem task)
         {
             lock (_tileCacheQueue)
             {
-                if (!_tileCacheQueue.Contains(task))
+                if (_tileCacheQueue.Contains(task))
                 {
-                    Debug.WriteLine("EnqueueCacheTask: " + task);
+                    return;
+                }
 
-                    _tileCacheQueue.Enqueue(task);
+                Debug.WriteLine("EnqueueCacheTask: " + task);
 
-                    if (_cacheEngine != null && _cacheEngine.IsAlive)
-                    {
-                        WaitForCache.Set();
-                    }
-                    else if (
-                        _cacheEngine == null
-                        || _cacheEngine.ThreadState == System.Threading.ThreadState.Stopped
-                        || _cacheEngine.ThreadState == System.Threading.ThreadState.Unstarted
-                    )
-                    {
-                        _cacheEngine = null;
-                        _cacheEngine = new Thread(CacheEngineLoop);
-                        _cacheEngine.Name = "CacheEngine";
-                        _cacheEngine.IsBackground = true;
-                        _cacheEngine.Priority = ThreadPriority.Lowest;
+                _tileCacheQueue.Enqueue(task);
 
-                        _abortCacheLoop = false;
-                        _cacheEngine.Start();
-                    }
+                if (_cacheEngine != null && _cacheEngine.IsAlive)
+                {
+                    WaitForCache.Set();
+                }
+                else if (
+                    _cacheEngine == null
+                    || _cacheEngine.ThreadState == System.Threading.ThreadState.Stopped
+                    || _cacheEngine.ThreadState == System.Threading.ThreadState.Unstarted
+                )
+                {
+                    _cacheEngine = null;
+                    _cacheEngine = new Thread(CacheEngineLoop);
+                    _cacheEngine.Name = "CacheEngine";
+                    _cacheEngine.IsBackground = true;
+                    _cacheEngine.Priority = ThreadPriority.Lowest;
+
+                    _abortCacheLoop = false;
+                    _cacheEngine.Start();
                 }
             }
         }
@@ -324,9 +335,9 @@ namespace Asv.Avalonia.Map
         volatile bool _abortCacheLoop;
         internal volatile bool NoMapInstances = false;
 
-        public TileCacheComplete OnTileCacheComplete;
-        public TileCacheStart OnTileCacheStart;
-        public TileCacheProgress OnTileCacheProgress;
+        public TileCacheComplete? OnTileCacheComplete;
+        public TileCacheStart? OnTileCacheStart;
+        public TileCacheProgress? OnTileCacheProgress;
 
         /// <summary>
         ///     immediately stops background tile caching, call it if you want fast exit the process
@@ -351,8 +362,8 @@ namespace Asv.Avalonia.Map
         /// </summary>
         public bool CacheOnIdleRead
         {
-            get { return _cacheOnIdleRead; }
-            set { _cacheOnIdleRead = value; }
+            get => _cacheOnIdleRead;
+            set => _cacheOnIdleRead = value;
         }
 
         volatile bool _boostCacheEngine;
@@ -362,22 +373,18 @@ namespace Asv.Avalonia.Map
         /// </summary>
         public bool BoostCacheEngine
         {
-            get { return _boostCacheEngine; }
-            set { _boostCacheEngine = value; }
+            get => _boostCacheEngine;
+            set => _boostCacheEngine = value;
         }
 
         /// <summary>
-        ///     live for cache ;}
+        ///     live for cache ;}.
         /// </summary>
         void CacheEngineLoop()
         {
             Debug.WriteLine("CacheEngine: start");
-            int left;
 
-            if (OnTileCacheStart != null)
-            {
-                OnTileCacheStart();
-            }
+            OnTileCacheStart?.Invoke();
 
             bool startEvent = false;
 
@@ -387,6 +394,7 @@ namespace Asv.Avalonia.Map
                 {
                     CacheQueueItem? task = null;
 
+                    int left;
                     lock (_tileCacheQueue)
                     {
                         left = _tileCacheQueue.Count;
@@ -402,10 +410,7 @@ namespace Asv.Avalonia.Map
                         {
                             startEvent = false;
 
-                            if (OnTileCacheStart != null)
-                            {
-                                OnTileCacheStart();
-                            }
+                            OnTileCacheStart?.Invoke();
                         }
 
                         if (OnTileCacheProgress != null)
@@ -424,7 +429,7 @@ namespace Asv.Avalonia.Map
                                     + "]: storing tile "
                                     + task.Value
                                     + ", "
-                                    + task.Value.Img.Length / 1024
+                                    + (task.Value.Img.Length / 1024)
                                     + "kB..."
                             );
 
@@ -492,10 +497,7 @@ namespace Asv.Avalonia.Map
                         {
                             startEvent = true;
 
-                            if (OnTileCacheComplete != null)
-                            {
-                                OnTileCacheComplete();
-                            }
+                            OnTileCacheComplete?.Invoke();
                         }
 
                         if (
@@ -515,19 +517,18 @@ namespace Asv.Avalonia.Map
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine("CacheEngineLoop: " + ex.ToString());
+                    Debug.WriteLine("CacheEngineLoop: " + ex);
                 }
             }
 
             Debug.WriteLine("CacheEngine: stop");
 
-            if (!startEvent)
+            if (startEvent)
             {
-                if (OnTileCacheComplete != null)
-                {
-                    OnTileCacheComplete();
-                }
+                return;
             }
+
+            OnTileCacheComplete?.Invoke();
         }
 
         class StringWriterExt : StringWriter
@@ -535,48 +536,38 @@ namespace Asv.Avalonia.Map
             public StringWriterExt(IFormatProvider info)
                 : base(info) { }
 
-            public override Encoding Encoding
-            {
-                get { return Encoding.UTF8; }
-            }
+            public override Encoding Encoding => Encoding.UTF8;
         }
 
         public string SerializeGPX(gpxType targetInstance)
         {
-            string retVal;
-            using (var writer = new StringWriterExt(CultureInfo.InvariantCulture))
-            {
-                var serializer = new XmlSerializer(targetInstance.GetType());
-                serializer.Serialize(writer, targetInstance);
-                retVal = writer.ToString();
-            }
+            using var writer = new StringWriterExt(CultureInfo.InvariantCulture);
+            var serializer = new XmlSerializer(targetInstance.GetType());
+            serializer.Serialize(writer, targetInstance);
+            var retVal = writer.ToString();
 
             return retVal;
         }
 
-        public gpxType DeserializeGPX(string objectXml)
+        public gpxType? DeserializeGPX(string objectXml)
         {
-            gpxType retVal;
+            using var stringReader = new StringReader(objectXml);
+            var xmlReader = new XmlTextReader(stringReader);
 
-            using (var stringReader = new StringReader(objectXml))
-            {
-                var xmlReader = new XmlTextReader(stringReader);
+            var serializer = new XmlSerializer(typeof(gpxType));
+            var retVal = serializer.Deserialize(xmlReader) as gpxType;
 
-                var serializer = new XmlSerializer(typeof(gpxType));
-                retVal = serializer.Deserialize(xmlReader) as gpxType;
-
-                xmlReader.Close();
-            }
+            xmlReader.Close();
 
             return retVal;
         }
 
         /// <summary>
-        ///     exports gps data to gpx file
+        ///     exports gps data to gpx file/
         /// </summary>
-        /// <param name="log">gps data</param>
-        /// <param name="gpxFile">file to export</param>
-        /// <returns>true if success</returns>
+        /// <param name="log">gps data.</param>
+        /// <param name="gpxFile">file to export.</param>
+        /// <returns>true if success.</returns>
         public bool ExportGPX(IEnumerable<List<GpsLog>> log, string gpxFile)
         {
             try
@@ -599,6 +590,7 @@ namespace Asv.Avalonia.Map
                     {
                         seg.trkpt = new wptType[session.Count];
                     }
+
                     gpx.trk[0].trkseg[sesid++] = seg;
 
                     for (int i = 0; i < session.Count; i++)
@@ -659,6 +651,7 @@ namespace Asv.Avalonia.Map
 
                             #endregion
                         }
+
                         seg.trkpt[i] = t;
                     }
                 }
@@ -669,7 +662,7 @@ namespace Asv.Avalonia.Map
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("ExportGPX: " + ex.ToString());
+                Debug.WriteLine("ExportGPX: " + ex);
                 return false;
             }
 
@@ -679,18 +672,18 @@ namespace Asv.Avalonia.Map
         #endregion
 
         /// <summary>
-        ///     gets image from tile server
+        ///     gets image from tile server.
         /// </summary>
-        /// <param name="provider"></param>
-        /// <param name="pos"></param>
-        /// <param name="zoom"></param>
-        /// <param name="result"></param>
-        /// <returns></returns>
+        /// <param name="provider">provider.</param>
+        /// <param name="pos">pos.</param>
+        /// <param name="zoom">zoom.</param>
+        /// <param name="result">result.</param>
+        /// <returns>.</returns>
         public PureImage? GetImageFrom(
             GMapProvider provider,
             GPoint pos,
             int zoom,
-            out Exception result
+            out Exception? result
         )
         {
             PureImage? ret = null;
@@ -703,7 +696,7 @@ namespace Asv.Avalonia.Map
                 // let't check memory first
                 if (UseMemoryCache)
                 {
-                    var m = MemoryCache.GetTileFromMemoryCache(rtile);
+                    var m = MemoryCache?.GetTileFromMemoryCache(rtile);
                     if (m != null)
                     {
                         if (GMapProvider.TileImageProxy != null)
@@ -743,7 +736,7 @@ namespace Asv.Avalonia.Map
                             {
                                 if (UseMemoryCache)
                                 {
-                                    MemoryCache.AddTileToMemoryCache(rtile, ret.Data.GetBuffer());
+                                    MemoryCache?.AddTileToMemoryCache(rtile, ret.Data?.GetBuffer());
                                 }
 
                                 return ret;
@@ -763,13 +756,13 @@ namespace Asv.Avalonia.Map
                             {
                                 if (UseMemoryCache)
                                 {
-                                    MemoryCache.AddTileToMemoryCache(rtile, ret.Data.GetBuffer());
+                                    MemoryCache?.AddTileToMemoryCache(rtile, ret.Data?.GetBuffer());
                                 }
 
                                 EnqueueCacheTask(
                                     new CacheQueueItem(
                                         rtile,
-                                        ret.Data.GetBuffer(),
+                                        ret.Data?.GetBuffer(),
                                         CacheUsage.First
                                     )
                                 );
@@ -787,7 +780,7 @@ namespace Asv.Avalonia.Map
                             {
                                 if (UseMemoryCache)
                                 {
-                                    MemoryCache.AddTileToMemoryCache(rtile, ret.Data.GetBuffer());
+                                    MemoryCache?.AddTileToMemoryCache(rtile, ret.Data?.GetBuffer());
                                 }
 
                                 if (Mode != AccessMode.ServerOnly && !provider.BypassCache)
@@ -795,7 +788,7 @@ namespace Asv.Avalonia.Map
                                     EnqueueCacheTask(
                                         new CacheQueueItem(
                                             rtile,
-                                            ret.Data.GetBuffer(),
+                                            ret.Data?.GetBuffer(),
                                             CacheUsage.Both
                                         )
                                     );
@@ -813,7 +806,7 @@ namespace Asv.Avalonia.Map
             {
                 result = ex;
                 ret = null;
-                Debug.WriteLine("GetImageFrom: " + ex.ToString());
+                Debug.WriteLine("GetImageFrom: " + ex);
             }
 
             return ret;
@@ -823,31 +816,25 @@ namespace Asv.Avalonia.Map
             "No data in local tile cache..."
         );
 
-        private TileHttpHost _host;
+        private TileHttpHost? _host;
 
         /// <summary>
-        ///     turns on tile host
+        ///     turns on tile host.
         /// </summary>
-        /// <param name="port"></param>
+        /// <param name="port">port.</param>
         public void EnableTileHost(int port)
         {
-            if (_host == null)
-            {
-                _host = new TileHttpHost();
-            }
+            _host ??= new TileHttpHost();
 
             _host.Start(port);
         }
 
         /// <summary>
-        ///     turns off tile host
+        ///     turns off tile host.
         /// </summary>
         public void DisableTileHost()
         {
-            if (_host != null)
-            {
-                _host.Stop();
-            }
+            _host?.Stop();
         }
     }
 }

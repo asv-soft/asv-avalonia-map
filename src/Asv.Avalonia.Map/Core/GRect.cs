@@ -4,7 +4,7 @@ using System.Globalization;
 namespace Asv.Avalonia.Map
 {
     /// <summary>
-    ///     the rect
+    ///     the rect.
     /// </summary>
     public struct GRect
     {
@@ -33,7 +33,7 @@ namespace Asv.Avalonia.Map
 
         public GPoint Location
         {
-            get { return new GPoint(X, Y); }
+            get => new(X, Y);
             set
             {
                 X = value.X;
@@ -41,24 +41,15 @@ namespace Asv.Avalonia.Map
             }
         }
 
-        public GPoint RightBottom
-        {
-            get { return new GPoint(Right, Bottom); }
-        }
+        public GPoint RightBottom => new(Right, Bottom);
 
-        public GPoint RightTop
-        {
-            get { return new GPoint(Right, Top); }
-        }
+        public GPoint RightTop => new(Right, Top);
 
-        public GPoint LeftBottom
-        {
-            get { return new GPoint(Left, Bottom); }
-        }
+        public GPoint LeftBottom => new(Left, Bottom);
 
         public GSize Size
         {
-            get { return new GSize(Width, Height); }
+            get => new(Width, Height);
             set
             {
                 Width = value.Width;
@@ -74,37 +65,22 @@ namespace Asv.Avalonia.Map
 
         public long Height { get; set; }
 
-        public long Left
-        {
-            get { return X; }
-        }
+        public long Left => X;
 
-        public long Top
-        {
-            get { return Y; }
-        }
+        public long Top => Y;
 
-        public long Right
-        {
-            get { return X + Width; }
-        }
+        public long Right => X + Width;
 
-        public long Bottom
-        {
-            get { return Y + Height; }
-        }
+        public long Bottom => Y + Height;
 
-        public bool IsEmpty
-        {
-            get { return Height == 0 && Width == 0 && X == 0 && Y == 0; }
-        }
+        public bool IsEmpty => Height == 0 && Width == 0 && X == 0 && Y == 0;
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (!(obj is GRect))
+            if (obj is not GRect comp)
+            {
                 return false;
-
-            var comp = (GRect)obj;
+            }
 
             return comp.X == X && comp.Y == Y && comp.Width == Width && comp.Height == Height;
         }

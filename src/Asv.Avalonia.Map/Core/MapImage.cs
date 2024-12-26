@@ -30,29 +30,22 @@ namespace Asv.Avalonia.Map
     }
 
     /// <summary>
-    ///     image abstraction
+    ///     image abstraction.
     /// </summary>
     public class MapImage : PureImage
     {
-        public IImage Img;
+        public IImage? Img;
 
         public override void Dispose()
         {
-            if (Img != null)
-            {
-                Img = null;
-            }
-
-            if (Data != null)
-            {
-                Data.Dispose();
-                Data = null;
-            }
+            Img = null;
+            Data?.Dispose();
+            Data = null;
         }
     }
 
     /// <summary>
-    ///     image abstraction proxy
+    ///     image abstraction proxy.
     /// </summary>
     public class MapImageProxy : PureImageProxy
     {
@@ -65,24 +58,26 @@ namespace Asv.Avalonia.Map
 
         public static readonly MapImageProxy Instance = new MapImageProxy();
 
-        public override PureImage? FromStream(Stream stream)
+        public override PureImage? FromStream(Stream? stream)
         {
-            if (stream != null)
+            if (stream == null)
             {
-                try
-                {
-                    var m = new Bitmap(stream);
+                return null;
+            }
 
-                    var ret = new MapImage { Img = m };
-                    return ret;
-                }
-                catch
-                {
-                    stream.Position = 0;
+            try
+            {
+                var m = new Bitmap(stream);
 
-                    int type = stream.Length > 0 ? stream.ReadByte() : 0;
-                    Debug.WriteLine("WindowsPresentationImageProxy: unknown image format: " + type);
-                }
+                var ret = new MapImage { Img = m };
+                return ret;
+            }
+            catch
+            {
+                stream.Position = 0;
+
+                int type = stream.Length > 0 ? stream.ReadByte() : 0;
+                Debug.WriteLine("WindowsPresentationImageProxy: unknown image format: " + type);
             }
 
             return null;
@@ -91,17 +86,19 @@ namespace Asv.Avalonia.Map
         public override bool Save(Stream stream, PureImage image)
         {
             var ret = (MapImage)image;
-            if (ret.Img != null)
+            if (ret.Img == null)
             {
-                try
-                {
-                    (ret.Img as Bitmap)?.Save(stream);
-                    return true;
-                }
-                catch
-                {
-                    // ignore
-                }
+                return false;
+            }
+
+            try
+            {
+                (ret.Img as Bitmap)?.Save(stream);
+                return true;
+            }
+            catch
+            {
+                // ignore
             }
 
             return false;

@@ -5,7 +5,7 @@ using System.Globalization;
 namespace Asv.Avalonia.Map
 {
     /// <summary>
-    ///     the point ;}
+    ///     the point ;}.
     /// </summary>
     [Serializable]
     public struct GPoint
@@ -68,12 +68,13 @@ namespace Asv.Avalonia.Map
             return new GPoint(pt.X - sz.Width, pt.Y - sz.Height);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (!(obj is GPoint))
+            if (obj is not GPoint comp)
+            {
                 return false;
+            }
 
-            var comp = (GPoint)obj;
             return comp.X == X && comp.Y == Y;
         }
 
@@ -106,16 +107,6 @@ namespace Asv.Avalonia.Map
                 + Y.ToString(CultureInfo.CurrentCulture)
                 + "}";
         }
-
-        //private static int HIWORD(int n)
-        //{
-        //   return (n >> 16) & 0xffff;
-        //}
-
-        //private static int LOWORD(int n)
-        //{
-        //   return n & 0xffff;
-        //}
     }
 
     internal class GPointComparer : IEqualityComparer<GPoint>
